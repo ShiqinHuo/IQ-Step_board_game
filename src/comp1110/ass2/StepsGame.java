@@ -21,7 +21,7 @@ public class StepsGame {
      * @return True if the piece placement is well-formed
      */
     static boolean isPiecePlacementWellFormed(String piecePlacement) {
-        // FIXME Task 3: determine whether a piece placement is well-formed
+        // FIXME Task 2: determine whether a piece placement is well-formed
         return false;
     }
 
@@ -35,7 +35,7 @@ public class StepsGame {
      * @return True if the placement is well-formed
      */
     static boolean isPlacementWellFormed(String placement) {
-        // FIXME Task 4: determine whether a placement is well-formed
+        // FIXME Task 3: determine whether a placement is well-formed
         return false;
     }
 
@@ -48,7 +48,7 @@ public class StepsGame {
      * @return True if the placement sequence is valid
      */
     static boolean isPlacementSequenceValid(String placement) {
-        // FIXME Task 6: determine whether a placement sequence is valid
+        // FIXME Task 5: determine whether a placement sequence is valid
         return false;
     }
 
@@ -64,7 +64,7 @@ public class StepsGame {
      * @return An set of viable piece placements
      */
     static Set<String> getViablePiecePlacements(String placement, String objective) {
-        // FIXME Task 7: determine the correct order of piece placements
+        // FIXME Task 6: determine the correct order of piece placements
         return null;
     }
 
@@ -76,7 +76,7 @@ public class StepsGame {
      * starting point provided by placement.
      */
     static String[] getSolutions(String placement) {
-        // FIXME Task 10: determine all solutions to the game, given a particular starting placement
+        // FIXME Task 9: determine all solutions to the game, given a particular starting placement
         return null;
     }
 }
