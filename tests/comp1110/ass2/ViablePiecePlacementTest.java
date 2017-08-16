@@ -28,12 +28,16 @@ public class ViablePiecePlacementTest {
         }
     }
 
+
+    private void testOneOne(int i) {
+        Set<String> placements = StepsGame.getViablePiecePlacements(VIABLE1[i][1],VIABLE1[i][0]);
+        assertTrue("Expected one viable placement for '"+VIABLE1[i][1]+"', '"+VIABLE1[i][0]+"' but got: "+placements, placements.contains(VIABLE1[i][2]));
+    }
+
     @Test
     public void testOne() {
-        for (int i = 0; i < VIABLE1.length; i++) {
-            Set<String> placements = StepsGame.getViablePiecePlacements(VIABLE1[i][1],VIABLE1[i][0]);
-            assertTrue("Expected one viable placement for '"+VIABLE1[i][1]+"', '"+VIABLE1[i][0]+"' but got: "+placements, placements.contains(VIABLE1[i][2]));
-        }
+        for (int i = 0; i < VIABLE1.length; i++)
+            testOneOne(i);
     }
 
     private void testOneTwo(int i) {
@@ -45,9 +49,8 @@ public class ViablePiecePlacementTest {
     }
     @Test
     public void testTwo() {
-        for (int i = 0; i < VIABLE2.length; i++) {
+        for (int i = 0; i < VIABLE2.length; i++)
             testOneTwo(i);
-        }
     }
 
     private void testOneThree(int i) {
@@ -60,13 +63,13 @@ public class ViablePiecePlacementTest {
 
     @Test
     public void testThree() {
-        for (int i = 0; i < VIABLE3.length; i++) {
+        for (int i = 0; i < VIABLE3.length; i++)
             testOneThree(i);
-        }
     }
 
     @Test
     public void testFirst() {
+        testOneOne(0);
         testOneTwo(0);
         testOneThree(0);
     }
