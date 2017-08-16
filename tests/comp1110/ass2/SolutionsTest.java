@@ -18,21 +18,34 @@ import static org.junit.Assert.assertTrue;
  */
 public class SolutionsTest {
     @Rule
-    public Timeout globalTimeout = Timeout.seconds(40);
+    public Timeout globalTimeout = Timeout.seconds(120);
+
+
+    private void testSingle(String placement, String reference) {
+        String[] result = StepsGame.getSolutions(placement);
+        assertTrue("Placement '"+placement+"' has solution '"+reference+"', but you returned a null array", result != null);
+        assertTrue("Placement '"+placement+"' has only one solution, but you provided "+result.length+" solutions", result.length == 1);
+        assertTrue("Placement '"+placement+"' has solution '"+reference+"', but you returned a null string", result[0] != null);
+        String normresult = TestUtility.normalize(result[0]);
+        String normref = TestUtility.normalize(reference);
+        assertTrue("Placement '"+placement+"' has solution '"+reference+"' ('"+normref+"'), but you provided '"+result[0]+"' ('"+normresult+"')",normref.equals(normresult));
+    }
+
+    @Test
+    public void testSimple() {
+        for (int i = 0; i < SOLUTIONS_ONE.length; i++) {
+            String placement = SOLUTIONS_ONE[i][1].substring(0,SOLUTIONS_ONE[i][1].length()-3); // task is to solve for last move, so use solution, less one move
+            String reference = SOLUTIONS_ONE[i][1];
+            testSingle(placement, reference);
+        }
+    }
 
     @Test
     public void testSingle() {
         for (int i = 0; i < SOLUTIONS_ONE.length; i++) {
-            String test = SOLUTIONS_ONE[i][0];
+            String placement = SOLUTIONS_ONE[i][0];
             String reference = SOLUTIONS_ONE[i][1];
-            System.out.println("Testing:  "+test+" -> "+reference);
-            String[] result = StepsGame.getSolutions(test);
-            System.out.println("Done!");
-            assertTrue("Placement '"+test+"' has solution '"+reference+"', but you returned a null array", result != null);
-            assertTrue("Placement '"+test+"' has only one solution, but you provided "+result.length+" solutions", result.length == 1);
-            assertTrue("Placement '"+test+"' has solution '"+reference+"', but you returned a null string", result[0] != null);
-            String normal = TestUtility.normalize(result[0]);
-            assertTrue("Placement '"+test+"' has solution '"+reference+"', but you provided '"+result[0]+"' ('"+normal+"')",reference.equals(normal));
+            testSingle(placement, reference);
         }
     }
 
@@ -47,7 +60,7 @@ public class SolutionsTest {
             assertTrue("Placement '"+test+"' has "+sols+" solutions, but you provided "+result.length+" solutions", result.length == sols);
             Set<String> solset = new HashSet<>();
             for (int j = 1; j <= sols; j++) {
-                solset.add(SOLUTIONS_MULTI[i][j]);
+                solset.add(TestUtility.normalize(SOLUTIONS_MULTI[i][j]));
             }
 
             String mismatch = "";
