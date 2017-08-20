@@ -1,5 +1,6 @@
 package comp1110.ass2;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -35,9 +36,40 @@ public class StepsGame {
      * @return True if the placement is well-formed
      */
     static boolean isPlacementWellFormed(String placement) {
-        // FIXME Task 3: determine whether a placement is well-formed
+      if (placement == null || placement.equals("")){
+          return false;
+      }else{
+        String[] a = new String[placement.length()/3];
+        for (int i = 0; i < placement.length()/3; i++){
+            a[i] = placement.substring(3*i,3*i+3);
+        }
+
+        for (int m = 0; m < a.length; m++){
+            if (isPiecePlacementWellFormed(a[m]) == true && isDuplicate(a) == false){
+                return true;
+            }
+        }
         return false;
+      }
     }
+
+    public static boolean isDuplicate (String[] i){
+        HashSet<String> m = new HashSet<>();
+        for (int n = 0; n < i.length; n++){
+            m.add(i[n]);
+        }
+        if (m.size() == i.length){
+            return false;
+        }
+        return true;
+    }
+
+    public static void main(String[] args) {
+        String[] a = {"HHn", "EDI"};
+        System.out.println(isDuplicate(a));
+
+    }
+
 
     /**
      * Determine whether a placement sequence is valid.  To be valid, the placement
