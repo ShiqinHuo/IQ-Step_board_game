@@ -33,6 +33,12 @@ public class Viewer extends Application {
     TextField textField;
 
 
+
+
+
+
+
+
     /**
      * Draw a placement in the window, removing any previously drawn one
      *
