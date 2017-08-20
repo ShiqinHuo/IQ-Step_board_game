@@ -45,7 +45,7 @@ public class StepsGame {
                             (placementInt[2] >= 97 && placementInt[2] <= 121));
                 } return false;
             } return false;
-        } return false;
+       } return false;
     }
 
     /**
@@ -84,12 +84,6 @@ public class StepsGame {
             return false;
         }
         return true;
-    }
-
-    public static void main(String[] args) {
-        String[] a = {"HHn", "EDI"};
-        System.out.println(isDuplicate(a));
-
     }
 
 
