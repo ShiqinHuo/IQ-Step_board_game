@@ -68,8 +68,8 @@ public class PlacementWellFormedTest {
             int dup = r.nextInt(8);
             int victim = (dup + 1 + r.nextInt(7)) % 8;
 
-            String bad = p.substring(3 * dup, 1 + (3 * dup));
-            String base = bad + p.substring(0, 3 * victim) + bad + p.substring(1 + 3 * victim, p.length());
+            String bad = p.substring(3 * dup, 3 * (dup+1));
+            String base = p.substring(0, 3 * victim) + bad + p.substring(3 * (victim+1), p.length());
             String test = TestUtility.shufflePlacement(base);
             assertFalse("Placement '" + test + "' uses piece '" + bad + "' twice, but passed.", StepsGame.isPlacementWellFormed(test));
         }
