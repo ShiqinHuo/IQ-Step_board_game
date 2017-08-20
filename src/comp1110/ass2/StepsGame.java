@@ -22,7 +22,29 @@ public class StepsGame {
      */
     static boolean isPiecePlacementWellFormed(String piecePlacement) {
         // FIXME Task 2: determine whether a piece placement is well-formed
-        return false;
+        //Check it consists of exactly three characters
+        if (piecePlacement.length() == 3) {
+
+            char[] placementChar;
+            placementChar = piecePlacement.toCharArray();
+
+            byte[] placementInt = new byte[3];
+
+            //Convert char to related ASCII number
+            for (int i = 0; i < 3; i ++) {
+                placementInt[i] = (byte) placementChar[i];
+            }
+
+            //Check first char
+            if(placementInt[0] >= 65 && placementInt[0] <= 72){
+                //Check second char
+                if(placementInt[1] >= 65 && placementInt[1] <= 72){
+                    //Check third char
+                    return ((placementInt[2] >= 65 && placementInt[2] <= 89) ||
+                            (placementInt[2] >= 97 && placementInt[2] <= 121));
+                } return false;
+            } return false;
+        } return false;
     }
 
     /**
