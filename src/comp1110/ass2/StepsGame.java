@@ -28,22 +28,15 @@ public class StepsGame {
             char[] placementChar;
             placementChar = piecePlacement.toCharArray();
 
-            byte[] placementInt = new byte[3];
-
-            //Convert char to related ASCII number
-            for (int i = 0; i < 3; i ++) {
-                placementInt[i] = (byte) placementChar[i];
-            }
-
             //Check first char
-            if(placementInt[0] >= 65 && placementInt[0] <= 72){
+            if(placementChar[0] >= 'A' && placementChar[0] <= 'H'){
                 //Check second char
-                if(placementInt[1] >= 65 && placementInt[1] <= 72){
+                if(placementChar[1] >= 'A' && placementChar[1] <= 'H'){
                     //Check third char
-                    return ((placementInt[2] >= 65 && placementInt[2] <= 89) ||
-                            (placementInt[2] >= 97 && placementInt[2] <= 121));
-                } return false;
-            } return false;
+                    return ((placementChar[2] >= 'A' && placementChar[2] <= 'Y') ||
+                            (placementChar[2] >= 'a' && placementChar[2] <= 'y'));
+                }
+            }
         } return false;
     }
 
