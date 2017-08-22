@@ -101,7 +101,7 @@ public class Viewer extends Application {
     }
 
     /**
-     * Set up each of the 8 pieces
+     * Set up each of the 16 pieces
      */
     private void makePieces() {
     }
