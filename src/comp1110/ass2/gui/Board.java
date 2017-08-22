@@ -225,9 +225,6 @@ public  class Board extends Application {
     public static void makeBoard(String b) {
     }
 
-
-
-
     // FIXME Task 10: Implement hints
 
     /**
