@@ -83,6 +83,8 @@ public class StepsGame {
         return null;
     }
 
+    static
+
     /**
      * Return an array of all solutions to the game, given a starting placement.
      *
