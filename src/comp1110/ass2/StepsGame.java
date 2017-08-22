@@ -1,6 +1,6 @@
 package comp1110.ass2;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.Set;
 
 /**
@@ -29,23 +29,17 @@ public class StepsGame {
             char[] placementChar;
             placementChar = piecePlacement.toCharArray();
 
-            byte[] placementInt = new byte[3];
-
-            //Convert char to related ASCII number
-            for (int i = 0; i < 3; i ++) {
-                placementInt[i] = (byte) placementChar[i];
-            }
-
             //Check first char
-            if(placementInt[0] >= 65 && placementInt[0] <= 72){
+            if(placementChar[0] >= 'A' && placementChar[0] <= 'H'){
                 //Check second char
-                if(placementInt[1] >= 65 && placementInt[1] <= 72){
+                if(placementChar[1] >= 'A' && placementChar[1] <= 'H'){
                     //Check third char
-                    return ((placementInt[2] >= 65 && placementInt[2] <= 89) ||
-                            (placementInt[2] >= 97 && placementInt[2] <= 121));
-                } return false;
-            } return false;
-       } return false;
+
+                    return ((placementChar[2] >= 'A' && placementChar[2] <= 'Y') ||
+                            (placementChar[2] >= 'a' && placementChar[2] <= 'y'));
+                }
+            }
+        } return false;
     }
 
     /**
@@ -60,32 +54,50 @@ public class StepsGame {
     static boolean isPlacementWellFormed(String placement) {
       if (placement == null || placement.equals("")){
           return false;
-      }else{
-        String[] a = new String[placement.length()/3];
-        for (int i = 0; i < placement.length()/3; i++){
-            a[i] = placement.substring(3*i,3*i+3);
+      }else if (placement.length()%3 != 0){
+          return false;
+      }else {
+              String[] a = new String[placement.length()/3];
+
+              for (int i = 0; i < placement.length()/3; i++){
+                  a[i] = placement.substring(3*i,3*i+3);
+              }
+
+              for (int m = 0; m < a.length; m++){
+                  if (isPiecePlacementWellFormed(a[m]) == true && isDuplicate(placement) == false){
+                      return true;
+                  }
+              }
+              return false;
+          }
+      }
+
+    public static boolean isDuplicate (String i){
+        int a = i.length()/3;
+        char[] b = i.toCharArray();
+        ArrayList<Character> input = new ArrayList<>();
+        for (int m = 0; m < i.length(); m++){
+            input.add(b[m]);
         }
 
-        for (int m = 0; m < a.length; m++){
-            if (isPiecePlacementWellFormed(a[m]) == true && isDuplicate(a) == false){
+        for (int n = 0; n < a; n++){
+            char c = input.get(3*n);
+            //input.remove(3*n);
+            input.remove(3*n);
+            input.remove(3*n);
+            if (input.contains(c)){
                 return true;
             }
         }
         return false;
-      }
     }
 
-    public static boolean isDuplicate (String[] i){
-        HashSet<String> m = new HashSet<>();
-        for (int n = 0; n < i.length; n++){
-            m.add(i[n]);
-        }
-        if (m.size() == i.length){
-            return false;
-        }
-        return true;
+    public static void main(String[] args) {
+        String s = "MCGiAAOAHnGAkFGgEDQDBABF";
+        String f = "HHnAAgDBiGAkFGQEDI";
+        System.out.println(isDuplicate(s));
+        System.out.println(isDuplicate(f));
     }
-
 
     /**
      * Determine whether a placement sequence is valid.  To be valid, the placement
