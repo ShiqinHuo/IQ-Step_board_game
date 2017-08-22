@@ -146,7 +146,7 @@ public class StepsGame {
     String[] output = {"o"};
     return output;
     }
-    
+
     /**
      * Return an array of all solutions to the game, given a starting placement.
      *
