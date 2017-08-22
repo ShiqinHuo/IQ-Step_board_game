@@ -1,5 +1,6 @@
 package comp1110.ass2;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 /**
@@ -33,6 +34,7 @@ public class StepsGame {
                 //Check second char
                 if(placementChar[1] >= 'A' && placementChar[1] <= 'H'){
                     //Check third char
+
                     return ((placementChar[2] >= 'A' && placementChar[2] <= 'Y') ||
                             (placementChar[2] >= 'a' && placementChar[2] <= 'y'));
                 }
@@ -50,8 +52,58 @@ public class StepsGame {
      * @return True if the placement is well-formed
      */
     static boolean isPlacementWellFormed(String placement) {
-        // FIXME Task 3: determine whether a placement is well-formed
+      if (placement == null || placement.equals("")){
+          return false;
+      }else if (placement.length()%3 != 0){
+          return false;
+      }else {
+              String[] a = new String[placement.length()/3];
+
+              for (int i = 0; i < placement.length()/3; i++){
+                  a[i] = placement.substring(3*i,3*i+3);
+              }
+
+              for (int m = 0; m < a.length; m++){
+                  if (isPiecePlacementWellFormed(a[m]) == true && isDuplicate(placement) == false){
+                      return true;
+                  }
+              }
+              return false;
+          }
+      }
+
+    /**
+     *Here we need to implement a method called isDuplicate to decide
+     whether there are shapes appearing more than once in the placement.
+     * @param. placement A string describing a placement of one or more pieces
+     * @return false if no shape appears more than once in the placement
+     */
+
+    public static boolean isDuplicate (String i){
+        int a = i.length()/3;
+        char[] b = i.toCharArray();
+        ArrayList<Character> input = new ArrayList<>();
+        for (int m = 0; m < i.length(); m++){
+            input.add(b[m]);
+        }
+
+        for (int n = 0; n < a; n++){
+            char c = input.get(3*n);
+            //input.remove(3*n);
+            input.remove(3*n);
+            input.remove(3*n);
+            if (input.contains(c)){
+                return true;
+            }
+        }
         return false;
+    }
+
+    public static void main(String[] args) {
+        String s = "MCGiAAOAHnGAkFGgEDQDBABF";
+        String f = "HHnAAgDBiGAkFGQEDI";
+        System.out.println(isDuplicate(s));
+        System.out.println(isDuplicate(f));
     }
 
     /**
@@ -67,6 +119,16 @@ public class StepsGame {
         return false;
     }
 
+    /**
+     * Split the String to different pieces so as to determine whether the sections are valid or
+       not.
+     * @param. placement A placement sequence string
+     * @return a String array divided by input string
+     * */
+    static String[] split(String imput) {
+           String[] output = {"o"};
+           return output;
+    }
     /**
      * Given a string describing a placement of pieces and a string describing
      * an (unordered) objective, return a set of all possible next viable
