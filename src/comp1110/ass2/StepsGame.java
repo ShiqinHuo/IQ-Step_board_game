@@ -145,7 +145,36 @@ public class StepsGame {
         return null;
     }
 
-    static
+    /**
+     * Get all unused piece , given the current placement
+     * @param placement A valid piece placement string.
+     * @return all the pieces which are not used
+     */
+    private static String getUnusedPiece(String placement){
+        return null;
+    }
+
+
+    /**
+     * Based on the placement, finding the all possible home location
+     * @param placement A valid sequence of piece placements where each piece placement is drawn from the objective
+     * @return An char[] which contains all the possible home locations
+     */
+    private static char[] getValidHomeLocation(String placement) {
+
+        return null;
+    }
+
+    /**  We need to check in certain home location of object, is it obstruct other pieces
+     * @param placement A valid sequence of piece placements where each piece placement is drawn from the objective
+     * @param location A string represent location of object
+     * @return true if this location is valid
+     */
+    private static boolean notObtructOthers(String placement, String location){
+        return false;
+    }
+
+
 
     /**
      * Return an array of all solutions to the game, given a starting placement.
@@ -158,4 +187,26 @@ public class StepsGame {
         // FIXME Task 9: determine all solutions to the game, given a particular starting placement
         return null;
     }
+
+
+    /**
+     * Attach all possible candidates to form a new String list
+     * @param placement A valid piece placement string.
+     * @return An array of strings, each is added a piece in valid position
+     */
+    private static String addValidPiece(String placement){
+        return null;
+    }
+
+
+    /**
+     * To check whether all the pieces are used
+     * @param placement A valid piece placement string.
+     * @return true if the length is 24
+     */
+    private static boolean isEnd(String placement){
+        return true;
+    }
+
+
 }
