@@ -1,5 +1,6 @@
 package comp1110.ass2;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 /**
@@ -22,7 +23,23 @@ public class StepsGame {
      */
     static boolean isPiecePlacementWellFormed(String piecePlacement) {
         // FIXME Task 2: determine whether a piece placement is well-formed
-        return false;
+        //Check it consists of exactly three characters
+        if (piecePlacement.length() == 3) {
+
+            char[] placementChar;
+            placementChar = piecePlacement.toCharArray();
+
+            //Check first char
+            if(placementChar[0] >= 'A' && placementChar[0] <= 'H'){
+                //Check second char
+                if(placementChar[1] >= 'A' && placementChar[1] <= 'H'){
+                    //Check third char
+
+                    return ((placementChar[2] >= 'A' && placementChar[2] <= 'Y') ||
+                            (placementChar[2] >= 'a' && placementChar[2] <= 'y'));
+                }
+            }
+        } return false;
     }
 
     /**
@@ -35,8 +52,51 @@ public class StepsGame {
      * @return True if the placement is well-formed
      */
     static boolean isPlacementWellFormed(String placement) {
-        // FIXME Task 3: determine whether a placement is well-formed
+      if (placement == null || placement.equals("")){
+          return false;
+      }else if (placement.length()%3 != 0){
+          return false;
+      }else {
+              String[] a = new String[placement.length()/3];
+
+              for (int i = 0; i < placement.length()/3; i++){
+                  a[i] = placement.substring(3*i,3*i+3);
+              }
+
+              for (int m = 0; m < a.length; m++){
+                  if (isPiecePlacementWellFormed(a[m]) == true && isDuplicate(placement) == false){
+                      return true;
+                  }
+              }
+              return false;
+          }
+      }
+
+    public static boolean isDuplicate (String i){
+        int a = i.length()/3;
+        char[] b = i.toCharArray();
+        ArrayList<Character> input = new ArrayList<>();
+        for (int m = 0; m < i.length(); m++){
+            input.add(b[m]);
+        }
+
+        for (int n = 0; n < a; n++){
+            char c = input.get(3*n);
+            //input.remove(3*n);
+            input.remove(3*n);
+            input.remove(3*n);
+            if (input.contains(c)){
+                return true;
+            }
+        }
         return false;
+    }
+
+    public static void main(String[] args) {
+        String s = "MCGiAAOAHnGAkFGgEDQDBABF";
+        String f = "HHnAAgDBiGAkFGQEDI";
+        System.out.println(isDuplicate(s));
+        System.out.println(isDuplicate(f));
     }
 
     /**
