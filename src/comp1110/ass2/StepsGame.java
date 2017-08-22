@@ -72,6 +72,14 @@ public class StepsGame {
           }
       }
 
+
+    /**
+     *Here we need to implement a method called isDuplicate to decide
+     whether there are shapes appearing more than once in the placement.
+     * @param. placement A string describing a placement of one or more pieces
+     * @return false if no shape appears more than once in the placement
+     */
+
     public static boolean isDuplicate (String i){
         int a = i.length()/3;
         char[] b = i.toCharArray();
@@ -128,6 +136,17 @@ public class StepsGame {
         return null;
     }
 
+    /**
+     * Split the String to different pieces so as to determine whether the sections are valid or
+     not.
+     * @param. placement A placement sequence string
+     * @return a String array divided by input string
+     * */
+    static String[] split(String imput) {
+    String[] output = {"o"};
+    return output;
+    }
+    
     /**
      * Return an array of all solutions to the game, given a starting placement.
      *
