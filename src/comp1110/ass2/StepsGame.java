@@ -1,6 +1,8 @@
 package comp1110.ass2;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -63,6 +65,15 @@ public class StepsGame {
                   a[i] = placement.substring(3*i,3*i+3);
               }
 
+              Set<String> k = new HashSet<>();
+              for (int n = 0; n < a.length; n++){
+                  k.add(a[n]);
+              }
+
+              if (k.size() != a.length){
+                  return false;
+              }
+          
               for (int m = 0; m < a.length; m++){
                   if (isPiecePlacementWellFormed(a[m]) == true && isDuplicate(placement) == false){
                       return true;
@@ -83,27 +94,24 @@ public class StepsGame {
         int a = i.length()/3;
         char[] b = i.toCharArray();
         ArrayList<Character> input = new ArrayList<>();
-        for (int m = 0; m < i.length(); m++){
-            input.add(b[m]);
+
+        for (int m = 0; m < a; m++){
+            input.add(b[3*m]);
         }
 
-        for (int n = 0; n < a; n++){
-            char c = input.get(3*n);
-            //input.remove(3*n);
-            input.remove(3*n);
-            input.remove(3*n);
-            if (input.contains(c)){
+        if (i.length() == 3){
+            return false;
+        }else {
+            Set<Character> k = new HashSet<>();
+            for (int n = 0; n < input.size(); n++){
+                k.add(input.get(n));
+            }
+
+            if (k.size() != input.size()){
                 return true;
             }
         }
         return false;
-    }
-
-    public static void main(String[] args) {
-        String s = "MCGiAAOAHnGAkFGgEDQDBABF";
-        String f = "HHnAAgDBiGAkFGQEDI";
-        System.out.println(isDuplicate(s));
-        System.out.println(isDuplicate(f));
     }
 
     /**
@@ -115,20 +123,139 @@ public class StepsGame {
      * @return True if the placement sequence is valid
      */
     static boolean isPlacementSequenceValid(String placement) {
-        // FIXME Task 5: determine whether a placement sequence is valid
+        if (!isPlacementWellFormed(placement)){
+            return false;
+        }else{
+            String[] place = new String[placement.length()/3];
+
+            for (int i = 0; i < placement.length()/3; i++){
+                place[i] = placement.substring(3*i,3*i+3);
+
+            }
+
+            for (int m = 0; m < place.length; m++){
+                System.out.println(place[m]);
+                if (!isValidPieceString(place[m])){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    static boolean isValidPieceString(String p){
+        char[] ACDFGH1 = {'L', 'N', 'P', 'R', 'W', 'Y', 'b', 'd', 'g', 'i', 'k', 'm'}; char[] ACDFGH2 = {'M', 'O', 'Q', 'S', 'V', 'X', 'a', 'c', 'h', 'j', 'l', 'n'};
+        char[] BAEC = {'L', 'N', 'P', 'R', 'U', 'W', 'Y', 'b', 'd', 'g', 'i', 'k', 'm'}; char[] BCEA = {'L', 'N', 'P', 'R', 'T', 'W', 'Y', 'b', 'd', 'g', 'i', 'k', 'm', 'o'};
+        char[] BBED = {'C', 'E', 'G', 'I', 'L', 'N', 'P', 'R', 'W', 'Y', 'b', 'd', 'g', 'i', 'k', 'm'}; char[] BDEB = {'L', 'N', 'P', 'R', 'W', 'Y', 'b', 'd', 'g', 'i', 'k', 'm', 'r', 't', 'v', 'x'};
+        char[] BEEG = {'M', 'O', 'Q', 'S', 'V', 'X', 'a', 'c', 'e', 'h', 'j', 'l', 'n'}; char[] BGEE = {'K', 'M', 'O', 'Q', 'S', 'V', 'X', 'a', 'c', 'f', 'h', 'j', 'l', 'n'};
+        char[] BFEH = {'M', 'O', 'Q', 'S', 'V', 'X', 'a', 'c', 'h', 'j', 'l', 'n', 'q', 's', 'u', 'w'}; char[] BHEF = {'B', 'D', 'F', 'H', 'M', 'O', 'Q', 'S', 'V', 'X', 'a', 'c', 'h', 'j', 'l', 'n'};
+
+        if (p.charAt(0) == 'A'|| p.charAt(0) == 'C' || p.charAt(0) == 'D' || p.charAt(0) == 'F' || p.charAt(0) == 'G' || p.charAt(0) == 'H'){
+            if (p.charAt(1) >= 'A' && p.charAt(1)<='D'){
+                ArrayList<Character> ACDFGHList1 = new ArrayList<>();
+                for (int m = 0; m < ACDFGH1.length; m++){
+                    ACDFGHList1.add(ACDFGH1[m]);
+                }
+                if (ACDFGHList1.contains(p.charAt(2))){
+                    return true;
+                }else{
+                    return false;
+                }
+            }else if (p.charAt(1) >= 'E' && p.charAt(1)<='H'){
+                ArrayList<Character> ACDFGHList2 = new ArrayList<>();
+                for (int m = 0; m < ACDFGH2.length; m++){
+                    ACDFGHList2.add(ACDFGH2[m]);
+                }
+                if (ACDFGHList2.contains(p.charAt(2))){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+        }else if ((p.charAt(0) == 'B' && p.charAt(1) == 'A')||(p.charAt(0) == 'E' && p.charAt(1) == 'C')){
+            ArrayList<Character> BAECList = new ArrayList<>();
+            for (int m = 0; m < BAEC.length; m++){
+                BAECList.add(BAEC[m]);
+            }
+            if (BAECList.contains(p.charAt(2))){
+                return true;
+            }else{
+                return false;
+            }
+        }else if ((p.charAt(0) == 'B' && p.charAt(1) == 'C')||(p.charAt(0) == 'E' && p.charAt(1) == 'A')){
+            ArrayList<Character> BCEAList = new ArrayList<>();
+            for (int m = 0; m < BCEA.length; m++){
+                BCEAList.add(BCEA[m]);
+            }
+            if (BCEAList.contains(p.charAt(2))){
+                return true;
+            }else{
+                return false;
+            }
+        }else if ((p.charAt(0) == 'B' && p.charAt(1) == 'B')||(p.charAt(0) == 'E' && p.charAt(1) == 'D')){
+            ArrayList<Character> BBEDList = new ArrayList<>();
+            for (int m = 0; m < BBED.length; m++){
+                BBEDList.add(BBED[m]);
+            }
+            if (BBEDList.contains(p.charAt(2))){
+                return true;
+            }else{
+                return false;
+            }
+        } else if ((p.charAt(0) == 'B' && p.charAt(1) == 'D')||(p.charAt(0) == 'E' && p.charAt(1) == 'B')){
+            ArrayList<Character> BDEBList = new ArrayList<>();
+            for (int m = 0; m < BDEB.length; m++){
+                BDEBList.add(BDEB[m]);
+            }
+            if (BDEBList.contains(p.charAt(2))){
+                return true;
+            }else{
+                return false;
+            }
+        } else if ((p.charAt(0) == 'B' && p.charAt(1) == 'E')||(p.charAt(0) == 'E' && p.charAt(1) == 'G')){
+            ArrayList<Character> BEEGList = new ArrayList<>();
+            for (int m = 0; m < BEEG.length; m++){
+                BEEGList.add(BEEG[m]);
+            }
+            if (BEEGList.contains(p.charAt(2))){
+                return true;
+            }else{
+                return false;
+            }
+        } else if ((p.charAt(0) == 'B' && p.charAt(1) == 'G')||(p.charAt(0) == 'E' && p.charAt(1) == 'E')){
+            ArrayList<Character> BGEEList = new ArrayList<>();
+            for (int m = 0; m < BGEE.length; m++){
+                BGEEList.add(BGEE[m]);
+            }
+            if (BGEEList.contains(p.charAt(2))){
+                return true;
+            }else{
+                return false;
+            }
+        } else if ((p.charAt(0) == 'B' && p.charAt(1) == 'F')||(p.charAt(0) == 'E' && p.charAt(1) == 'H')){
+            ArrayList<Character> BFEHList = new ArrayList<>();
+            for (int m = 0; m < BFEH.length; m++){
+                BFEHList.add(BFEH[m]);
+            }
+            if (BFEHList.contains(p.charAt(2))){
+                return true;
+            }else{
+                return false;
+            }
+        }else if ((p.charAt(0) == 'B' && p.charAt(1) == 'H')||(p.charAt(0) == 'E' && p.charAt(1) == 'F')){
+            ArrayList<Character> BHEFList = new ArrayList<>();
+            for (int m = 0; m < BHEF.length; m++){
+                BHEFList.add(BHEF[m]);
+            }
+            if (BHEFList.contains(p.charAt(2))){
+                return true;
+            }else{
+                return false;
+            }
+        }
         return false;
     }
 
-    /**
-     * Split the String to different pieces so as to determine whether the sections are valid or
-       not.
-     * @param. placement A placement sequence string
-     * @return a String array divided by input string
-     * */
-    static String[] split(String imput) {
-           String[] output = {"o"};
-           return output;
-    }
     /**
      * Given a string describing a placement of pieces and a string describing
      * an (unordered) objective, return a set of all possible next viable
