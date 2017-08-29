@@ -1,9 +1,8 @@
 package comp1110.ass2;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import gittest.A;
+
+import java.util.*;
 
 /**
  * This class provides the text interface for the Steps Game
@@ -134,13 +133,234 @@ public class StepsGame {
             }
 
             for (int m = 0; m < place.length; m++){
-                System.out.println(place[m]);
                 if (!isValidPieceString(place[m])){
                     return false;
                 }
             }
+
+            ArrayList<Integer> outcome = new ArrayList<>();
+            for (int v = 0; v < place.length; v++){
+                ArrayList<Integer> list = getCoordinate(place[v]);
+                for (int w = 0; w <list.size(); w++){
+                    outcome.add(list.get(w));
+                }
+            }
+
+            Set<Integer> out = new HashSet<>();
+            for (int j = 0; j < outcome.size(); j++){
+                out.add(outcome.get(j));
+            }
+
+            if (outcome.size() != out.size()){
+                return false;
+            }
         }
         return true;
+    }
+
+    static ArrayList<Integer> selection (int[][] a, int[] b){
+        ArrayList<Integer> arr1 = new ArrayList<>();
+        for (int i = 0; i < 3; i++){
+            for (int j = 0; j < 3; j++){
+                if (a[i][j] == 0){
+                arr1.add(b[3*i+j]);
+                }
+            }
+        }
+
+        return arr1;
+    }
+
+
+    static ArrayList<Integer> getCoordinate(String s){
+        Map<Character, Integer> pin = new HashMap<>();
+        char[] position = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y',
+                           'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y'};
+
+        for (int i = 0; i < position.length; i++){
+            pin.put(position[i],i);
+        }
+
+        int third = pin.get(s.charAt(2));
+
+        int[] gobal = {third-11, third-10, third-9, third-1, third, third+1, third+9,third+10,third+11};
+
+        int[][] arrA = {{0, 0, -1},{0, 0, 0}, {0, -1, -1}}; int[][] arrB = {{-1, 0, -1},{-1, 0, 0},{-1, 0, 0}};
+        int[][] arrC = {{-1, 0, -1},{-1, 0, 0},{ 0, 0, -1}}; int[][] arrD = {{-1, 0, -1},{0, 0, -1},{-1, 0, 0}};
+        int[][] arrE = {{-1, 0, -1},{0, 0, -1},{0, 0, -1}}; int[][] arrF = {{-1, -1, 0},{-1, 0, 0},{0, 0, -1}};
+        int[][] arrG = {{-1, 0, 0},{-1, 0, 0},{0, 0, -1}}; int[][] arrH = {{-1, 0, 0}, {0, 0, -1},{-1, 0, 0}};
+
+        if (s.charAt(0) == 'A'){
+            if (s.charAt(1) == 'A'){
+                return selection(arrA,gobal);
+            }else if (s.charAt(1) == 'B'){
+                return selection(rotate(arrA),gobal);
+            }else if (s.charAt(1) == 'C'){
+                return selection(rotate(rotate(arrA)),gobal);
+            }else if (s.charAt(1) == 'D'){
+                return selection(rotate(rotate(rotate(arrA))),gobal);
+            }else if (s.charAt(1) == 'E'){
+                return selection(reverse(arrA),gobal);
+            }else if (s.charAt(1) == 'F'){
+                return selection(rotate(reverse(arrA)),gobal);
+            }else if (s.charAt(1) == 'G'){
+                return selection(rotate(rotate(reverse(arrA))),gobal);
+            }else if (s.charAt(1) == 'H'){
+                return selection(rotate(rotate(rotate(reverse(arrA)))),gobal);
+            }
+        }else if (s.charAt(0) == 'B'){
+            if (s.charAt(1) == 'A'){
+                return selection(arrB,gobal);
+            }else if (s.charAt(1) == 'B'){
+                return selection(rotate(arrB),gobal);
+            }else if (s.charAt(1) == 'C'){
+                return selection(rotate(rotate(arrB)),gobal);
+            }else if (s.charAt(1) == 'D'){
+                return selection(rotate(rotate(rotate(arrB))),gobal);
+            }else if (s.charAt(1) == 'E'){
+                return selection(reverse(arrB),gobal);
+            }else if (s.charAt(1) == 'F'){
+                return selection(rotate(reverse(arrB)),gobal);
+            }else if (s.charAt(1) == 'G'){
+                return selection(rotate(rotate(reverse(arrB))),gobal);
+            }else if (s.charAt(1) == 'H'){
+                return selection(rotate(rotate(rotate(reverse(arrB)))),gobal);
+            }
+        }else if (s.charAt(0) == 'C'){
+            if (s.charAt(1) == 'A'){
+                return selection(arrC,gobal);
+            }else if (s.charAt(1) == 'B'){
+                return selection(rotate(arrC),gobal);
+            }else if (s.charAt(1) == 'C'){
+                return selection(rotate(rotate(arrC)),gobal);
+            }else if (s.charAt(1) == 'D'){
+                return selection(rotate(rotate(rotate(arrC))),gobal);
+            }else if (s.charAt(1) == 'E'){
+                return selection(reverse(arrC),gobal);
+            }else if (s.charAt(1) == 'F'){
+                return selection(rotate(reverse(arrC)),gobal);
+            }else if (s.charAt(1) == 'G'){
+                return selection(rotate(rotate(reverse(arrC))),gobal);
+            }else if (s.charAt(1) == 'H'){
+                return selection(rotate(rotate(rotate(reverse(arrC)))),gobal);
+            }
+        }else if (s.charAt(0) == 'D'){
+            if (s.charAt(1) == 'A'){
+                return selection(arrD,gobal);
+            }else if (s.charAt(1) == 'B'){
+                return selection(rotate(arrD),gobal);
+            }else if (s.charAt(1) == 'C'){
+                return selection(rotate(rotate(arrD)),gobal);
+            }else if (s.charAt(1) == 'D'){
+                return selection(rotate(rotate(rotate(arrD))),gobal);
+            }else if (s.charAt(1) == 'E'){
+                return selection(reverse(arrD),gobal);
+            }else if (s.charAt(1) == 'F'){
+                return selection(rotate(reverse(arrD)),gobal);
+            }else if (s.charAt(1) == 'G'){
+                return selection(rotate(rotate(reverse(arrD))),gobal);
+            }else if (s.charAt(1) == 'H'){
+                return selection(rotate(rotate(rotate(reverse(arrD)))),gobal);
+            }
+        }else if (s.charAt(0) == 'E'){
+            if (s.charAt(1) == 'A'){
+                return selection(arrE,gobal);
+            }else if (s.charAt(1) == 'B'){
+                return selection(rotate(arrE),gobal);
+            }else if (s.charAt(1) == 'C'){
+                return selection(rotate(rotate(arrE)),gobal);
+            }else if (s.charAt(1) == 'D'){
+                return selection(rotate(rotate(rotate(arrE))),gobal);
+            }else if (s.charAt(1) == 'E'){
+                return selection(reverse(arrE),gobal);
+            }else if (s.charAt(1) == 'F'){
+                return selection(rotate(reverse(arrE)),gobal);
+            }else if (s.charAt(1) == 'G'){
+                return selection(rotate(rotate(reverse(arrE))),gobal);
+            }else if (s.charAt(1) == 'H'){
+                return selection(rotate(rotate(rotate(reverse(arrE)))),gobal);
+            }
+        }else if (s.charAt(0) == 'F'){
+            if (s.charAt(1) == 'A'){
+                return selection(arrF,gobal);
+            }else if (s.charAt(1) == 'B'){
+                return selection(rotate(arrF),gobal);
+            }else if (s.charAt(1) == 'C'){
+                return selection(rotate(rotate(arrF)),gobal);
+            }else if (s.charAt(1) == 'D'){
+                return selection(rotate(rotate(rotate(arrF))),gobal);
+            }else if (s.charAt(1) == 'E'){
+                return selection(reverse(arrF),gobal);
+            }else if (s.charAt(1) == 'F'){
+                return selection(rotate(reverse(arrF)),gobal);
+            }else if (s.charAt(1) == 'G'){
+                return selection(rotate(rotate(reverse(arrF))),gobal);
+            }else if (s.charAt(1) == 'H'){
+                return selection(rotate(rotate(rotate(reverse(arrF)))),gobal);
+            }
+        }else if (s.charAt(0) == 'G'){
+            if (s.charAt(1) == 'A'){
+                return selection(arrG,gobal);
+            }else if (s.charAt(1) == 'B'){
+                return selection(rotate(arrG),gobal);
+            }else if (s.charAt(1) == 'C'){
+                return selection(rotate(rotate(arrG)),gobal);
+            }else if (s.charAt(1) == 'D'){
+                return selection(rotate(rotate(rotate(arrG))),gobal);
+            }else if (s.charAt(1) == 'E'){
+                return selection(reverse(arrG),gobal);
+            }else if (s.charAt(1) == 'F'){
+                return selection(rotate(reverse(arrG)),gobal);
+            }else if (s.charAt(1) == 'G'){
+                return selection(rotate(rotate(reverse(arrG))),gobal);
+            }else if (s.charAt(1) == 'H'){
+                return selection(rotate(rotate(rotate(reverse(arrG)))),gobal);
+            }
+        }else if (s.charAt(0) == 'H'){
+            if (s.charAt(1) == 'A'){
+                return selection(arrH,gobal);
+            }else if (s.charAt(1) == 'B'){
+                return selection(rotate(arrH),gobal);
+            }else if (s.charAt(1) == 'C'){
+                return selection(rotate(rotate(arrH)),gobal);
+            }else if (s.charAt(1) == 'D'){
+                return selection(rotate(rotate(rotate(arrH))),gobal);
+            }else if (s.charAt(1) == 'E'){
+                return selection(reverse(arrH),gobal);
+            }else if (s.charAt(1) == 'F'){
+                return selection(rotate(reverse(arrH)),gobal);
+            }else if (s.charAt(1) == 'G'){
+                return selection(rotate(rotate(reverse(arrH))),gobal);
+            }else if (s.charAt(1) == 'H'){
+                return selection(rotate(rotate(rotate(reverse(arrH)))),gobal);
+            }
+        }
+        return null;
+    }
+
+    static int[][] rotate(int[][] matrix) {
+        int[][] temp = new int[3][3];
+        int[][] outcome = new int[3][3];
+        temp[0] = matrix[2];
+        temp[2] = matrix[0];
+        temp[1] = matrix[1];
+
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                outcome[j][i] = temp[i][j];
+            }
+        }
+        return outcome;
+    }
+
+    static int[][] reverse(int[][] matrix){
+        int[][]outcome = new int[3][3];
+        for (int i = 0;i<3;i++){
+            for (int j =0 ;j<3;j++ ){
+                outcome[i][j]= matrix[i][2-j];
+            }
+        }
+        return outcome;
     }
 
     static boolean isValidPieceString(String p){
