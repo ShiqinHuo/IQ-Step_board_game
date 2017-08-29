@@ -2,8 +2,7 @@ We declare that the work we have submitted for Stage C of this assignment and al
 
 * The idea of using <...> to make the game run faster came from a discussion with <...> (noted in source code comments)
 
-* The code in class <...> is based on a solution we found when researching the problem (URL provided in source code comments)
+* The code in class <Viewer> is based on a solution we found when researching the problem (https://docs.oracle.com/javase/8/javafx/api/javafx/scene/layout/HBox.html)
 
-*  ....
 
-Signed: Mary Jones (u2345678), Bob Smith (u3456789), and Sue Black (u0123456)
+Signed: ShiqinHuo (u5949730), Wenjun Yang (u6251843), and Xiangyi Luo (u6162693)

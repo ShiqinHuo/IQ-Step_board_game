@@ -5,22 +5,14 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
-
 import java.io.IOException;
+import java.util.ArrayList;
 
 
 public  class Board extends Application {
     private static final int BOARD_WIDTH = 933;
     private static final int BOARD_HEIGHT = 700;
-    /* constants describing the shape of the board */
-    public static final int Unit_SIDE = 1;                         // dimensions of sub-board
-    public static final int Unit_PLACES = Unit_SIDE*Unit_SIDE;   // number of places in sub-board
-    public static final int Long_SIDE = Unit_SIDE * 10;         // dimensions of overall board
-    public static final int Short_SIDE = Unit_SIDE * 5;
-    public static final int PLACES = Long_SIDE*Short_SIDE;                     // number of places in board
-    /* where to find media assets */
     private static final String URI_BASE = "assets/";
-    String Origin_BOARD = new String("");
 
     /**
      * An inner class that represents pieces used in the game
@@ -34,11 +26,12 @@ public  class Board extends Application {
 
         /**
          * Construct chess A-H
+         *
          * @param piece A character representing the piece to be created (A..H)
          */
 
-        FXPiece (char piece){
-            if (!(piece >= 'A' && piece <= 'L')) {
+        FXPiece(char piece) {
+            if (!(piece >= 'A' && piece <= 'H')) {
                 throw new IllegalArgumentException("Bad piece: \"" + piece + " \"");
             }
 
@@ -50,18 +43,25 @@ public  class Board extends Application {
 
         /**
          * Construct a particular peg at a given position
+         *
          * @param piece A character representing the piece to be created (A..H)
-         * @param ori A character representing the orientation of the piece
-         * @param pos An integer reflecting the position on the grid (0..99) (consider 2 levels)
+         * @param ori   A character representing the orientation of the piece
+         * @param pos   An integer reflecting the position on the grid (0..99) (consider 2 levels)
          */
 
-        FXPiece(char piece, char ori, int pos){
+        FXPiece(char piece, char ori, int pos) {
 
         }
     }
 
 
     // FIXME Task 8: Implement starting placements
+
+    private static String current = "";
+    private static String placement = "";
+    private final ArrayList<Viewer.Onepeg> pegs2 = new ArrayList<>();
+
+
     /**
      * This class extends FXPiece with the capacity for it to be dragged and dropped,
      * and snap-to-grid.
@@ -70,11 +70,13 @@ public  class Board extends Application {
         int position;
         int homeX, homeY;
         double mouseX, mouseY;
+
         /**
          * Construct a draggable piece (A..H)
+         *
          * @param piece The piece identifier ('A'..'H')
          */
-        DraggableFXPiece(char piece){
+        DraggableFXPiece(char piece) {
             super(piece);
             position = -1;
             homeX = 0; // undefined
@@ -91,15 +93,15 @@ public  class Board extends Application {
             setOnMouseClicked(event2 -> {
                 if (event2.getClickCount() == 2 && piece != 'A') {
                     flip();
-                }else if (event2.getClickCount() == 2 && piece == 'A'){
+                } else if (event2.getClickCount() == 2 && piece == 'A') {
                     setRotate(180);
                 }
             });
             setOnMousePressed(event -> {      // mouse press indicates begin of drag
                 mouseX = event.getSceneX();
                 mouseY = event.getSceneY();
-                setFitWidth(Viewer.SQUARE_SIZE*1.5);  // undefined
-                setFitHeight(Viewer.SQUARE_SIZE*1.5); // undefined
+                setFitWidth(Viewer.SQUARE_SIZE * 1.5);  // undefined
+                setFitHeight(Viewer.SQUARE_SIZE * 1.5); // undefined
 
             });
             setOnMouseDragged(event -> {      // mouse is being dragged
@@ -107,8 +109,8 @@ public  class Board extends Application {
                 toFront();
                 double movementX = event.getSceneX() - mouseX;
                 double movementY = event.getSceneY() - mouseY;
-                setLayoutX(getLayoutX() + movementX );
-                setLayoutY(getLayoutY() + movementY );
+                setLayoutX(getLayoutX() + movementX);
+                setLayoutY(getLayoutY() + movementY);
                 mouseX = event.getSceneX();
                 mouseY = event.getSceneY();
                 event.consume();
@@ -117,12 +119,6 @@ public  class Board extends Application {
                 snapToGrid();
                 showCompletion();
             });
-
-        }
-        /**
-         * Snap the piece to the nearest grid position (if it is over the grid)
-         */
-        private void snapToGrid() {
         }
 
         /**
@@ -149,14 +145,55 @@ public  class Board extends Application {
          * Rotate the piece by 90 degrees (unless this is mask zero and there is a constraint on mask zero)
          */
         private void rotate() {
-            setRotate((getRotate() + 60 ) % 360);
+            setRotate((getRotate() + 60) % 360);
         }
 
         /**
          * Flip the piece
          */
         private void flip() {
-            setScaleY(getScaleY()*(-1));
+            setScaleY(getScaleY() * (-1));
+        }
+
+
+        /**
+         * Snap the piece to the nearest grid position (if it is over the grid)
+         */
+        private void snapToGrid() {
+
+/*            String or = "";
+            String now = "";
+            for (int i = 1; i <= placement.length() - 1; i += 3)
+                if (piece == placement.charAt(i))
+                    placement = placement.substring(0, i - 1) + placement.substring(i + 2);
+            for (Viewer.Onepeg a : pegs2) {
+                if (getLayoutY() + 50 + 25 <= a.y + 20 && getLayoutY() + 50 + 25 >= a.y - 20 && getLayoutX() + 50 + 25 <= a.x + 20 && getLayoutX() + 50 + 25 >= a.x - 20) {
+                    setLayoutY(a.y - 50 - 25);
+                    setLayoutX(a.x - 50 - 25);
+                    setFitWidth(Viewer.SQUARE_SIZE * 1.5);
+                    setFitHeight(Viewer.SQUARE_SIZE * 1.5);
+
+                } else
+                    continue;
+                if (getScaleY() == -1 && piece != 'A')
+                    or = or + piece + (char) ('G' + (getRotate() / 60 == 360 ? 0 : getRotate() / 60));
+                else if (getScaleY() == 1)
+                    or = or + piece + (char) ('A' + (getRotate() / 60 == 360 ? 0 : getRotate() / 60));
+                now = a.num + or;
+                if (placement.length() == 0)
+                    placement = current + placement + now;
+                else
+                    placement = placement + now;
+                break;
+            }
+            if (now.equals(""))
+                snapToHome();
+            else if (!StepsGame.isPlacementSequenceValid(placement)) {
+                snapToHome();
+                placement = placement.substring(0, placement.length() - 3);
+            }
+
+        }*/
         }
 
 
@@ -184,7 +221,6 @@ public  class Board extends Application {
         }
     }
 
-
     /**
      * Set up event handlers for the main game
      *
@@ -202,8 +238,6 @@ public  class Board extends Application {
     }
 
 
-
-
     /**
      * Turn the sound loop on or off
      */
@@ -217,13 +251,6 @@ public  class Board extends Application {
     private void makeSolution(String solution) {
     }
 
-
-    /**
-     * Set up the group that represents the places that make the board
-     * @param b The board string
-     */
-    public static void makeBoard(String b) {
-    }
 
     // FIXME Task 10: Implement hints
 
@@ -289,6 +316,5 @@ public  class Board extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-    }
+        }
 }
-
