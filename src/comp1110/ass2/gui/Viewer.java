@@ -35,7 +35,8 @@ public class Viewer extends Application {
     public static final int SQUARE_SIZE = 60;
     private static final int VIEWER_WIDTH = 750;
     private static final int VIEWER_HEIGHT = 500;
-
+    //private static final int PIECE_IMAGE_SIZE = (int) ((3*SQUARE_SIZE)*1.33);
+    private static int refershed = 0;
     private static final String URI_BASE = "assets/";
 
     /* node groups */
@@ -51,9 +52,6 @@ public class Viewer extends Application {
 
     /* message on completion */
     private final Text completionText = new Text("Well done!");
-
-    /* the state of the 16 pieces */
-    char[] piecestate = new char[16]; // all off screen to begin with
 
     private static final String[] Pieceset = {"AA","AE","BA","BE","CA","CE","DA","DE","EA","EE","FA","FE","GA","GE","HA","HE"};
 
@@ -71,26 +69,77 @@ public class Viewer extends Application {
 
     void makePlacement(String placement) {
         // FIXME Task 4: implement the simple placement viewer
+//        if (!(placement.length()%3==0))
+//            throw new IllegalArgumentException("Bad placement: " + placement + " ");
+        int group = placement.length()/3;
+        for (int i=0;i<group;i++){
+            placePieces(placement.substring(3*i,3*i+3));
+        }
+    }
+
+    public void placePieces (String piece){
+        //System.out.println(piece);
+        ImageView Piece = new ImageView();
+        String char1 = String.valueOf(piece.charAt(0));
+        String char2 = String.valueOf(piece.charAt(1));
+        String location = String.valueOf(piece.charAt(2));
+        int wid = 120;
+        String imageName;
+        String ImageChar2 = "ABCD";  // non-flipped
+        // decode the board:
+        final String[] Rotate = {"BF","CG","DH"}; //Rotate_90_180_270
+        // Column 1-10 (index 0-9)
+        final String[] Column = {"AKUfp","BLVgq","CMWhr","DNXis","EOYjt","FPaku","GQblv","HRcmw","ISdnx","JTeoy"};
+        // Row 1-5 (index 0-4)
+        final String[] Row = {"ABCDEFGHIJ","KLMNOPQRST","UVWXYabcde","fghijklmno","pqrstuvwxy"};
+        // set the imageName (whether flipped)  imported from the folder
+        if (ImageChar2.contains(char2))
+            imageName = char1 + "A";
+        else
+            imageName = char1 + "E";
+        Image name = new Image(Viewer.class.getResource("assets/"+imageName+".png").toString());
+        Piece.setImage(name);
+        Piece.setFitWidth(110);  //PIECE_IMAGE_SIZE
+        Piece.setFitHeight(110);
+
+        // rotate the pieces
+        for (int i=0;i<3;i++){
+            if(Rotate[i].contains(char2))
+                Piece.setRotate(90*(i+1));
+        }
+        // locate the board
+        Onepeg first_peg =new Onepeg( 1);
+
+        //set the x-coordinate
+        for (int i =0;i<10;i++){
+            if(Column[i].contains(location))
+                Piece.setX(first_peg.x+(i-1)*30-25);
+                //System.out.println(first_peg.x+i*30+"xxxx");
+        }
+        //set the y-coordinate
+        for (int i=0;i<5;i++){
+            if(Row[i].contains(location))
+                Piece.setY(first_peg.y+(i-1)*30-25);
+                //System.out.println(first_peg.y+i*30+"yyyyy");
+        }
+
+        root.getChildren().add(Piece);
+    }
+
+
+
+    /**
+     * Put all of the masks back in their home position
+     */
+    private void resetPieces(String placement) {
         for(int i=0;1<16;i++){
             newPiece.getChildren().add(new NewPiece(Pieceset[i],placement));
         }
-
     }
 
-//    String toPiece(String p, String placement){
-//        for (int i = 1; i < placement.length(); i += 3){
-//            if (p == placement.charAt(i)) {
-//                char[] val = {placement.charAt(i-1),placement.charAt(i),placement.charAt(i+1)};
-//                String s =new String(val);
-//                return s;
-//            }
-//        }
-//        return "";
-//    }
 
     class Picture extends ImageView{
         String piece;
-
         Picture(String piece){
             for(int i=0;1<16;i++){
                 if (Pieceset[i] == piece){
@@ -104,23 +153,6 @@ public class Viewer extends Application {
         }
     }
 
-    class DraggableFXPiece extends Picture {
-        int position;
-        int homeX, homeY;
-        /**
-         * Construct a draggable piece
-         *
-         * @param piece The piece identifier ('A' - 'H')
-         */
-        DraggableFXPiece(String piece) {
-            super(piece);
-            position = -1;
-            homeX = (SQUARE_SIZE * (((piece.charAt(0) - 'A') % 2) ));
-            setLayoutX(homeX);
-            homeY = (100 * (((piece.charAt(0) - 'A') / 2)));
-            setLayoutY(homeY);
-        }
-    }
 
     private static final Map<String,Integer> piecemap;
     static {
@@ -142,6 +174,8 @@ public class Viewer extends Application {
         piecemap.put("HA",135);
         piecemap.put("HE",270);
     }
+
+
 
     class NewPiece extends Picture{
         double homeX;
@@ -183,45 +217,44 @@ public class Viewer extends Application {
             setFitWidth(100);
         }
     }
+
     /**
      * Construct a particular peg at a particular place
      */
     class Onepeg extends Circle {
-        double wid;
         double x,y;
         String num;
         Onepeg(int num){
-            wid = 16.5*2;
-            setRadius(4.5*2);
+            setRadius(10);
             if(num<=5) {
-                setCenterX(250 + (num-1)* wid*1.6);
-                x = 250 + (num-1)*wid;
+                setCenterX(250 + (num-1)* 60);    // 250 .. 20
+                x = 250 + (num-1) * 60;   //      33
                 setCenterY(200);
                 y = 200;
             }
             else if(num<=10){
-                setCenterX(250+wid*1.6/2+(num-6)*wid*1.6);
-                x = 250+wid+(num-1)*2*wid;
-                setCenterY(200+wid/2*(Math.sqrt(3)));
-                y = 200+wid/2*(Math.sqrt(3));
+                setCenterX(280+(num-6)* 60);
+                x = 280+(num-6)* 60;                   // 250 + 60
+                setCenterY(200+30);
+                y = 200+30;
             }
             else if(num<=15) {
-                setCenterX(250 + (num - 11) * wid*1.6);
-                x =250 + (num - 11) * wid;
-                setCenterY(200+wid/2*(Math.sqrt(3))*2);
-                y =200+wid/2*(Math.sqrt(3))*2;
+                setCenterX(250 + (num - 11) * 60);
+                x =250 + (num - 11) * 60;
+                setCenterY(200+30*2);
+                y =200+30*2;
             }
             else if(num<=20) {
-                setCenterX(250 + wid*1.6/2 + (num-16)*wid*1.6);
-                x = 250+wid+(num-16)*2*wid;
-                setCenterY(200+wid/2*(Math.sqrt(3))*3);
-                y =200+wid/2*(Math.sqrt(3))*3;
+                setCenterX(280 + (num-16) * 60);
+                x = 280+(num-16)*60;
+                setCenterY(200+30*3);
+                y =200+30*3;
             }
             else if(num<=25) {
-                setCenterX(250 + (num-21)*wid*1.6);
-                x = 250 + (num-21) * wid;
-                setCenterY(200+wid/2*(Math.sqrt(3))*4);
-                y =200+wid/2*(Math.sqrt(3))*4;
+                setCenterX(250 + (num-21)*60);
+                x = 250 + (num-21) * 60;
+                setCenterY(200+30*4);
+                y =200+30*4;
             }
             setStroke(Color.gray(0.6));
             setFill(Color.gray(0.6));
@@ -236,21 +269,6 @@ public class Viewer extends Application {
     }
 
     /**
-     * Set up each of the 16 pieces
-     */
-    private void makePieces() {
-        pieces.getChildren().clear();
-        for(int i=0;1<=15;i++){
-            pieces.getChildren().add(new DraggableFXPiece(Pieceset[i]));
-        }
-    }
-    /**
-     * Put all of the masks back in their home position
-     */
-    private void resetPieces() {
-    }
-
-    /**
      * Create a basic text field for input and a refresh button.
      */
     private void makeControls() {
@@ -261,8 +279,26 @@ public class Viewer extends Application {
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                makePlacement(textField.getText());
-                textField.clear();
+                if(refershed==0){
+                    makePlacement(textField.getText());
+                    textField.clear();
+                    refershed += 1;
+                }
+                else {
+                    root.getChildren().clear();
+                    root.getChildren().add(pegs);
+                    root.getChildren().add(controls);
+                    makePegs();
+                    HBox hb = new HBox();
+                    hb.getChildren().addAll(label1, textField, button);
+                    hb.setSpacing(10);
+                    hb.setLayoutX(130);
+                    hb.setLayoutY(VIEWER_HEIGHT - 50);
+                    controls.getChildren().add(hb);
+                    makePlacement(textField.getText());
+                    textField.setPrefWidth(300);
+                    textField.clear();
+                }
             }
         });
         HBox hb = new HBox();
@@ -292,11 +328,11 @@ public class Viewer extends Application {
 //        root.getChildren().add(solution);
 //        root.getChildren().add(controls);
         root.getChildren().add(pegs);
-//        makePieces();
         makePegs();
+
         makeControls();
 
-        Board.makeBoard("");
+
         primaryStage.setScene(scene);
         primaryStage.show();
         }
