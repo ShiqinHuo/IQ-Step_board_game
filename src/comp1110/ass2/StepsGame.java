@@ -1,6 +1,7 @@
 package comp1110.ass2;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -142,7 +143,20 @@ public class StepsGame {
      */
     static Set<String> getViablePiecePlacements(String placement, String objective) {
         // FIXME Task 6: determine the correct order of piece placements
-        return null;
+
+        Set<String> rowPlacements = new HashSet<>();
+        int lenPlacement = placement.length();
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(objective);
+        sb.replace(0,lenPlacement,"");
+
+        String rest = sb.toString();
+
+        for (int i = 0; i < rest.length()/3 ; i++) {
+            rowPlacements.add(rest.substring(i * 3,(i+1) * 3));
+        }
+        return rowPlacements;
     }
 
     /**
