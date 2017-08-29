@@ -142,7 +142,7 @@ public class StepsGame {
      */
     static Set<String> getViablePiecePlacements(String placement, String objective) {
         // FIXME Task 6: determine the correct order of piece placements
-        return null;//add a conment
+        return null;
     }
 
     /**
