@@ -35,15 +35,12 @@ public class Viewer extends Application {
     public static final int SQUARE_SIZE = 60;
     private static final int VIEWER_WIDTH = 750;
     private static final int VIEWER_HEIGHT = 500;
-    //private static final int PIECE_IMAGE_SIZE = (int) ((3*SQUARE_SIZE)*1.33);
     private static int refershed = 0;
     private static final String URI_BASE = "assets/";
 
     /* node groups */
     private final Group root = new Group();
     private final Group pieces = new Group();
-//    private final Group solution = new Group();
-//    private final Group board = new Group();
     private final Group controls = new Group();
     private final Group newPiece = new Group();
     private final Group pegs = new Group();
@@ -69,8 +66,6 @@ public class Viewer extends Application {
 
     void makePlacement(String placement) {
         // FIXME Task 4: implement the simple placement viewer
-//        if (!(placement.length()%3==0))
-//            throw new IllegalArgumentException("Bad placement: " + placement + " ");
         int group = placement.length()/3;
         for (int i=0;i<group;i++){
             placePieces(placement.substring(3*i,3*i+3));
@@ -114,19 +109,15 @@ public class Viewer extends Application {
         for (int i =0;i<10;i++){
             if(Column[i].contains(location))
                 Piece.setX(first_peg.x+(i-1)*30-25);
-                //System.out.println(first_peg.x+i*30+"xxxx");
         }
         //set the y-coordinate
         for (int i=0;i<5;i++){
             if(Row[i].contains(location))
                 Piece.setY(first_peg.y+(i-1)*30-25);
-                //System.out.println(first_peg.y+i*30+"yyyyy");
         }
 
         root.getChildren().add(Piece);
     }
-
-
 
     /**
      * Put all of the masks back in their home position
@@ -149,7 +140,6 @@ public class Viewer extends Application {
                     setFitWidth(SQUARE_SIZE);
                     break;}
             }
-//            throw new IllegalArgumentException("Bad "+piece);
         }
     }
 
