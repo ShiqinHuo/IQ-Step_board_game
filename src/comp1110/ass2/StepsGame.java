@@ -489,16 +489,62 @@ public class StepsGame {
      */
     static Set<String> getViablePiecePlacements(String placement, String objective) {
         // FIXME Task 6: determine the correct order of piece placements
-        return null;
+
+        /*Consider no more piece can be used*/
+        if(placement.length() == objective.length()) return new HashSet<>();
+
+
+        /*Create String Set to store the valid candidates*/
+        Set<String> validCans = new HashSet<>();
+
+
+        String[] cans = getCandidates(placement,objective);
+        int lencans = cans.length;
+
+        /*Create String Builder*/
+        StringBuilder sb = new StringBuilder(placement);
+
+
+        /*Append each candidate to the input String placement*/
+        String[] appendOnePiece = new String[lencans];
+        for (int i = 0; i < lencans ; i++) {
+            String appended = sb.append(cans[i]).toString();
+            appendOnePiece[i] = appended;
+        }
+
+
+        for (int i = 0; i < lencans ; i++) {
+            if(isPlacementSequenceValid(appendOnePiece[i])) validCans.add(cans[i]);
+        }
+
+
+        for (String str: cans
+             ) {
+            System.out.println(str+" ");
+        }
+        return validCans;
     }
 
     /**
-     * Get all unused piece , given the current placement
+     * Get all rest placements by discarding used pieces , given the current placement and objective
      * @param placement A valid piece placement string.
-     * @return all the pieces which are not used
+     * @param objective A valid game objective, but not necessarily a valid placement string
+     * @return all the pieces' placements which are not used
      */
-    private static String getUnusedPiece(String placement){
-        return null;
+    private static String[] getCandidates(String placement, String objective){
+
+        int lenPlacement = placement.length();
+
+        String restPlacements = objective.substring(lenPlacement);
+
+        int lenCands = restPlacements.length()/3;
+        String[] cands = new String[lenCands];
+
+        for (int i = 0; i < lenCands ; i++) {
+            cands[i] = restPlacements.substring(i * 3, (i+1) * 3);
+        }
+
+        return cands;
     }
 
 
