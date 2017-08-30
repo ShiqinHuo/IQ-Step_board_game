@@ -553,13 +553,58 @@ public class StepsGame {
 
 
     /**
+     * Helper for task6
      * Based on the placement, finding the all possible home location
-     * @param placement A valid sequence of piece placements where each piece placement is drawn from the objective
-     * @return An char[] which contains all the possible home locations
+     * Get idea from Heap's Algorithm
+     * @param candidates the unused pieces draw from objective
+     * @return An ArrayList<String[]> which contains all the possible permutation
      */
-    private static char[] getValidHomeLocation(String placement) {
+    private static ArrayList<String[]> getPermutations(String[] candidates) {
 
-        return null;
+        /*Create an ArrayLIst to store the permutations*/
+        ArrayList<String[]> permutations = new ArrayList<>();
+
+
+        /*Consider the candidates having length 1*/
+        if(candidates.length == 1){
+            permutations.add(candidates);
+        }
+
+        /*Calculate the number of results (permutations) */
+        int lenCands = candidates.length;
+
+        /*Heap's algorithm : generate all the possible permutations*/
+        int[] indices = new int[lenCands];
+        for (int i = 0; i < lenCands ; i++) {
+            indices[i] = i;
+        }
+
+        int index = 0;
+
+        while(index < lenCands) {
+            if (indices[index] < index){
+                if(index % 2 == 0) {
+                    swap(0,index,candidates);
+                } else {
+                    swap(indices[index],index,candidates);
+                }
+
+                permutations.add(candidates);
+                indices[index] ++;
+                index = 0;
+            } else {
+                indices[index] = 0 ;
+                index ++;
+            }
+        } // end while
+
+        return permutations;
+    }
+
+    private static void swap(int i, int j, String[] origin){
+        String c = origin[i];
+        origin[i] = origin[j];
+        origin[j] = c;
     }
 
     /**  We need to check in certain home location of object, is it obstruct other pieces
