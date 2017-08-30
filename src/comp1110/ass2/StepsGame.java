@@ -1,5 +1,6 @@
 package comp1110.ass2;
 
+import com.sun.deploy.util.StringUtils;
 import gittest.A;
 
 import java.util.*;
@@ -494,35 +495,46 @@ public class StepsGame {
         if(placement.length() == objective.length()) return new HashSet<>();
 
 
-        /*Create String Set to store the valid candidates*/
-        Set<String> validCans = new HashSet<>();
-
-
+        /*Get all candidates and their permutations*/
         String[] cans = getCandidates(placement,objective);
-        int lencans = cans.length;
+        ArrayList<String[]> permutations = getPermutations(cans);
 
-        /*Create String Builder*/
-        StringBuilder sb = new StringBuilder(placement);
+        ArrayList<String> pers = new ArrayList<>();
+        permutations.forEach(strings -> {
+            StringBuilder sbb = new StringBuilder();
+            for (String str: strings
+                 ) {
+                sbb.append(str);
+            } // end for loop
 
-
-        /*Append each candidate to the input String placement*/
-        String[] appendOnePiece = new String[lencans];
-        for (int i = 0; i < lencans ; i++) {
-            String appended = sb.append(cans[i]).toString();
-            appendOnePiece[i] = appended;
-        }
-
-
-        for (int i = 0; i < lencans ; i++) {
-            if(isPlacementSequenceValid(appendOnePiece[i])) validCans.add(cans[i]);
-        }
+            pers.add(sbb.toString());
+        });
 
 
-        for (String str: cans
+        /*Pick out the valid next placement*/
+        ArrayList<String> validPers = new ArrayList<>();
+        for (String str: pers
              ) {
-            System.out.println(str+" ");
+            if(isPlacementSequenceValid(str)) validPers.add(str);
         }
-        return validCans;
+
+        /*Draw valid cans*/
+        Set<String> validCandidates = new HashSet<>();
+        for (String str: validPers
+             ) {
+            validCandidates.add(str.substring(placement.length(),placement.length() + 3));
+        }
+
+
+        //test getCandidates
+        for (String str: validCandidates
+             ) {
+            System.out.print(str+" ");
+        }
+        //test
+
+        return validCandidates;
+
 
     } // end get viable PiecePlacement
 
