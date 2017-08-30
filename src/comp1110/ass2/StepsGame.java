@@ -523,9 +523,13 @@ public class StepsGame {
             System.out.println(str+" ");
         }
         return validCans;
-    }
+
+    } // end get viable PiecePlacement
+
+
 
     /**
+     * Helper for task6
      * Get all rest placements by discarding used pieces , given the current placement and objective
      * @param placement A valid piece placement string.
      * @param objective A valid game objective, but not necessarily a valid placement string
