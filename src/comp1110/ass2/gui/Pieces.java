@@ -18,7 +18,13 @@ public class Pieces {
             { 0,-1, -1}
     };
 
+    static final int[][] AB = rotateRight(AA);
+    static final int[][] AC = rotateRight(AB);
+    static final int[][] AD = rotateRight(AC);
     static final int[][] AE = flipPieces(AA);
+    static final int[][] AF = rotateRight(AE);
+    static final int[][] AG = rotateRight(AF);
+    static final int[][] AH = rotateRight(AG);
 
 
     static final int[][] BA = {
@@ -26,8 +32,13 @@ public class Pieces {
             {-1, 0,  1},
             {-1, 1,  0}
     };
-
+    static final int[][] BB = rotateRight(BA);
+    static final int[][] BC = rotateRight(BB);
+    static final int[][] BD = rotateRight(BC);
     static final int[][] BE = flipPieces(BA);
+    static final int[][] BF = rotateRight(BE);
+    static final int[][] BG = rotateRight(BF);
+    static final int[][] BH = rotateRight(BG);
 
     static final int[][] CA = {
             {-1, 1, -1},
@@ -35,7 +46,13 @@ public class Pieces {
             {0,  1, -1}
     };
 
+    static final int[][] CB = rotateRight(CA);
+    static final int[][] CC = rotateRight(CB);
+    static final int[][] CD = rotateRight(CC);
     static final int[][] CE = flipPieces(CA);
+    static final int[][] CF = rotateRight(CE);
+    static final int[][] CG = rotateRight(CF);
+    static final int[][] CH = rotateRight(CG);
 
     static final int[][] DA = {
             {-1, 1, -1},
@@ -43,7 +60,13 @@ public class Pieces {
             {-1, 1,  0}
     };
 
+    static final int[][] DB = rotateRight(DA);
+    static final int[][] DC = rotateRight(DB);
+    static final int[][] DD = rotateRight(DC);
     static final int[][] DE = flipPieces(DA);
+    static final int[][] DF = rotateRight(DE);
+    static final int[][] DG = rotateRight(DF);
+    static final int[][] DH = rotateRight(DG);
 
     static final int[][] EA = {
             {-1, 1, -1},
@@ -51,9 +74,13 @@ public class Pieces {
             {0 , 1, -1}
     };
 
-
+    static final int[][] EB = rotateRight(EA);
+    static final int[][] EC = rotateRight(EB);
+    static final int[][] ED = rotateRight(EC);
     static final int[][] EE = flipPieces(EA);
-
+    static final int[][] EF = rotateRight(EE);
+    static final int[][] EG = rotateRight(EF);
+    static final int[][] EH = rotateRight(EG);
 
     static final int[][] FA = {
             {-1,-1,  0},
@@ -61,7 +88,13 @@ public class Pieces {
             {0 , 1, -1}
     };
 
+    static final int[][] FB = rotateRight(FA);
+    static final int[][] FC = rotateRight(FB);
+    static final int[][] FD = rotateRight(FC);
     static final int[][] FE = flipPieces(FA);
+    static final int[][] FF = rotateRight(FE);
+    static final int[][] FG = rotateRight(FF);
+    static final int[][] FH = rotateRight(FG);
 
     static final int[][] GA = {
             {-1, 1,  0},
@@ -69,7 +102,13 @@ public class Pieces {
             {0 , 1, -1}
     };
 
+    static final int[][] GB = rotateRight(GA);
+    static final int[][] GC = rotateRight(GB);
+    static final int[][] GD = rotateRight(GC);
     static final int[][] GE = flipPieces(GA);
+    static final int[][] GF = rotateRight(GE);
+    static final int[][] GG = rotateRight(GF);
+    static final int[][] GH = rotateRight(GG);
 
     static final int[][] HA = {
             {-1, 1,  0},
@@ -77,7 +116,28 @@ public class Pieces {
             {-1, 1,  0}
     };
 
+    static final int[][] HB = rotateRight(HA);
+    static final int[][] HC = rotateRight(HB);
+    static final int[][] HD = rotateRight(HC);
     static final int[][] HE = flipPieces(HA);
+    static final int[][] HF = rotateRight(HE);
+    static final int[][] HG = rotateRight(HF);
+    static final int[][] HH = rotateRight(HG);
+
+    static final int[][][][] pieces = {
+            {AA, AB, AC, AD, AE, AF, AG, AH},
+            {BA, BB, BC, BD, BE, BF, BG, BH},
+            {CA, CB, CC, CD, CE, CF, CG, CH},
+            {DA, DB, DC, DD, DE, DF, DG, DH},
+            {EA, EB, EC, ED, EE, EF, EG, EH},
+            {FA, FB, FC, FD, FE, FF, FG, FH},
+            {GA, GB, GC, GD, GE, GF, GG, GH},
+            {HA, HB, HC, HD, HE, HF, HG, HH}
+    };
+
+
+
+
 
 
     /**
@@ -85,7 +145,7 @@ public class Pieces {
      * @param m original pieces
      * @return a piece flipped
      */
-    private static int[][] flipPieces(int[][] m){
+     static int[][] flipPieces(int[][] m){
         int[][] flip = new int[3][3];
 
         for (int i = 0; i < 3 ; i++) {
@@ -104,9 +164,48 @@ public class Pieces {
     }
 
 
+    /**
+     * This method rotate piece by 90 degree in right direction
+     * @param m original 3x3 matrix
+     * @return new piece got by rotate m
+     */
+    static int[][] rotateRight(int[][] m){
+
+        int[][] rotate = new int[3][3];
+        /*Swap the first row and last row*/
+        rotate[0] = m[2];
+        rotate[2] = m[0];
+        rotate[1] = m[1];
+
+        /*Do transpose*/
+        return transpose(rotate);
+
+
+    }
+
+    /**
+     * This method get the transpose of the given matrix
+     * @param m given matrix
+     * @return a transposed matrix
+     */
+    static int[][] transpose(int[][] m){
+
+        int[][] transpose = new int[3][3];
+
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                transpose[j][i] = m[i][j];
+            }
+        }
+        return transpose;
+    }
+
+
+
 
     public static void main(String[] args) {
-        int[][]test = flipPieces(EA);
+        int[][]m ={{1,2,3},{4,5,6},{7,8,9}};
+        int[][]test = transpose(m);
         for (int i = 0; i < 3 ; i++) {
             for (int j = 0; j < 3 ; j++) {
                 System.out.print(test[i][j]+" ");

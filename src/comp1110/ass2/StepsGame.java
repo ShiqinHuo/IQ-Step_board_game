@@ -497,8 +497,25 @@ public class StepsGame {
 
         /*Get all candidates and their permutations*/
         String[] cans = getCandidates(placement,objective);
+
+        //test getCandidates
+        for (String str: cans
+                ) {
+            System.out.print(str+" ");
+        }
+        //test
+
         ArrayList<String[]> permutations = getPermutations(cans);
 
+//        //test permutation
+//        for (String[] str:permutations
+//             ) {
+//            for (String st: str
+//                 ) {
+//                System.out.println(st);
+//            }
+//        }
+//        //test
         ArrayList<String> pers = new ArrayList<>();
         permutations.forEach(strings -> {
             StringBuilder sbb = new StringBuilder();
@@ -526,12 +543,7 @@ public class StepsGame {
         }
 
 
-        //test getCandidates
-        for (String str: validCandidates
-             ) {
-            System.out.print(str+" ");
-        }
-        //test
+
 
         return validCandidates;
 
@@ -591,8 +603,8 @@ public class StepsGame {
             indices[i] = i;
         }
 
-        int index = 0;
 
+        int index = 0;
         while(index < lenCands) {
             if (indices[index] < index){
                 if(index % 2 == 0) {
@@ -601,13 +613,19 @@ public class StepsGame {
                     swap(indices[index],index,candidates);
                 }
 
+                for (String str: candidates
+                        ) {
+                    System.out.print("&&&: "+str+" ");
+                }
                 permutations.add(candidates);
+
                 indices[index] ++;
                 index = 0;
             } else {
                 indices[index] = 0 ;
                 index ++;
             }
+
         } // end while
 
         return permutations;
