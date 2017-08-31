@@ -497,6 +497,8 @@ public class StepsGame {
 
         /*Get all candidates and their permutations*/
         String[] cans = getCandidates(placement,objective);
+        ArrayList<String[]> permutations = getPermutations(cans);
+
 
         //test getCandidates
         for (String str: cans
@@ -505,17 +507,8 @@ public class StepsGame {
         }
         //test
 
-        ArrayList<String[]> permutations = getPermutations(cans);
 
-//        //test permutation
-//        for (String[] str:permutations
-//             ) {
-//            for (String st: str
-//                 ) {
-//                System.out.println(st);
-//            }
-//        }
-//        //test
+
         ArrayList<String> pers = new ArrayList<>();
         permutations.forEach(strings -> {
             StringBuilder sbb = new StringBuilder();
@@ -600,7 +593,7 @@ public class StepsGame {
         /*Heap's algorithm : generate all the possible permutations*/
         int[] indices = new int[lenCands];
         for (int i = 0; i < lenCands ; i++) {
-            indices[i] = i;
+            indices[i] = 0;
         }
 
 
@@ -617,8 +610,8 @@ public class StepsGame {
                         ) {
                     System.out.print("&&&: "+str+" ");
                 }
-                permutations.add(candidates);
 
+                permutations.add(candidates);
                 indices[index] ++;
                 index = 0;
             } else {
