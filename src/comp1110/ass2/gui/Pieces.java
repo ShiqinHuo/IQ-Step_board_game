@@ -12,6 +12,13 @@ public class Pieces {
     * -1 for empty position
     */
 
+    static final String BOARD =
+            ".........." +
+            ".........." +
+            ".........." +
+            ".........." +
+            "..........";
+
     static final int[][] AA = {
             { 0, 1, -1},
             { 1, 0,  1},
@@ -134,6 +141,7 @@ public class Pieces {
             {GA, GB, GC, GD, GE, GF, GG, GH},
             {HA, HB, HC, HD, HE, HF, HG, HH}
     };
+
 
 
 

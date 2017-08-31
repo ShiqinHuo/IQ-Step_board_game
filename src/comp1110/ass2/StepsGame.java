@@ -1,6 +1,7 @@
 package comp1110.ass2;
 
 import com.sun.deploy.util.StringUtils;
+import comp1110.ass2.gui.Permutation;
 import gittest.A;
 
 import java.util.*;
@@ -491,51 +492,45 @@ public class StepsGame {
     static Set<String> getViablePiecePlacements(String placement, String objective) {
         // FIXME Task 6: determine the correct order of piece placements
 
+
         /*Consider no more piece can be used*/
         if(placement.length() == objective.length()) return new HashSet<>();
 
 
-        /*Get all candidates and their permutations*/
-        String[] cans = getCandidates(placement,objective);
-        ArrayList<String[]> permutations = getPermutations(cans);
+
+        /*Create new set to store viable piece placement*/
+        Set<String> validCandidates = new HashSet<>();
 
 
-        //test getCandidates
-        for (String str: cans
-                ) {
-            System.out.print(str+" ");
-        }
+
+        /*Get Candidates and the permutations*/
+        ArrayList<String> cands = getCandidates(placement,objective);
+        ArrayList<String> candsPermutations = Permutation.getPermutations(cands,cands.size());
+
+
+        candsPermutations.forEach(str -> {
+                if(isPlacementSequenceValid(str)) validCandidates.add(str);
+        });
+
+
+
+        //test
+        System.out.println("size"+candsPermutations.size());
+
+        candsPermutations.forEach(str -> System.out.println(str));
+
         //test
 
 
 
-        ArrayList<String> pers = new ArrayList<>();
-        permutations.forEach(strings -> {
-            StringBuilder sbb = new StringBuilder();
-            for (String str: strings
-                 ) {
-                sbb.append(str);
-            } // end for loop
-
-            pers.add(sbb.toString());
-        });
 
 
-        /*Pick out the valid next placement*/
-        ArrayList<String> validPers = new ArrayList<>();
-        for (String str: pers
-             ) {
-            if(isPlacementSequenceValid(str)) validPers.add(str);
-        }
-
-        /*Draw valid cans*/
-        Set<String> validCandidates = new HashSet<>();
-        for (String str: validPers
-             ) {
-            validCandidates.add(str.substring(placement.length(),placement.length() + 3));
-        }
 
 
+//        for (String sol: validSol
+//             ) {
+//            validCandidates.add(sol.substring(placement.length(),placement.length()+3));
+//        }
 
 
         return validCandidates;
@@ -552,90 +547,66 @@ public class StepsGame {
      * @param objective A valid game objective, but not necessarily a valid placement string
      * @return all the pieces' placements which are not used
      */
-    private static String[] getCandidates(String placement, String objective){
+    private static ArrayList<String> getCandidates(String placement, String objective){
 
-        int lenPlacement = placement.length();
+        ArrayList<String> cands = new ArrayList<>();
+        String restPlacements = objective.substring(placement.length());
 
-        String restPlacements = objective.substring(lenPlacement);
+        int lenRest = objective.length() - placement.length();
 
-        int lenCands = restPlacements.length()/3;
-        String[] cands = new String[lenCands];
-
-        for (int i = 0; i < lenCands ; i++) {
-            cands[i] = restPlacements.substring(i * 3, (i+1) * 3);
+        for (int i = 0; i < lenRest / 3  ; i++) {
+            cands.add(restPlacements.substring(i * 3, (i+1) * 3));
         }
+
+        //print
+        cands.forEach(can -> System.out.print("can:" + can + " "));
 
         return cands;
     }
 
 
-    /**
-     * Helper for task6
-     * Based on the placement, finding the all possible home location
-     * Get idea from Heap's Algorithm
-     * @param candidates the unused pieces draw from objective
-     * @return An ArrayList<String[]> which contains all the possible permutation
-     */
-    private static ArrayList<String[]> getPermutations(String[] candidates) {
 
-        /*Create an ArrayLIst to store the permutations*/
-        ArrayList<String[]> permutations = new ArrayList<>();
-
-
-        /*Consider the candidates having length 1*/
-        if(candidates.length == 1){
-            permutations.add(candidates);
-        }
-
-        /*Calculate the number of results (permutations) */
-        int lenCands = candidates.length;
-
-        /*Heap's algorithm : generate all the possible permutations*/
-        int[] indices = new int[lenCands];
-        for (int i = 0; i < lenCands ; i++) {
-            indices[i] = 0;
-        }
-
-
-        int index = 0;
-        while(index < lenCands) {
-            if (indices[index] < index){
-                if(index % 2 == 0) {
-                    swap(0,index,candidates);
-                } else {
-                    swap(indices[index],index,candidates);
-                }
-
-                for (String str: candidates
-                        ) {
-                    System.out.print("&&&: "+str+" ");
-                }
-
-                permutations.add(candidates);
-                indices[index] ++;
-                index = 0;
-            } else {
-                indices[index] = 0 ;
-                index ++;
-            }
-
-        } // end while
-
-        return permutations;
-    }
-
-    private static void swap(int i, int j, String[] origin){
-        String c = origin[i];
-        origin[i] = origin[j];
-        origin[j] = c;
-    }
 
     /**  We need to check in certain home location of object, is it obstruct other pieces
-     * @param placement A valid sequence of piece placements where each piece placement is drawn from the objective
-     * @param location A string represent location of object
+     * @param placements A list of placement
+     * @param objective A string represent location of object
      * @return true if this location is valid
      */
-    private static boolean notObtructOthers(String placement, String location){
+    private static ArrayList<String> validOrder(ArrayList<String> placements, ArrayList<String[]> candidates, String objective){
+
+        /*Append each candidates and check whether obstruct*/
+        /*Recursively*/
+        ArrayList<String> newPlacements = new ArrayList<>();
+        ArrayList<String[]> newCandidates = new ArrayList<>();
+
+        StringBuilder sb = new StringBuilder();
+
+
+        do {
+            for (int i = 0; i < candidates.size() ; i++) {
+                for (String piece: candidates.get(i)
+                     ) {
+                    if(notObstruct(placements.get(i), piece)){
+                       sb.setLength(0);
+                       sb.append(newPlacements.get(i));
+                       sb.append(piece);
+                       newPlacements.add(sb.toString());
+                       //newCandidates.add(getCandidates(sb.toString(),objective));
+                    }
+                }
+            }
+
+            for (String str: newPlacements
+                 ) {
+                System.out.println("###"+str);
+            }
+
+            validOrder(newPlacements,newCandidates,objective);
+        } while (newPlacements.get(0).length() < 24);
+        return newPlacements;
+    }
+
+    private static boolean notObstruct(String placement, String next){
         return false;
     }
 

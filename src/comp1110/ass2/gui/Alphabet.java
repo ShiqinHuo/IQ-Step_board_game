@@ -19,7 +19,7 @@ public enum Alphabet {
         this.id = id;
     }
 
-    int getId(){
+    public int getId(){
         return id;
     }
 }
