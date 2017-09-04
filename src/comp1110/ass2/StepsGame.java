@@ -26,7 +26,6 @@ public class StepsGame {
      * @return True if the piece placement is well-formed
      */
     static boolean isPiecePlacementWellFormed(String piecePlacement) {
-        // FIXME Task 2: determine whether a piece placement is well-formed
         //Check it consists of exactly three characters
         if (piecePlacement.length() == 3) {
 
