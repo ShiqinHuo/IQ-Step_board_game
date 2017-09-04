@@ -1,11 +1,6 @@
 package comp1110.ass2.gui;
 
 import comp1110.ass2.StepsGame;
-import gittest.A;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -146,6 +141,7 @@ public class Pieces {
     static final int[][] HF = rotateRight(HE);
     static final int[][] HG = rotateRight(HF);
     static final int[][] HH = rotateRight(HG);
+
 
     static final int[][][][] pieces = {
             {AA, AB, AC, AD, AE, AF, AG, AH},

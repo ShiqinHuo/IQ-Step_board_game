@@ -492,15 +492,11 @@ public class StepsGame {
     static Set<String> getViablePiecePlacements(String placement, String objective) {
         // FIXME Task 6: determine the correct order of piece placements
 
-
         /*Consider no more piece can be used*/
         if(placement.length() == objective.length()) return new HashSet<>();
 
         /*Create new set to store viable piece placement*/
         Set<String> validCandidates = new HashSet<>();
-
-
-
 
         return validCandidates;
 
@@ -576,6 +572,12 @@ public class StepsGame {
     }
 
 
+    /**
+     * Helper for task 6
+     * @param placement A valid sequence of piece placements where each piece placement is drawn from the objective
+     * @param next The next 3 length String who is trying to put on the board
+     * @return true if the next piece (which is going to put in) does not obstruct the current pieces
+     */
     public static boolean notObstruct(String placement, String next){
         ArrayList<String> shapes = new ArrayList<>();
         for (int i = 0; i < placement.length()/3 ; i++) {
