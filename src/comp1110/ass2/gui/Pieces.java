@@ -280,9 +280,9 @@ public class Pieces {
                         update.add(40);
                         break;
                     default :
-                        for (int neibour: neighbour
+                        for (int nei: neighbour
                                 ) {
-                            if(i + neibour >= 0 && i + neibour <= 49) update.add(i + neibour);
+                            if(i + nei >= 0 && i + nei <= 49) update.add(i + nei);
                         }
 
                     }
