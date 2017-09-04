@@ -297,13 +297,15 @@ public class Pieces {
         cannotUse(gggg);
         gggg.forEach(i -> System.out.println(i));
 
-        System.out.println(StepsGame.notObstruct("BGKFCNCFlAFnHHSGAiDBg","DBg"));
+        //System.out.println(StepsGame.notObstruct("BGKFCNCFlAFnHHSGAiDBg","DBg"));
 
         ArrayList<String> starter = new ArrayList<>();
-        starter.add("BGKFCNCFlAFnHHSGAi");
+        starter.add("");
 
-        ArrayList<String> orders = StepsGame.validOrder(starter,"BGKFCNCFlAFnHHSGAiECPDBg");
+        ArrayList<String> orders = StepsGame.validOrder(starter,"DFOGGQEDIBAkFHnHCiAALCAg");
+
         System.out.println(orders.size());
+
         for (String s: orders
              ) {
             System.out.println(s);

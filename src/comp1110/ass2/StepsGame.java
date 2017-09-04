@@ -492,6 +492,7 @@ public class StepsGame {
     static Set<String> getViablePiecePlacements(String placement, String objective) {
         // FIXME Task 6: determine the correct order of piece placements
 
+
         /*Consider no more piece can be used*/
         if(placement.length() == objective.length()) return new HashSet<>();
 
@@ -503,14 +504,10 @@ public class StepsGame {
 
         /*Draw viable pieces from the orders*/
         Set<String> viablePieces = new HashSet<>();
-        orders.forEach(order -> viablePieces.add(order.substring(placement.length(), placement.length()+3)));
-
-
+        orders.forEach(order -> viablePieces.add(order.substring(placement.length(),placement.length() + 3)));
 
         return viablePieces;
-
-
-    } // end getViablePiecePlacement
+    }
 
 
 
@@ -548,8 +545,8 @@ public class StepsGame {
 
         //print cans
         eightPieces.forEach(str-> {
-            System.out.print("@@@"+str);
-            System.out.println();
+            System.out.println("@@@"+str);
+
         });
         return candidates;
     }
@@ -574,13 +571,14 @@ public class StepsGame {
             ArrayList<String> candidates = getCandidates(s,objective);
             for (String can: candidates
                  ) {
-                System.out.println("Cands: "+can);
-                if(notObstruct(s,can)) newStarters.add(s+can);
-                System.out.println("New XXX: "+s+can);
+                //System.out.println("Cands: "+can);
+                if(notObstruct(s,can)) {
+                    newStarters.add(s+can);
+                }
+                //System.out.println("New XXX: "+s+can);
             }
 
         }
-
         return validOrder(newStarters,objective);
     }
 
