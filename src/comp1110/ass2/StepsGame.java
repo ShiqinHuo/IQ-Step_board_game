@@ -2,6 +2,7 @@ package comp1110.ass2;
 
 import com.sun.deploy.util.StringUtils;
 import comp1110.ass2.gui.Permutation;
+import comp1110.ass2.gui.Pieces;
 import gittest.A;
 
 import java.util.*;
@@ -496,47 +497,16 @@ public class StepsGame {
         /*Consider no more piece can be used*/
         if(placement.length() == objective.length()) return new HashSet<>();
 
-
-
         /*Create new set to store viable piece placement*/
         Set<String> validCandidates = new HashSet<>();
 
 
 
-        /*Get Candidates and the permutations*/
-        ArrayList<String> cands = getCandidates(placement,objective);
-        ArrayList<String> candsPermutations = Permutation.getPermutations(cands,cands.size());
-
-
-        candsPermutations.forEach(str -> {
-                if(isPlacementSequenceValid(str)) validCandidates.add(str);
-        });
-
-
-
-        //test
-        System.out.println("size"+candsPermutations.size());
-
-        candsPermutations.forEach(str -> System.out.println(str));
-
-        //test
-
-
-
-
-
-
-
-//        for (String sol: validSol
-//             ) {
-//            validCandidates.add(sol.substring(placement.length(),placement.length()+3));
-//        }
-
 
         return validCandidates;
 
 
-    } // end get viable PiecePlacement
+    } // end getViablePiecePlacement
 
 
 
@@ -606,9 +576,30 @@ public class StepsGame {
         return newPlacements;
     }
 
-    private static boolean notObstruct(String placement, String next){
-        return false;
+
+    public static boolean notObstruct(String placement, String next){
+        ArrayList<String> shapes = new ArrayList<>();
+        for (int i = 0; i < placement.length()/3 ; i++) {
+            shapes.add(placement.substring(i * 3, i * 3 + 3));
+        }
+
+        Set<Integer> positions = new HashSet<>();
+        for (String shape : shapes) {
+            positions.addAll(Pieces.usedPos(shape));
+        }
+
+        Set<Integer> update = Pieces.cannotUse(positions);
+
+        Set<Integer> nextPositions = Pieces.usedPos(next);
+        for (int integer: nextPositions
+             ) {
+            if(update.contains(integer)) return false;
+        }
+
+        return true;
+
     }
+
 
 
 

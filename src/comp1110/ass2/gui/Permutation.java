@@ -59,7 +59,11 @@ public class Permutation {
     }
 
 
-
+    /**
+     * This method convert An Arraylist of String into single string
+     * @param list
+     * @return
+     */
     private static String ConvertToString(ArrayList<String> list){
         StringBuilder sb = new StringBuilder();
 

@@ -1,5 +1,14 @@
 package comp1110.ass2.gui;
 
+import comp1110.ass2.StepsGame;
+import gittest.A;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Created by luoxi on 30/08/2017.
  */
@@ -13,11 +22,18 @@ public class Pieces {
     */
 
     static final String BOARD =
-            ".........." +
-            ".........." +
-            ".........." +
-            ".........." +
-            "..........";
+            ".........." + ".........." +
+            ".........." + ".........." +
+            ".........." + ".........." +
+            ".........." + ".........." +
+            ".........." + ".........." ;
+
+    /*Reflect the relationship of the 9 grids*/
+    final static int[][] grid3x3 = {
+            {-11,  -10, -9},
+            {-1 ,  0  , +1},
+            {+9 ,  +10, +11}
+    };
 
     static final int[][] AA = {
             { 0, 1, -1},
@@ -144,10 +160,6 @@ public class Pieces {
 
 
 
-
-
-
-
     /**
      * This method flip the given pieces
      * @param m original pieces
@@ -211,15 +223,86 @@ public class Pieces {
 
 
 
-    public static void main(String[] args) {
-        int[][]m ={{1,2,3},{4,5,6},{7,8,9}};
-        int[][]test = transpose(m);
+
+    /**
+     * Get current position in board
+     * @param placement length 3 String which represent the special piece which have be used
+     * @return a set of integer, telling the position
+     */
+     public static Set<Integer> usedPos(String placement){
+        String first = String.valueOf(placement.charAt(0));
+        String second = String.valueOf(placement.charAt(1));
+        String third = String.valueOf(placement.charAt(2));
+
+        int row = Alphabet.valueOf(first).getId();
+        int column = Alphabet.valueOf(second).getId();
+        int homePos = Alphabet.valueOf(third).getId();
+
+        int[][] shape = pieces[row][column];
+
+        Set<Integer> positions = new HashSet<>();
+
         for (int i = 0; i < 3 ; i++) {
             for (int j = 0; j < 3 ; j++) {
-                System.out.print(test[i][j]+" ");
-            }
+                if(shape[i][j] == 0 || shape[i][j] == 1) positions.add(homePos + grid3x3[i][j]);
 
+            }
         }
+        return positions;
+
+    }
+
+
+    /**
+     * This method find all the postions which cannot be obstructed in next step
+     * @param pos which tell that the positions which has ring on it
+     * @return all the position which cannot use including the original pos
+     */
+    public static Set<Integer> cannotUse(Set<Integer> pos){
+        Set<Integer> update = new HashSet<>(pos);
+        int[] neighbour = {-10,-1,+1,+10};
+        pos.forEach( i -> {
+            if(!Alphabet.isPeg(i)){
+                switch (i){
+                    case 9 :
+                        update.add(8);
+                        update.add(19);
+                        break;
+                    case 10 :
+                        update.add(0);
+                        update.add(11);
+                        update.add(20);
+                        break;
+                    case 29 :
+                        update.add(19);
+                        update.add(28);
+                        update.add(39);
+                        break;
+                    case 30 :
+                        update.add(20);
+                        update.add(31);
+                        update.add(40);
+                        break;
+                    default :
+                        for (int neibour: neighbour
+                                ) {
+                            if(i + neibour >= 0 && i + neibour <= 49) update.add(i + neibour);
+                        }
+
+                    }
+                }
+        });
+        return update;
+    }
+
+    public static void main(String[] args) {
+        Set<Integer> gggg = usedPos("AAL");
+        cannotUse(gggg);
+        gggg.forEach(i -> System.out.println(i));
+
+        System.out.println(StepsGame.notObstruct("BGKFCNCFlAFnHHSGAi","DBg"));
+
+
     }
 
 
