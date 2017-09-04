@@ -496,9 +496,18 @@ public class StepsGame {
         if(placement.length() == objective.length()) return new HashSet<>();
 
         /*Create new set to store viable piece placement*/
-        Set<String> validCandidates = new HashSet<>();
+        ArrayList<String> posList = new ArrayList<>();
+        posList.add(placement);
 
-        return validCandidates;
+        ArrayList<String> orders = validOrder(posList,objective);
+
+        /*Draw viable pieces from the orders*/
+        Set<String> viablePieces = new HashSet<>();
+        orders.forEach(order -> viablePieces.add(order.substring(placement.length(), placement.length()+3)));
+
+
+
+        return viablePieces;
 
 
     } // end getViablePiecePlacement
@@ -512,63 +521,67 @@ public class StepsGame {
      * @param objective A valid game objective, but not necessarily a valid placement string
      * @return all the pieces' placements which are not used
      */
-    private static ArrayList<String> getCandidates(String placement, String objective){
+    public static ArrayList<String> getCandidates(String placement, String objective){
 
-        ArrayList<String> cands = new ArrayList<>();
-        String restPlacements = objective.substring(placement.length());
-
-        int lenRest = objective.length() - placement.length();
-
-        for (int i = 0; i < lenRest / 3  ; i++) {
-            cands.add(restPlacements.substring(i * 3, (i+1) * 3));
+        /*Get the eight item from objective*/
+        ArrayList<String> eightPieces = new ArrayList<>();
+        for (int i = 0; i < 8 ; i++) {
+            eightPieces.add(objective.substring(i*3, (i+1) * 3));
         }
 
-        //print
-        cands.forEach(can -> System.out.print("can:" + can + " "));
+        /*Consider empty string, just return eight unused item*/
+        if(placement.equals("")) return eightPieces;
 
-        return cands;
+
+        /*Find all used item from input placement */
+        ArrayList<String> used = new ArrayList<>();
+        for (int i = 0; i < placement.length() / 3; i++) {
+            used.add(placement.substring(i*3, (i+1) * 3));
+        }
+
+        /*Collect items which do not occur in used*/
+        ArrayList<String> candidates = new ArrayList<>();
+        for (String piece: eightPieces
+             ) {
+            if(!used.contains(piece)) candidates.add(piece);
+        }
+
+        //print cans
+        eightPieces.forEach(str-> {
+            System.out.print("@@@"+str);
+            System.out.println();
+        });
+        return candidates;
     }
 
 
 
 
     /**  We need to check in certain home location of object, is it obstruct other pieces
-     * @param placements A list of placement
+     * @param starters A list of placement
      * @param objective A string represent location of object
      * @return true if this location is valid
      */
-    private static ArrayList<String> validOrder(ArrayList<String> placements, ArrayList<String[]> candidates, String objective){
+    public static ArrayList<String> validOrder( ArrayList<String> starters, String objective){
+
+        if(starters.get(0).length() == objective.length()) return starters;
 
         /*Append each candidates and check whether obstruct*/
         /*Recursively*/
-        ArrayList<String> newPlacements = new ArrayList<>();
-        ArrayList<String[]> newCandidates = new ArrayList<>();
-
-        StringBuilder sb = new StringBuilder();
-
-
-        do {
-            for (int i = 0; i < candidates.size() ; i++) {
-                for (String piece: candidates.get(i)
-                     ) {
-                    if(notObstruct(placements.get(i), piece)){
-                       sb.setLength(0);
-                       sb.append(newPlacements.get(i));
-                       sb.append(piece);
-                       newPlacements.add(sb.toString());
-                       //newCandidates.add(getCandidates(sb.toString(),objective));
-                    }
-                }
-            }
-
-            for (String str: newPlacements
+        ArrayList<String> newStarters = new ArrayList<>();
+        for (String s: starters
+                ) {
+            ArrayList<String> candidates = getCandidates(s,objective);
+            for (String can: candidates
                  ) {
-                System.out.println("###"+str);
+                System.out.println("Cands: "+can);
+                if(notObstruct(s,can)) newStarters.add(s+can);
+                System.out.println("New XXX: "+s+can);
             }
 
-            validOrder(newPlacements,newCandidates,objective);
-        } while (newPlacements.get(0).length() < 24);
-        return newPlacements;
+        }
+
+        return validOrder(newStarters,objective);
     }
 
 

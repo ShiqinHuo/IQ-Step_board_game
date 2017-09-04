@@ -1,6 +1,8 @@
 package comp1110.ass2.gui;
 
 import comp1110.ass2.StepsGame;
+
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -241,7 +243,6 @@ public class Pieces {
         for (int i = 0; i < 3 ; i++) {
             for (int j = 0; j < 3 ; j++) {
                 if(shape[i][j] == 0 || shape[i][j] == 1) positions.add(homePos + grid3x3[i][j]);
-
             }
         }
         return positions;
@@ -296,7 +297,17 @@ public class Pieces {
         cannotUse(gggg);
         gggg.forEach(i -> System.out.println(i));
 
-        System.out.println(StepsGame.notObstruct("BGKFCNCFlAFnHHSGAi","DBg"));
+        System.out.println(StepsGame.notObstruct("BGKFCNCFlAFnHHSGAiDBg","DBg"));
+
+        ArrayList<String> starter = new ArrayList<>();
+        starter.add("BGKFCNCFlAFnHHSGAi");
+
+        ArrayList<String> orders = StepsGame.validOrder(starter,"BGKFCNCFlAFnHHSGAiECPDBg");
+        System.out.println(orders.size());
+        for (String s: orders
+             ) {
+            System.out.println(s);
+        }
 
 
     }
