@@ -1,7 +1,5 @@
 package comp1110.ass2.gui;
 
-import comp1110.ass2.StepsGame;
-
 import java.util.*;
 
 /**
@@ -179,7 +177,7 @@ public class Pieces {
      * @param m original 3x3 matrix
      * @return new piece got by rotate m
      */
-    static int[][] rotateRight(int[][] m){
+    private static int[][] rotateRight(int[][] m){
 
         int[][] rotate = new int[3][3];
         /*Swap the first row and last row*/
@@ -198,7 +196,7 @@ public class Pieces {
      * @param m given matrix
      * @return a transposed matrix
      */
-    static int[][] transpose(int[][] m){
+    private static int[][] transpose(int[][] m){
 
         int[][] transpose = new int[3][3];
 
@@ -243,7 +241,7 @@ public class Pieces {
 
 
     /**
-     * This method find all the postions which cannot be obstructed in next step
+     * This method find all the positions which cannot be obstructed in next step
      * @param pos which tell that the positions which has ring on it
      * @return all the position which cannot use including the original pos
      */
@@ -283,7 +281,5 @@ public class Pieces {
         });
         return update;
     }
-
-
 
 }

@@ -1,6 +1,5 @@
 package comp1110.ass2.gui;
 
-import java.util.jar.JarEntry;
 
 /**
  * Created by luoxi on 31/08/2017.

@@ -489,23 +489,14 @@ public class StepsGame {
     static Set<String> getViablePiecePlacements(String placement, String objective) {
         // FIXME Task 6: determine the correct order of piece placements
 
-//        ArrayList<String> candidates = getCandidates(placement,objective);
-//        int[] graph = new int[candidates.size()];
-//        for (int i = 0; i < candidates.size() ; i++) {
-//            graph[i] = i;
-//        }
-
         /*Consider no more piece can be used*/
         if(placement.length() == objective.length()) return new HashSet<>();
 
-        /*Create new set to store viable piece placement*/
-        ArrayList<String> posList = new ArrayList<>();
-        posList.add(placement);
-
+        /*Create starting hashmap*/
         Map<String, ArrayList<String>> stater = new HashMap<>();
         stater.put(placement,getCandidates(placement,objective));
 
-        Set<String> orders = validOrders(stater).keySet();
+        Set<String> orders = validOrders(stater);
 
         /*Draw viable pieces from the orders*/
         Set<String> viablePieces = new HashSet<>();
@@ -533,9 +524,7 @@ public class StepsGame {
 
         /*Consider empty string, just return eight unused item*/
         if(placement.equals("")) return eightPieces;
-        ArrayList<String> empty = new ArrayList<>();
-        empty.add("");
-        if(placement.length() == objective.length()) return empty;
+
 
         /*Find all used item from input placement */
         ArrayList<String> used = new ArrayList<>();
@@ -550,83 +539,63 @@ public class StepsGame {
             if(!used.contains(piece)) candidates.add(piece);
         }
 
-        //print cans
-        eightPieces.forEach(str-> {
-            System.out.println("@@@"+str);
-
-        });
         return candidates;
     }
 
 
 
 
-    /** Given a list of String as starter, find all possible order for the given objective
-     * @param starters A list of placement
-     * @param objective A string represent location of object
+    /** Given a Map of String as starter, find all possible order for the given objective
+     * @param starter a Map (K:current placement, V:current candidates)
      * @return all possible orders in an array list
      */
-    public static ArrayList<String> validOrder( ArrayList<String> starters, String objective){
+    private static Set<String> validOrders( Map<String, ArrayList<String>> starter){
 
-        if(starters.get(0).length() == objective.length()) return starters;
-        /*Append each candidates and check whether obstruct*/
-        /*Recursively*/
-        ArrayList<String> newStarters = new ArrayList<>();
-        for (String s: starters
-                ) {
-            ArrayList<String> candidates = getCandidates(s,objective);
-            for (String can: candidates
-                 ) {
-                //System.out.println("Cands: "+can);
-                if(notObstruct(s,can)) {
-                    newStarters.add(s+can);
-                }
-                //System.out.println("New XXX: "+s+can);
-            }
-
-        }
-        return validOrder(newStarters,objective);
-    }
-
-
-    private static boolean noCandidates( Map<String, ArrayList<String>> map){
-        for(Map.Entry<String,ArrayList<String>> entry : map.entrySet()){
-            //String key = entry.getKey();
-            ArrayList<String> value = entry.getValue();
-            if(value.isEmpty()) return true;
-        }
-        return false;
-    }
-
-    public static Map<String, ArrayList<String>> validOrders( Map<String, ArrayList<String>> starter){
-
-        if(noCandidates(starter)) return starter;
-        System.out.println("termination: "+noCandidates(starter));
+        /*Termination condition*/
+        if(noCandidates(starter)) return starter.keySet();
 
         /*Append each candidates and check whether obstruct*/
         /*Recursively*/
+
         Map<String, ArrayList<String>> newStarter = new HashMap<>();
 
         for(Map.Entry<String,ArrayList<String>> entry : starter.entrySet()) {
             String key = entry.getKey();
             ArrayList<String> value = entry.getValue();
+
+            /*Clone the values*/
             ArrayList<String> delete = new ArrayList<>(value);
 
-            //value.forEach(str -> System.out.println("Candidate: "+ str));
 
             for (String de: value
                  ) {
                 if(notObstruct(key,de)){
                     delete.remove(de);
                     newStarter.put(key+de,delete);
+
+                    /*Reset the array list delete*/
                     delete = new ArrayList<>(value);
                 }
             }
         }
 
-
         return validOrders(newStarter);
     }
+
+
+    /**
+     * Helper for validOrders, determine the termination of the recursion
+     * @param map a Map (K:current placement, V:current candidates)
+     * @return true if no more candidates for current placement
+     */
+    private static boolean noCandidates( Map<String, ArrayList<String>> map){
+        for(Map.Entry<String,ArrayList<String>> entry : map.entrySet()){
+            ArrayList<String> value = entry.getValue();
+            if(value.isEmpty()) return true;
+        }
+        return false;
+    }
+
 
 
     /**
@@ -635,7 +604,7 @@ public class StepsGame {
      * @param next The next 3 length String who is trying to put on the board
      * @return true if the next piece (which is going to put in) does not obstruct the current pieces
      */
-    public static boolean notObstruct(String placement, String next){
+    private static boolean notObstruct(String placement, String next){
         ArrayList<String> shapes = new ArrayList<>();
         for (int i = 0; i < placement.length()/3 ; i++) {
             shapes.add(placement.substring(i * 3, i * 3 + 3));
@@ -649,6 +618,7 @@ public class StepsGame {
 
         /*Record the positions the next piece cannot use*/
         Set<Integer> update = Pieces.cannotUse(positions);
+
 
         /*Find positions the next pieces will take*/
         Set<Integer> nextPositions = Pieces.usedPos(next);
