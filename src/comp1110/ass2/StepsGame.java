@@ -489,6 +489,11 @@ public class StepsGame {
     static Set<String> getViablePiecePlacements(String placement, String objective) {
         // FIXME Task 6: determine the correct order of piece placements
 
+//        ArrayList<String> candidates = getCandidates(placement,objective);
+//        int[] graph = new int[candidates.size()];
+//        for (int i = 0; i < candidates.size() ; i++) {
+//            graph[i] = i;
+//        }
 
         /*Consider no more piece can be used*/
         if(placement.length() == objective.length()) return new HashSet<>();
@@ -581,10 +586,16 @@ public class StepsGame {
     }
 
 
-    public static ArrayList<String> sortedPieces(String i){ return null;}
-
+    /**
+     * Given two pieces' placement and check their order
+     * @param p1 length 3 String, representing a placement
+     * @param p2 length 3 String, representing another placement
+     * @return -1 if p1 < p2, 1 if p1 > p2, 0 if they are not comparable
+     */
     public static int sortingTwoPieces(String p1, String p2){
-        return 0;
+        if(notObstruct(p1, p2) && !notObstruct(p2,p1)) return -1;
+        else if(notObstruct(p1,p2) && notObstruct(p2,p1)) return 0;
+        else return 1;
     }
 
     /**

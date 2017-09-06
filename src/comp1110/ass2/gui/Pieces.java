@@ -221,7 +221,8 @@ public class Pieces {
      * @param placement length 3 String which represent the special piece which have be used
      * @return a set of integer, telling the position
      */
-     public static Set<Integer> usedPos(String placement){
+    public static Set<Integer> usedPos(String placement){
+
         String first = String.valueOf(placement.charAt(0));
         String second = String.valueOf(placement.charAt(1));
         String third = String.valueOf(placement.charAt(2));
@@ -240,7 +241,6 @@ public class Pieces {
             }
         }
         return positions;
-
     }
 
 
@@ -294,7 +294,7 @@ public class Pieces {
         //System.out.println(StepsGame.notObstruct("BGKFCNCFlAFnHHSGAiDBg","DBg"));
 
         ArrayList<String> starter = new ArrayList<>();
-        starter.add("");
+        starter.add("DFOGGQEDI");
 
         ArrayList<String> orders = StepsGame.validOrder(starter,"DFOGGQEDIBAkFHnHCiAALCAg");
 
@@ -304,6 +304,8 @@ public class Pieces {
              ) {
             System.out.println(s);
         }
+
+
 
 
     }
