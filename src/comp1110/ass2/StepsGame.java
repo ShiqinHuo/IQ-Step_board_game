@@ -1,9 +1,6 @@
 package comp1110.ass2;
 
-import com.sun.deploy.util.StringUtils;
-import comp1110.ass2.gui.Permutation;
 import comp1110.ass2.gui.Pieces;
-import gittest.A;
 
 import java.util.*;
 
@@ -554,14 +551,15 @@ public class StepsGame {
 
 
 
-    /**  We need to check in certain home location of object, is it obstruct other pieces
+    /** Given a list of String as starter, find all possible order for the given objective
      * @param starters A list of placement
      * @param objective A string represent location of object
-     * @return true if this location is valid
+     * @return all possible orders in an array list
      */
     public static ArrayList<String> validOrder( ArrayList<String> starters, String objective){
 
         if(starters.get(0).length() == objective.length()) return starters;
+
 
         /*Append each candidates and check whether obstruct*/
         /*Recursively*/
@@ -583,6 +581,12 @@ public class StepsGame {
     }
 
 
+    public static ArrayList<String> sortedPieces(String i){ return null;}
+
+    public static int sortingTwoPieces(String p1, String p2){
+        return 0;
+    }
+
     /**
      * Helper for task 6
      * @param placement A valid sequence of piece placements where each piece placement is drawn from the objective
@@ -595,13 +599,16 @@ public class StepsGame {
             shapes.add(placement.substring(i * 3, i * 3 + 3));
         }
 
+        /*Record the positions where the input placement have used*/
         Set<Integer> positions = new HashSet<>();
         for (String shape : shapes) {
             positions.addAll(Pieces.usedPos(shape));
         }
 
+        /*Record the positions the next piece cannot use*/
         Set<Integer> update = Pieces.cannotUse(positions);
 
+        /*Find positions the next pieces will take*/
         Set<Integer> nextPositions = Pieces.usedPos(next);
         for (int integer: nextPositions
              ) {

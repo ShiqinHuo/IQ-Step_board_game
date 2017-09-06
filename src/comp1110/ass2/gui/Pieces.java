@@ -18,15 +18,9 @@ public class Pieces {
     * -1 for empty position
     */
 
-    static final String BOARD =
-            ".........." + ".........." +
-            ".........." + ".........." +
-            ".........." + ".........." +
-            ".........." + ".........." +
-            ".........." + ".........." ;
 
     /*Reflect the relationship of the 9 grids*/
-    final static int[][] grid3x3 = {
+    private final static int[][] grid3x3 = {
             {-11,  -10, -9},
             {-1 ,  0  , +1},
             {+9 ,  +10, +11}
