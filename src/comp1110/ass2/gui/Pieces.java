@@ -2,9 +2,7 @@ package comp1110.ass2.gui;
 
 import comp1110.ass2.StepsGame;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by luoxi on 30/08/2017.
@@ -286,29 +284,6 @@ public class Pieces {
         return update;
     }
 
-    public static void main(String[] args) {
-        Set<Integer> gggg = usedPos("AAL");
-        cannotUse(gggg);
-        gggg.forEach(i -> System.out.println(i));
-
-        //System.out.println(StepsGame.notObstruct("BGKFCNCFlAFnHHSGAiDBg","DBg"));
-
-        ArrayList<String> starter = new ArrayList<>();
-        starter.add("DFOGGQEDI");
-
-        ArrayList<String> orders = StepsGame.validOrder(starter,"DFOGGQEDIBAkFHnHCiAALCAg");
-
-        System.out.println(orders.size());
-
-        for (String s: orders
-             ) {
-            System.out.println(s);
-        }
-
-
-
-
-    }
 
 
 }

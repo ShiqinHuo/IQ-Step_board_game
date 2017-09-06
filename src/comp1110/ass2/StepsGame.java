@@ -502,7 +502,10 @@ public class StepsGame {
         ArrayList<String> posList = new ArrayList<>();
         posList.add(placement);
 
-        ArrayList<String> orders = validOrder(posList,objective);
+        Map<String, ArrayList<String>> stater = new HashMap<>();
+        stater.put(placement,getCandidates(placement,objective));
+
+        Set<String> orders = validOrders(stater).keySet();
 
         /*Draw viable pieces from the orders*/
         Set<String> viablePieces = new HashSet<>();
@@ -530,7 +533,9 @@ public class StepsGame {
 
         /*Consider empty string, just return eight unused item*/
         if(placement.equals("")) return eightPieces;
-
+        ArrayList<String> empty = new ArrayList<>();
+        empty.add("");
+        if(placement.length() == objective.length()) return empty;
 
         /*Find all used item from input placement */
         ArrayList<String> used = new ArrayList<>();
@@ -564,8 +569,6 @@ public class StepsGame {
     public static ArrayList<String> validOrder( ArrayList<String> starters, String objective){
 
         if(starters.get(0).length() == objective.length()) return starters;
-
-
         /*Append each candidates and check whether obstruct*/
         /*Recursively*/
         ArrayList<String> newStarters = new ArrayList<>();
@@ -586,17 +589,45 @@ public class StepsGame {
     }
 
 
-    /**
-     * Given two pieces' placement and check their order
-     * @param p1 length 3 String, representing a placement
-     * @param p2 length 3 String, representing another placement
-     * @return -1 if p1 < p2, 1 if p1 > p2, 0 if they are not comparable
-     */
-    public static int sortingTwoPieces(String p1, String p2){
-        if(notObstruct(p1, p2) && !notObstruct(p2,p1)) return -1;
-        else if(notObstruct(p1,p2) && notObstruct(p2,p1)) return 0;
-        else return 1;
+    private static boolean noCandidates( Map<String, ArrayList<String>> map){
+        for(Map.Entry<String,ArrayList<String>> entry : map.entrySet()){
+            //String key = entry.getKey();
+            ArrayList<String> value = entry.getValue();
+            if(value.isEmpty()) return true;
+        }
+        return false;
     }
+
+    public static Map<String, ArrayList<String>> validOrders( Map<String, ArrayList<String>> starter){
+
+        if(noCandidates(starter)) return starter;
+        System.out.println("termination: "+noCandidates(starter));
+
+        /*Append each candidates and check whether obstruct*/
+        /*Recursively*/
+        Map<String, ArrayList<String>> newStarter = new HashMap<>();
+
+        for(Map.Entry<String,ArrayList<String>> entry : starter.entrySet()) {
+            String key = entry.getKey();
+            ArrayList<String> value = entry.getValue();
+            ArrayList<String> delete = new ArrayList<>(value);
+
+            //value.forEach(str -> System.out.println("Candidate: "+ str));
+
+            for (String de: value
+                 ) {
+                if(notObstruct(key,de)){
+                    delete.remove(de);
+                    newStarter.put(key+de,delete);
+                    delete = new ArrayList<>(value);
+                }
+            }
+        }
+
+
+        return validOrders(newStarter);
+    }
+
 
     /**
      * Helper for task 6
