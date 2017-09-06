@@ -1,6 +1,6 @@
 package comp1110.ass2;
 
-import gittest.A;
+import comp1110.ass2.gui.Pieces;
 
 import java.util.*;
 
@@ -488,46 +488,161 @@ public class StepsGame {
      */
     static Set<String> getViablePiecePlacements(String placement, String objective) {
         // FIXME Task 6: determine the correct order of piece placements
-        return null;
+
+        /*Consider no more piece can be used*/
+        if(placement.length() == objective.length()) return new HashSet<>();
+
+        /*Create starting hashmap*/
+        Map<String, ArrayList<String>> stater = new HashMap<>();
+        stater.put(placement,getCandidates(placement,objective));
+
+        Set<String> orders = validOrders(stater);
+
+        /*Draw viable pieces from the orders*/
+        Set<String> viablePieces = new HashSet<>();
+        orders.forEach(order -> viablePieces.add(order.substring(placement.length(),placement.length() + 3)));
+
+        return viablePieces;
     }
 
+
+
     /**
-     * Get all unused piece , given the current placement
+     * Helper for task6
+     * Get all rest placements by discarding used pieces , given the current placement and objective
      * @param placement A valid piece placement string.
-     * @return all the pieces which are not used
+     * @param objective A valid game objective, but not necessarily a valid placement string
+     * @return all the pieces' placements which are not used
      */
-    private static String getUnusedPiece(String placement){
-        return null;
+    public static ArrayList<String> getCandidates(String placement, String objective){
+
+        /*Get the eight item from objective*/
+        ArrayList<String> eightPieces = new ArrayList<>();
+        for (int i = 0; i < 8 ; i++) {
+            eightPieces.add(objective.substring(i*3, (i+1) * 3));
+        }
+
+        /*Consider empty string, just return eight unused item*/
+        if(placement.equals("")) return eightPieces;
+
+
+        /*Find all used item from input placement */
+        ArrayList<String> used = new ArrayList<>();
+        for (int i = 0; i < placement.length() / 3; i++) {
+            used.add(placement.substring(i*3, (i+1) * 3));
+        }
+
+        /*Collect items which do not occur in used*/
+        ArrayList<String> candidates = new ArrayList<>();
+        for (String piece: eightPieces
+             ) {
+            if(!used.contains(piece)) candidates.add(piece);
+        }
+
+        return candidates;
+    }
+
+
+
+
+    /** Given a Map of String as starter, find all possible order for the given objective
+     * @param starter a Map (K:current placement, V:current candidates)
+     * @return all possible orders in an array list
+     */
+    private static Set<String> validOrders( Map<String, ArrayList<String>> starter){
+
+        /*Termination condition*/
+        if(noCandidates(starter)) return starter.keySet();
+
+        /*Append each candidates and check whether obstruct*/
+        /*Recursively*/
+
+        Map<String, ArrayList<String>> newStarter = new HashMap<>();
+
+        for(Map.Entry<String,ArrayList<String>> entry : starter.entrySet()) {
+            String key = entry.getKey();
+            ArrayList<String> value = entry.getValue();
+
+            /*Clone the values*/
+            ArrayList<String> delete = new ArrayList<>(value);
+
+
+            for (String de: value
+                 ) {
+                if(notObstruct(key,de)){
+                    delete.remove(de);
+                    newStarter.put(key+de,delete);
+
+                    /*Reset the array list delete*/
+                    delete = new ArrayList<>(value);
+                }
+            }
+        }
+
+        return validOrders(newStarter);
     }
 
 
     /**
-     * Based on the placement, finding the all possible home location
-     * @param placement A valid sequence of piece placements where each piece placement is drawn from the objective
-     * @return An char[] which contains all the possible home locations
+     * Helper for validOrders, determine the termination of the recursion
+     * @param map a Map (K:current placement, V:current candidates)
+     * @return true if no more candidates for current placement
      */
-    private static char[] getValidHomeLocation(String placement) {
-
-        return null;
-    }
-
-    /**  We need to check in certain home location of object, is it obstruct other pieces
-     * @param placement A valid sequence of piece placements where each piece placement is drawn from the objective
-     * @param location A string represent location of object
-     * @return true if this location is valid
-     */
-    private static boolean notObtructOthers(String placement, String location){
+    private static boolean noCandidates( Map<String, ArrayList<String>> map){
+        for(Map.Entry<String,ArrayList<String>> entry : map.entrySet()){
+            ArrayList<String> value = entry.getValue();
+            if(value.isEmpty()) return true;
+        }
         return false;
     }
 
 
 
     /**
-     * Return an array of all solutions to the game, given a starting placement.
+     * Helper for task 6
+     * @param placement A valid sequence of piece placements where each piece placement is drawn from the objective
+     * @param next The next 3 length String who is trying to put on the board
+     * @return true if the next piece (which is going to put in) does not obstruct the current pieces
+     */
+    private static boolean notObstruct(String placement, String next){
+        ArrayList<String> shapes = new ArrayList<>();
+        for (int i = 0; i < placement.length()/3 ; i++) {
+            shapes.add(placement.substring(i * 3, i * 3 + 3));
+        }
+
+        /*Record the positions where the input placement have used*/
+        Set<Integer> positions = new HashSet<>();
+        for (String shape : shapes) {
+            positions.addAll(Pieces.usedPos(shape));
+        }
+
+        /*Record the positions the next piece cannot use*/
+        Set<Integer> update = Pieces.cannotUse(positions);
+
+
+        /*Find positions the next pieces will take*/
+        Set<Integer> nextPositions = Pieces.usedPos(next);
+        for (int integer: nextPositions
+             ) {
+            if(update.contains(integer)) return false;
+        }
+
+        return true;
+
+    }
+
+
+
+
+    /**
+     * Return an array of all unique (unordered) solutions to the game, given a
+     * starting placement.   A given unique solution may have more than one than
+     * one placement sequence, however, only a single (unordered) solution should
+     * be returned for each such case.
      *
      * @param placement  A valid piece placement string.
-     * @return An array of strings, each describing a solution to the game given the
-     * starting point provided by placement.
+     * @return An array of strings, each describing a unique unordered solution to
+     * the game given the starting point provided by placement.
      */
     static String[] getSolutions(String placement) {
         // FIXME Task 9: determine all solutions to the game, given a particular starting placement
