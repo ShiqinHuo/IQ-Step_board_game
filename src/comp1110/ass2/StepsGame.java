@@ -526,8 +526,8 @@ public class StepsGame {
      * Return an array of all solutions to the game, given a starting placement.
      *
      * @param placement  A valid piece placement string.
-     * @return An array of strings, each describing a solution to the game given the
-     * starting point provided by placement.
+     * @return An array of strings, each describing a unique unordered solution to
+     * the game given the starting point provided by placement.
      */
     static String[] getSolutions(String placement) {
         // FIXME Task 9: determine all solutions to the game, given a particular starting placement
