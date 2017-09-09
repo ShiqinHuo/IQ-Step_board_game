@@ -545,7 +545,8 @@ public class StepsGame {
 
 
 
-    /** Given a Map of String as starter, find all possible order for the given objective
+    /**
+     * Given a Map of String as starter, find all possible order for the given objective
      * @param starter a Map (K:current placement, V:current candidates)
      * @return all possible orders in an array list
      */

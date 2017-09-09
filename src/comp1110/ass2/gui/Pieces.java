@@ -17,15 +17,15 @@ public class Pieces {
 
     /*Reflect the relationship of the 9 grids*/
     private final static int[][] grid3x3 = {
-            {-11,  -10, -9},
-            {-1 ,  0  , +1},
-            {+9 ,  +10, +11}
+            {-11, -10, -9},
+            {-1, 0, +1},
+            {+9, +10, +11}
     };
 
     static final int[][] AA = {
-            { 0, 1, -1},
-            { 1, 0,  1},
-            { 0,-1, -1}
+            {0, 1, -1},
+            {1, 0, 1},
+            {0, -1, -1}
     };
 
     static final int[][] AB = rotateRight(AA);
@@ -39,8 +39,8 @@ public class Pieces {
 
     static final int[][] BA = {
             {-1, 1, -1},
-            {-1, 0,  1},
-            {-1, 1,  0}
+            {-1, 0, 1},
+            {-1, 1, 0}
     };
     static final int[][] BB = rotateRight(BA);
     static final int[][] BC = rotateRight(BB);
@@ -52,8 +52,8 @@ public class Pieces {
 
     static final int[][] CA = {
             {-1, 1, -1},
-            {-1, 0,  1},
-            {0,  1, -1}
+            {-1, 0, 1},
+            {0, 1, -1}
     };
 
     static final int[][] CB = rotateRight(CA);
@@ -66,8 +66,8 @@ public class Pieces {
 
     static final int[][] DA = {
             {-1, 1, -1},
-            {1 , 0, -1},
-            {-1, 1,  0}
+            {1, 0, -1},
+            {-1, 1, 0}
     };
 
     static final int[][] DB = rotateRight(DA);
@@ -80,8 +80,8 @@ public class Pieces {
 
     static final int[][] EA = {
             {-1, 1, -1},
-            {1 , 0, -1},
-            {0 , 1, -1}
+            {1, 0, -1},
+            {0, 1, -1}
     };
 
     static final int[][] EB = rotateRight(EA);
@@ -93,9 +93,9 @@ public class Pieces {
     static final int[][] EH = rotateRight(EG);
 
     static final int[][] FA = {
-            {-1,-1,  0},
-            {-1, 0,  1},
-            {0 , 1, -1}
+            {-1, -1, 0},
+            {-1, 0, 1},
+            {0, 1, -1}
     };
 
     static final int[][] FB = rotateRight(FA);
@@ -107,9 +107,9 @@ public class Pieces {
     static final int[][] FH = rotateRight(FG);
 
     static final int[][] GA = {
-            {-1, 1,  0},
-            {-1, 0,  1},
-            {0 , 1, -1}
+            {-1, 1, 0},
+            {-1, 0, 1},
+            {0, 1, -1}
     };
 
     static final int[][] GB = rotateRight(GA);
@@ -121,9 +121,9 @@ public class Pieces {
     static final int[][] GH = rotateRight(GG);
 
     static final int[][] HA = {
-            {-1, 1,  0},
-            { 1, 0, -1},
-            {-1, 1,  0}
+            {-1, 1, 0},
+            {1, 0, -1},
+            {-1, 1, 0}
     };
 
     static final int[][] HB = rotateRight(HA);
@@ -147,25 +147,25 @@ public class Pieces {
     };
 
 
-
     /**
      * This method flip the given pieces
+     *
      * @param m original pieces
      * @return a piece flipped
      */
-     static int[][] flipPieces(int[][] m){
+    static int[][] flipPieces(int[][] m) {
         int[][] flip = new int[3][3];
 
-        for (int i = 0; i < 3 ; i++) {
+        for (int i = 0; i < 3; i++) {
             flip[i][0] = m[i][2];
             flip[i][1] = m[i][1];
             flip[i][2] = m[i][0];
         }
 
-        for (int i = 0; i < 3 ; i++) {
-            for (int j = 0; j < 3 ; j++) {
-                if(flip[i][j] == 0) flip[i][j] = 1;
-                else if(flip[i][j] == 1) flip[i][j] = 0;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (flip[i][j] == 0) flip[i][j] = 1;
+                else if (flip[i][j] == 1) flip[i][j] = 0;
             }
         }
         return flip;
@@ -174,10 +174,11 @@ public class Pieces {
 
     /**
      * This method rotate piece by 90 degree in right direction
+     *
      * @param m original 3x3 matrix
      * @return new piece got by rotate m
      */
-    private static int[][] rotateRight(int[][] m){
+    private static int[][] rotateRight(int[][] m) {
 
         int[][] rotate = new int[3][3];
         /*Swap the first row and last row*/
@@ -193,10 +194,11 @@ public class Pieces {
 
     /**
      * This method get the transpose of the given matrix
+     *
      * @param m given matrix
      * @return a transposed matrix
      */
-    private static int[][] transpose(int[][] m){
+    private static int[][] transpose(int[][] m) {
 
         int[][] transpose = new int[3][3];
 
@@ -209,15 +211,13 @@ public class Pieces {
     }
 
 
-
-
-
     /**
      * Get current position in board
+     *
      * @param placement length 3 String which represent the special piece which have be used
      * @return a set of integer, telling the position
      */
-    public static Set<Integer> usedPos(String placement){
+    public static Set<Integer> usedPos(String placement) {
 
         String first = String.valueOf(placement.charAt(0));
         String second = String.valueOf(placement.charAt(1));
@@ -231,9 +231,9 @@ public class Pieces {
 
         Set<Integer> positions = new HashSet<>();
 
-        for (int i = 0; i < 3 ; i++) {
-            for (int j = 0; j < 3 ; j++) {
-                if(shape[i][j] == 0 || shape[i][j] == 1) positions.add(homePos + grid3x3[i][j]);
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (shape[i][j] == 0 || shape[i][j] == 1) positions.add(homePos + grid3x3[i][j]);
             }
         }
         return positions;
@@ -242,44 +242,45 @@ public class Pieces {
 
     /**
      * This method find all the positions which cannot be obstructed in next step
+     *
      * @param pos which tell that the positions which has ring on it
      * @return all the position which cannot use including the original pos
      */
-    public static Set<Integer> cannotUse(Set<Integer> pos){
+    public static Set<Integer> cannotUse(Set<Integer> pos) {
         Set<Integer> update = new HashSet<>(pos);
-        int[] neighbour = {-10,-1,+1,+10};
-        pos.forEach( i -> {
-            if(!Alphabet.isPeg(i)){
-                switch (i){
-                    case 9 :
+        int[] neighbour = {-10, -1, +1, +10};
+        pos.forEach(i -> {
+            if (!Alphabet.isPeg(i)) {
+                switch (i) {
+                    case 9:
                         update.add(8);
                         update.add(19);
                         break;
-                    case 10 :
+                    case 10:
                         update.add(0);
                         update.add(11);
                         update.add(20);
                         break;
-                    case 29 :
+                    case 29:
                         update.add(19);
                         update.add(28);
                         update.add(39);
                         break;
-                    case 30 :
+                    case 30:
                         update.add(20);
                         update.add(31);
                         update.add(40);
                         break;
-                    default :
-                        for (int nei: neighbour
+                    default:
+                        for (int nei : neighbour
                                 ) {
-                            if(i + nei >= 0 && i + nei <= 49) update.add(i + nei);
+                            if (i + nei >= 0 && i + nei <= 49) update.add(i + nei);
                         }
 
-                    }
                 }
+            }
         });
         return update;
     }
-
 }
+
