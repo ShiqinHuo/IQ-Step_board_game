@@ -28,10 +28,9 @@ public class ViablePiecePlacementTest {
         }
     }
 
-
     private void testOneOne(int i) {
         Set<String> placements = StepsGame.getViablePiecePlacements(VIABLE1[i][1],VIABLE1[i][0]);
-        assertTrue("Expected one viable placement for '"+VIABLE1[i][1]+"', '"+VIABLE1[i][0]+"' but got: "+placements, placements.contains(VIABLE1[i][2]));
+        assertTrue("Expected one viable placement, "+VIABLE1[i][2]+", for '"+VIABLE1[i][1]+"', '"+VIABLE1[i][0]+"' but got: "+placements, placements.contains(VIABLE1[i][2]));
     }
 
     @Test
