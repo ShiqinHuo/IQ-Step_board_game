@@ -634,6 +634,7 @@ public class StepsGame {
 
 
 
+
     /**
      * Return an array of all unique (unordered) solutions to the game, given a
      * starting placement.   A given unique solution may have more than one than
@@ -649,6 +650,227 @@ public class StepsGame {
         return null;
     }
 
+    public static void main(String[] args) {
+        Set<String> newSet = new HashSet<>();
+        //newSet = getViablePiecePlacements("CEQEHuGEO","CEQEHuGEOBDxFGSHCiAALDBg");
+        for (String k : newSet){
+            //System.out.println(k);
+        }
+
+        ArrayList<String> newArr = new ArrayList<>();
+        //newArr = getCandidates("CEQEHuGEO","CEQEHuGEOBDxFGSHCiAALDBg");
+        for (String m : newArr){
+            // System.out.println(m);
+        }
+
+        //boolean a = notObstruct("AALBBGCAkDBgEAoFDNGHS","HCi");
+        //System.out.println(a);
+
+        for (String m : possibleSolutions("AALBBGCAk")){
+            System.out.println(m);
+        }
+    }
+
+    public static ArrayList<String> possibleSolutions(String placement){
+        ArrayList<String> A = maskGenerator1('A'); ArrayList<String> B = maskGenerator2();
+        ArrayList<String> C = maskGenerator1('C'); ArrayList<String> D = maskGenerator1('D');
+        ArrayList<String> E = maskGenerator3(); ArrayList<String> F = maskGenerator1('F');
+        ArrayList<String> G = maskGenerator1('G'); ArrayList<String> H = maskGenerator1('H');
+
+        ArrayList<Character> firstAlphabet = new ArrayList<>();
+
+        for (int i = 0; i < placement.length()/3; i++){
+            firstAlphabet.add(placement.charAt(3*i));
+        }
+
+        Map<Character,ArrayList<String>> newMap = new HashMap<>();
+        newMap.put('A',A);newMap.put('B',B);newMap.put('C',C);newMap.put('D',D);newMap.put('E',E);newMap.put('F',F);newMap.put('G',G);newMap.put('H',H);
+
+        Set<Character> key = newMap.keySet();
+
+        for (int i = 0; i < firstAlphabet.size(); i++){
+            key.remove(firstAlphabet.get(i));
+        }
+
+        ArrayList<Character> keyList = new ArrayList<>(key);
+
+        List<String[]> newList = new ArrayList<>();
+
+        for (int i = 0; i < keyList.size(); i++){
+            newMap.get(keyList.get(i));
+            String [] c = newMap.get(keyList.get(i)).toArray(new String[newMap.get(keyList.get(i)).size()]);
+            newList.add(c);
+        }
+
+        List<List<String>> firstOutcome = combineAlg(newList);
+
+        ArrayList<String> outcome = new ArrayList<>();
+
+        String a = "";
+        for (int i = 0; i < firstOutcome.size(); i++){
+            for (int j = 0; j < firstOutcome.get(i).size(); j++){
+                a+=firstOutcome.get(i).get(j);
+            }
+            if (isPlacementSequenceValid(a))
+                if (isPlacementSequenceValid(a+placement)){
+                    outcome.add(a+placement);
+                }
+            a = "";
+        }
+
+        return outcome;
+        /*ArrayList<String> outcome = new ArrayList<>();
+
+        if (key.size() == 0){
+            outcome.add(placement);
+            return outcome;
+        }else if (key.size() == 1){
+            for (int i = 0; i < newMap.get(keyList.get(0)).size(); i++){
+                if (isPlacementSequenceValid(newMap.get(keyList.get(0)).get(i))){
+                    if (isPlacementSequenceValid(newMap.get(keyList.get(0)).get(i) + placement))
+                        outcome.add(newMap.get(keyList.get(0)).get(i) + placement);
+                }
+            }
+            return outcome;
+        }else if (key.size() == 2){
+            for (int i = 0; i < newMap.get(keyList.get(0)).size(); i++){
+                for (int j = 0; j < newMap.get(keyList.get(1)).size(); j++){
+                    if (isPlacementSequenceValid(newMap.get(keyList.get(0)).get(i)+newMap.get(keyList.get(1)).get(j))){
+                        if (isPlacementSequenceValid(newMap.get(keyList.get(0)).get(i)+newMap.get(keyList.get(1)).get(j)+placement))
+                            outcome.add(newMap.get(keyList.get(0)).get(i)+newMap.get(keyList.get(1)).get(j)+placement);
+                    }
+                }
+            }
+            return outcome;
+        }else if (key.size() == 3){
+            for (int i = 0; i < newMap.get(keyList.get(0)).size(); i++){
+                for (int j = 0; j < newMap.get(keyList.get(1)).size(); j++){
+                    for (int m = 0; m < newMap.get(keyList.get(2)).size(); m++){
+                        if (isPlacementSequenceValid(newMap.get(keyList.get(0)).get(i)+newMap.get(keyList.get(1)).get(j)+newMap.get(keyList.get(2)).get(m)))
+                            if (isPlacementSequenceValid(newMap.get(keyList.get(0)).get(i)+newMap.get(keyList.get(1)).get(j)+newMap.get(keyList.get(2)).get(m)+placement))
+                            outcome.add(newMap.get(keyList.get(0)).get(i)+newMap.get(keyList.get(1)).get(j)+newMap.get(keyList.get(2)).get(m)+placement);
+                    }
+                }
+            }
+            return outcome;
+        }else if (key.size() == 4) {
+            for (int i = 0; i < newMap.get(keyList.get(0)).size(); i++) {
+                for (int j = 0; j < newMap.get(keyList.get(1)).size(); j++) {
+                    for (int m = 0; m < newMap.get(keyList.get(2)).size(); m++) {
+                        for (int n = 0; n < newMap.get(keyList.get(3)).size(); n++) {
+                            if (isPlacementSequenceValid(newMap.get(keyList.get(0)).get(i) + newMap.get(keyList.get(1)).get(j) + newMap.get(keyList.get(2)).get(m) + newMap.get(keyList.get(3)).get(n)))
+                                if (isPlacementSequenceValid(newMap.get(keyList.get(0)).get(i) + newMap.get(keyList.get(1)).get(j) + newMap.get(keyList.get(2)).get(m) + newMap.get(keyList.get(3)).get(n) + placement))
+                                outcome.add(newMap.get(keyList.get(0)).get(i) + newMap.get(keyList.get(1)).get(j) + newMap.get(keyList.get(2)).get(m) + newMap.get(keyList.get(3)).get(n) + placement);
+                        }
+                    }
+                }
+            }
+            return outcome;
+        }else if (key.size() == 5) {
+            for (int i = 0; i < newMap.get(keyList.get(0)).size(); i++) {
+                for (int j = 0; j < newMap.get(keyList.get(1)).size(); j++) {
+                    for (int m = 0; m < newMap.get(keyList.get(2)).size(); m++) {
+                        for (int n = 0; n < newMap.get(keyList.get(3)).size(); n++) {
+                            for (int a = 0; a < newMap.get(keyList.get(4)).size(); a++){
+                                if (isPlacementSequenceValid(newMap.get(keyList.get(0)).get(i) + newMap.get(keyList.get(1)).get(j) + newMap.get(keyList.get(2)).get(m) + newMap.get(keyList.get(3)).get(n)+newMap.get(keyList.get(4)).get(a)))
+                                    if (isPlacementSequenceValid(newMap.get(keyList.get(0)).get(i) + newMap.get(keyList.get(1)).get(j) + newMap.get(keyList.get(2)).get(m) + newMap.get(keyList.get(3)).get(n) + newMap.get(keyList.get(4)).get(a)+ placement))
+                                        outcome.add(newMap.get(keyList.get(0)).get(i) + newMap.get(keyList.get(1)).get(j) + newMap.get(keyList.get(2)).get(m) + newMap.get(keyList.get(3)).get(n) +newMap.get(keyList.get(4)).get(a)+ placement);
+                            }
+                        }
+                    }
+                }
+            }
+            return outcome;
+        }else {
+            return null;
+        }*/
+    }
+
+    public static List<List<String>> combineAlg(List<String[]> nArray) {
+        List<List<String>> values = new LinkedList<List<String>>();
+        int[] x = new int[nArray.size()];
+        for (int i = 0; i < x.length; i++) {
+            x[i] = 0;
+        }
+
+        int flag = 0;
+        do {
+            List<String> objs = new LinkedList<String>();
+            for (int looper = 0; looper < nArray.size(); looper++) {
+                objs.add(nArray.get(looper)[x[looper]]);
+            }
+            flag = NextPermutation(x, nArray);
+            values.add(objs);
+        } while (flag != 1);
+        return values;
+    }
+
+    public static int NextPermutation(int[] x, List<String[]> nArray) {
+        int carry = 0;
+        for (int looper = nArray.size() - 1; looper >= 0; looper--) {
+            if (x[looper] + 1 == nArray.get(looper).length) {
+                carry = 1;
+                x[looper] = 0;
+            } else {
+                x[looper] = x[looper] + 1;
+                carry = 0;
+                return 0;
+            }
+        }
+
+        if (carry == 1)
+            return 1;
+        else
+            return 0;
+    }
+
+    public static ArrayList<String> maskGenerator1(char first){
+        char[] ACDFGH1 = {'L', 'N', 'P', 'R', 'W', 'Y', 'b', 'd', 'g', 'i', 'k', 'm'};
+        char[] ACDFGH2 = {'M', 'O', 'Q', 'S', 'V', 'X', 'a', 'c', 'h', 'j', 'l', 'n'};
+        ArrayList<String> newArr = new ArrayList<>();
+        char[] second1 = {'A','B','C','D'};  char[] second2 = {'E','F','G','H'};
+        for (int i = 0; i < 4; i++){
+            for (int j = 0; j < ACDFGH1.length; j++){
+                newArr.add(String.valueOf(first)+String.valueOf(second1[i])+String.valueOf(ACDFGH1[j]));
+            }
+        }
+        for (int i = 0; i < 4; i++){
+            for (int j = 0; j < ACDFGH2.length; j++){
+                newArr.add(String.valueOf(first)+String.valueOf(second2[i])+String.valueOf(ACDFGH2[j]));
+            }
+        }
+        return newArr;
+    }
+
+    public static ArrayList<String> maskGenerator2(){
+        char[] BAEC = {'L', 'N', 'P', 'R', 'U', 'W', 'Y', 'b', 'd', 'g', 'i', 'k', 'm'}; char[] BCEA = {'L', 'N', 'P', 'R', 'T', 'W', 'Y', 'b', 'd', 'g', 'i', 'k', 'm', 'o'};
+        char[] BBED = {'C', 'E', 'G', 'I', 'L', 'N', 'P', 'R', 'W', 'Y', 'b', 'd', 'g', 'i', 'k', 'm'}; char[] BDEB = {'L', 'N', 'P', 'R', 'W', 'Y', 'b', 'd', 'g', 'i', 'k', 'm', 'r', 't', 'v', 'x'};
+        char[] BEEG = {'M', 'O', 'Q', 'S', 'V', 'X', 'a', 'c', 'e', 'h', 'j', 'l', 'n'}; char[] BGEE = {'K', 'M', 'O', 'Q', 'S', 'V', 'X', 'a', 'c', 'f', 'h', 'j', 'l', 'n'};
+        char[] BFEH = {'M', 'O', 'Q', 'S', 'V', 'X', 'a', 'c', 'h', 'j', 'l', 'n', 'q', 's', 'u', 'w'}; char[] BHEF = {'B', 'D', 'F', 'H', 'M', 'O', 'Q', 'S', 'V', 'X', 'a', 'c', 'h', 'j', 'l', 'n'};
+
+        ArrayList<String> newArr = new ArrayList<>();
+        for (int i = 0; i < BAEC.length; i++){newArr.add("BA"+BAEC[i]);} for (int i = 0; i < BBED.length; i++){newArr.add("BB"+BBED[i]);}
+        for (int i = 0; i < BEEG.length; i++){newArr.add("BE"+BEEG[i]);} for (int i = 0; i < BFEH.length; i++){newArr.add("BF"+BFEH[i]);}
+        for (int i = 0; i < BCEA.length; i++){newArr.add("BC"+BCEA[i]);} for (int i = 0; i < BDEB.length; i++){newArr.add("BD"+BDEB[i]);}
+        for (int i = 0; i < BGEE.length; i++){newArr.add("BG"+BGEE[i]);} for (int i = 0; i < BHEF.length; i++){newArr.add("BH"+BHEF[i]);}
+
+        return newArr;
+    }
+
+    public static ArrayList<String> maskGenerator3(){
+        char[] BAEC = {'L', 'N', 'P', 'R', 'U', 'W', 'Y', 'b', 'd', 'g', 'i', 'k', 'm'}; char[] BCEA = {'L', 'N', 'P', 'R', 'T', 'W', 'Y', 'b', 'd', 'g', 'i', 'k', 'm', 'o'};
+        char[] BBED = {'C', 'E', 'G', 'I', 'L', 'N', 'P', 'R', 'W', 'Y', 'b', 'd', 'g', 'i', 'k', 'm'}; char[] BDEB = {'L', 'N', 'P', 'R', 'W', 'Y', 'b', 'd', 'g', 'i', 'k', 'm', 'r', 't', 'v', 'x'};
+        char[] BEEG = {'M', 'O', 'Q', 'S', 'V', 'X', 'a', 'c', 'e', 'h', 'j', 'l', 'n'}; char[] BGEE = {'K', 'M', 'O', 'Q', 'S', 'V', 'X', 'a', 'c', 'f', 'h', 'j', 'l', 'n'};
+        char[] BFEH = {'M', 'O', 'Q', 'S', 'V', 'X', 'a', 'c', 'h', 'j', 'l', 'n', 'q', 's', 'u', 'w'}; char[] BHEF = {'B', 'D', 'F', 'H', 'M', 'O', 'Q', 'S', 'V', 'X', 'a', 'c', 'h', 'j', 'l', 'n'};
+
+        ArrayList<String> newArr = new ArrayList<>();
+        for (int i = 0; i < BAEC.length; i++){newArr.add("EC"+BAEC[i]);} for (int i = 0; i < BBED.length; i++){newArr.add("ED"+BBED[i]);}
+        for (int i = 0; i < BEEG.length; i++){newArr.add("EG"+BEEG[i]);} for (int i = 0; i < BFEH.length; i++){newArr.add("EH"+BFEH[i]);}
+        for (int i = 0; i < BCEA.length; i++){newArr.add("EA"+BCEA[i]);} for (int i = 0; i < BDEB.length; i++){newArr.add("EB"+BDEB[i]);}
+        for (int i = 0; i < BGEE.length; i++){newArr.add("EE"+BGEE[i]);} for (int i = 0; i < BHEF.length; i++){newArr.add("EF"+BHEF[i]);}
+
+        return newArr;
+    }
 
     /**
      * Attach all possible candidates to form a new String list
