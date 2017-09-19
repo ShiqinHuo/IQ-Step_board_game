@@ -545,7 +545,8 @@ public class StepsGame {
 
 
 
-    /** Given a Map of String as starter, find all possible order for the given objective
+    /**
+     * Given a Map of String as starter, find all possible order for the given objective
      * @param starter a Map (K:current placement, V:current candidates)
      * @return all possible orders in an array list
      */
@@ -870,25 +871,6 @@ public class StepsGame {
         for (int i = 0; i < BGEE.length; i++){newArr.add("EE"+BGEE[i]);} for (int i = 0; i < BHEF.length; i++){newArr.add("EF"+BHEF[i]);}
 
         return newArr;
-    }
-
-    /**
-     * Attach all possible candidates to form a new String list
-     * @param placement A valid piece placement string.
-     * @return An array of strings, each is added a piece in valid position
-     */
-    private static String addValidPiece(String placement){
-        return null;
-    }
-
-
-    /**
-     * To check whether all the pieces are used
-     * @param placement A valid piece placement string.
-     * @return true if the length is 24
-     */
-    private static boolean isEnd(String placement){
-        return true;
     }
 
 
