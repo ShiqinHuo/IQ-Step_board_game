@@ -1,7 +1,7 @@
 package comp1110.ass2;
 
 
-import comp1110.ass2.gui.Alphabet;
+import comp1110.ass2.Alphabet;
 
 import java.util.*;
 
