@@ -1,6 +1,5 @@
 package comp1110.ass2;
 
-
 import comp1110.ass2.Alphabet;
 
 import java.util.*;
@@ -201,7 +200,7 @@ public class Pieces {
      * @param m given matrix
      * @return a transposed matrix
      */
-    private static int[][] transpose(int[][] m) {
+    static int[][] transpose(int[][] m) {
 
         int[][] transpose = new int[3][3];
 
