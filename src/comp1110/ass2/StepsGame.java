@@ -1,6 +1,5 @@
 package comp1110.ass2;
 
-import comp1110.ass2.gui.Pieces;
 
 import java.util.*;
 
