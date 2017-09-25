@@ -14,11 +14,12 @@ public class isPegTest {
     @Rule
     public Timeout globalTimeout = Timeout.millis(2000);
 
-    boolean ispeg = false;
+    boolean ispeg = false; // flag boolean
 
     private static int[] pegset = {0, 2, 4, 6, 8, 11, 13, 15, 17, 19, 20, 22, 24,
-            26, 28, 31, 33, 35, 37, 39, 40, 42, 44, 46, 48};
+            26, 28, 31, 33, 35, 37, 39, 40, 42, 44, 46, 48}; // correct position
 
+//test 3 examples of peg positions
     @Test
     public void testGoodPeg(){
         int pos1 = 0;
@@ -28,6 +29,8 @@ public class isPegTest {
         assertTrue("testGoodPeg2",isPeg(pos2));
         assertTrue("testGoodPeg3",isPeg(pos3));
     }
+
+//test 3 examples of NOT peg positions
     @Test
     public void testBadPeg(){
         int pos1 = 5;
@@ -37,6 +40,9 @@ public class isPegTest {
         assertFalse("testBadPeg2",isPeg(pos2));
         assertFalse("testBadPeg3",isPeg(pos3));
     }
+//test position of random integer (from 0 to 49)
+
+//used an idea from a stackoverflow-question:
 //https://stackoverflow.com/questions/363681/how-do-i-generate-random-integers-within-a-specific-range-in-java
     int randomNum = 0 + (int)(Math.random() * 49);
     @Test
@@ -45,11 +51,11 @@ public class isPegTest {
             if (randomNum == pegset[j])
             {
                 ispeg = true;
-                //System.out.println("index"+j);
+                System.out.println("The index in the pegset is" + j);
                 break;}
         }
-        //System.out.println(randomNum);
-        //System.out.println(ispeg);
+        System.out.println("The random number is" + randomNum);
+        System.out.println("Whether the pos is peg:" + ispeg);
         assertTrue(ispeg==isPeg(randomNum));
         }
 

@@ -10,11 +10,16 @@ import javafx.embed.swing.JFXPanel;
 import javafx.stage.Stage;
 import org.junit.Test;
 public class MenuAppTest {
+//I searched online: how to write JUnit test for JavaFx part
+//and I found a method to use TestFx API which is quite complicated since it's an external library
+
+//For the basic runnable test:
+//I borrowed the idea in a stackoverflow-question below:
 //https://stackoverflow.com/questions/18429422/basic-junit-test-for-javafx-8
+//which gives to the code below:
     @Test
     public void No_Interrupt() throws InterruptedException {
         Thread thread = new Thread(new Runnable() {
-
             @Override
             public void run() {
                 new JFXPanel(); // Initializes the JavaFx Platform
