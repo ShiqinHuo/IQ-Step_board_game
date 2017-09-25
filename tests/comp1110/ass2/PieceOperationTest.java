@@ -2,12 +2,12 @@ package comp1110.ass2;
 
 /**
  * Created by DoubleHUO on 25/9/17.
+ * testReverse & testRotate (created by Wenjun Yang on 25/9/17.)
  */
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -33,6 +33,24 @@ public class PieceOperationTest {
         assertTrue("testFirstRow",result[0][0] == 1 && result[0][1] == 4 && result[0][2] == 7);
         assertTrue("testSecondRow",result[1][0] == 2 && result[1][1] == 5 && result[1][2] == 8);
         assertTrue("testThirdRow",result[2][0] == 3 && result[2][1] == 6 && result[2][2] == 9);
+    }
+
+    @Test
+    public void testRotate(){
+        int[][] test1 = {{1,2,3},{4,5,6},{7,8,9}};
+        int[][] result = StepsGame.rotate(test1);
+        assertTrue("testFirstRow",result[0][0] == 7 && result[0][2] == 1 && result[0][1] == 4);
+        assertTrue("testSecondRow",result[2][2] == 3 && result[2][0] == 9 && result[2][1] == 6);
+        assertTrue("testThirdRow",result[1][0] == 8 && result[1][1] == 5 && result[1][2] == 2);
+    }
+
+    @Test
+    public void testReverse(){
+        int[][] test2 = {{1,2,3},{4,5,6},{7,8,9}};
+        int[][] result = StepsGame.reverse(test2);
+        assertTrue("testFirstRow",result[0][0] == 3 && result[0][2] == 1 && result[0][1] == 2);
+        assertTrue("testSecondRow",result[2][2] == 7 && result[2][0] == 9 && result[2][1] == 8);
+        assertTrue("testThirdRow",result[1][0] == 6 && result[1][1] == 5 && result[1][2] == 4);
     }
 
     @Test
