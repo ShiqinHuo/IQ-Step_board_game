@@ -50,20 +50,21 @@ public class TaskSixHelpersTest {
 
         for (int i = 0; i < 8 ; i++) {
             String placement = objective.substring(0,i*3);
-            assertTrue("test empty placement", StepsGame.getCandidates(placement,objective).containsAll(pss.subList(i+1,8)));
+            assertTrue("test non-empty placement", StepsGame.getCandidates(placement,objective).containsAll(pss.subList(i+1,8)));
         }
 
     }
 
 
+    @Test
+    public void testNotObstruct(){
+
+    }
 
     @Test
     public void testValidOrders(){
 
     }
 
-    @Test
-    public void testNotObstruct(){
 
-    }
 }
