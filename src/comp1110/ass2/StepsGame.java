@@ -1,7 +1,5 @@
 package comp1110.ass2;
 
-import comp1110.ass2.Pieces;
-
 import java.util.*;
 
 /**
@@ -120,7 +118,7 @@ public class StepsGame {
      * @param placement A placement sequence string
      * @return True if the placement sequence is valid
      */
-    static boolean isPlacementSequenceValid(String placement) {
+    public static boolean isPlacementSequenceValid(String placement) {
         if (!isPlacementWellFormed(placement)){
             return false;
         }else{
@@ -642,11 +640,10 @@ public class StepsGame {
      * one placement sequence, however, only a single (unordered) solution should
      * be returned for each such case.
      *
-     * @param placement  A valid piece placement string.
      * @return An array of strings, each describing a unique unordered solution to
      * the game given the starting point provided by placement.
      */
-    static String[] getSolutions(String placement) {
+    public static String[] getSolutions() {
         // FIXME Task 9: determine all solutions to the game, given a particular starting placement
         return null;
     }
