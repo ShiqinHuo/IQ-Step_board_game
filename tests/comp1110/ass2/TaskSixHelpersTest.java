@@ -4,7 +4,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
 
-import java.util.ArrayList;
+import java.util.*;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -16,8 +16,6 @@ public class TaskSixHelpersTest {
 
     @Rule
     public Timeout globalTimeout = Timeout.millis(1000);
-
-
 
 
 
@@ -59,10 +57,27 @@ public class TaskSixHelpersTest {
     @Test
     public void testNotObstruct(){
 
+        assertFalse("Obstruct next piece "+"FDN"+" passed",StepsGame.notObstruct("GBL","FDN"));
+        assertTrue("Not obstruct example: ",StepsGame.notObstruct("EEfCHSAHQFDNGBLDAiHFl","BDx"));
     }
 
     @Test
     public void testValidOrders(){
+        String key = "BGKFCNCFl";
+        ArrayList<String> cands = new ArrayList<>();
+        cands.add("AFn");cands.add("HHS");cands.add("GAi");cands.add("ECP");cands.add("DBg");
+        Map<String,ArrayList<String>> starter = new HashMap<>();
+        starter.put(key,cands);
+
+        Set<String> orders = StepsGame.validOrders(starter);
+
+        assertTrue(orders.contains("BGKFCNCFlGAiAFnHHSDBgECP"));
+        assertTrue(orders.contains("BGKFCNCFlGAiAFnDBgHHSECP"));
+        assertTrue(orders.contains("BGKFCNCFlGAiDBgAFnHHSECP"));
+
+        assertFalse(orders.contains(""));
+        assertFalse(orders.contains("ECPBGKFCNCFlGAiDBgAFnHHS"));
+        assertFalse(orders.contains("ECPBGKFCNCFlDBgAFnHHSGAi"));
 
     }
 
