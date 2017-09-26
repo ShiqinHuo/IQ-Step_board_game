@@ -550,7 +550,7 @@ public class StepsGame {
      * @param starter a Map (K:current placement, V:current candidates)
      * @return all possible orders in an array list
      */
-    private static Set<String> validOrders( Map<String, ArrayList<String>> starter){
+     static Set<String> validOrders( Map<String, ArrayList<String>> starter){
 
         /*Termination condition*/
         if(noCandidates(starter)) return starter.keySet();
@@ -605,7 +605,7 @@ public class StepsGame {
      * @param next The next 3 length String who is trying to put on the board
      * @return true if the next piece (which is going to put in) does not obstruct the current pieces
      */
-    private static boolean notObstruct(String placement, String next){
+     static boolean notObstruct(String placement, String next){
         ArrayList<String> shapes = new ArrayList<>();
         for (int i = 0; i < placement.length()/3 ; i++) {
             shapes.add(placement.substring(i * 3, i * 3 + 3));

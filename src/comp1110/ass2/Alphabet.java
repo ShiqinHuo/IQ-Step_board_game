@@ -1,6 +1,11 @@
 package comp1110.ass2;
 
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * Created by luoxi on 31/08/2017.
  */
@@ -28,4 +33,7 @@ public enum Alphabet {
         else if(pos < 40) return pos % 2 == 1;
         else return pos % 2 == 0;
     }
+
 }
+
+
