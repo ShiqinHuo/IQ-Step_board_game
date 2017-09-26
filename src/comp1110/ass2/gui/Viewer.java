@@ -43,20 +43,11 @@ public class Viewer extends Application {
     private final Group pieces = new Group();
     private final Group controls = new Group();
     private final Group newPiece = new Group();
-    private final Group pegs = new Group();
+    private static final Group pegs = new Group();
 
     TextField textField;
 
-    /* message on completion */
-    private final Text completionText = new Text("Well done!");
 
-    private static final String[] Pieceset = {"AA","AE","BA","BE","CA","CE","DA","DE","EA","EE","FA","FE","GA","GE","HA","HE"};
-
-    private static final String[] Pieceset_up = {"AA","AE","BA","BE","CA","CE","DA","DE"};
-
-    private static final String[] Pieceset_left = {"EA","EE","FA","FE"};
-
-    private static final String[] Pieceset_right = {"GA","GE","HA","HE"};
 
     /**
      * Draw a placement in the window, removing any previously drawn one
@@ -119,139 +110,54 @@ public class Viewer extends Application {
         root.getChildren().add(Piece);
     }
 
-    /**
-     * Put all of the masks back in their home position
-     */
-    private void resetPieces(String placement) {
-        for(int i=0;1<16;i++){
-            newPiece.getChildren().add(new NewPiece(Pieceset[i],placement));
-        }
-    }
-
-
-    class Picture extends ImageView{
-        String piece;
-        Picture(String piece){
-            for(int i=0;1<16;i++){
-                if (Pieceset[i] == piece){
-                    setImage(new Image(Viewer.class.getResource(URI_BASE+piece+".png").toString()));
-                    this.piece = piece;
-                    setFitHeight(SQUARE_SIZE);
-                    setFitWidth(SQUARE_SIZE);
-                    break;}
-            }
-        }
-    }
-
-
-    private static final Map<String,Integer> piecemap;
-    static {
-        piecemap = new HashMap<String,Integer>();
-        piecemap.put("AA",50);    //    x  y= 150
-        piecemap.put("AE",160);
-        piecemap.put("BA",240);
-        piecemap.put("BE",360);
-        piecemap.put("CA",460);
-        piecemap.put("CE",550);
-        piecemap.put("DA",640);  // x 160 y == 135
-        piecemap.put("DE",760);  // x 160 y == 215
-        piecemap.put("EA",135); ////   y   x= 100
-        piecemap.put("EE",220);
-        piecemap.put("FA",280);
-        piecemap.put("FE",350);
-        piecemap.put("GA",130); // y 330 x 230
-        piecemap.put("GE",210); // y 330 x 430
-        piecemap.put("HA",135);
-        piecemap.put("HE",270);
-    }
-
-
-
-    class NewPiece extends Picture{
-        double homeX;
-        double homeY;
-        NewPiece(String piece,String placement){
-            super(piece);
-            if (piece=="DE"||piece=="DA"){
-                homeX = 160;
-                if (piece=="DA") {homeY = 125;}
-                else homeY= 225;
-            }
-            else if (piece=="GA" || piece == "GE") {
-                homeY=330;
-                if (piece=="GA") {homeX =230;}
-                else homeX= 430;
-            }
-            else if (Arrays.asList(Pieceset_up).contains(piece)){
-                homeX = piecemap.get(piece);
-                homeY = 20;}
-            else if  (Arrays.asList(Pieceset_left).contains(piece)){
-                homeY = piecemap.get(piece);
-                homeX = 60;
-            }
-            else if  (Arrays.asList(Pieceset_right).contains(piece)){
-                homeX = 560;
-                homeY = piecemap.get(piece);
-            }
-            setLayoutX(homeX-30);
-            setLayoutY(homeY );
-            if (piece=="FA" || piece=="GA"||piece=="CE"||piece=="DA")
-                setRotate(45);
-            if (piece=="FE" || piece== "GE"||piece=="CA"||piece=="DE")
-                setRotate(-45);
-            if (piece=="EA")
-                setRotate(90);
-            if (piece=="EE")
-                setRotate(-90);
-            setFitHeight(100);
-            setFitWidth(100);
-        }
-    }
 
     /**
      * Construct a particular peg at a particular place
      */
-    class Onepeg extends Circle {
+    public static class Onepeg extends Circle {
         double x,y;
         String num;
         Onepeg(int num){
-            setRadius(10);
+            setRadius(12);
             if(num<=5) {
-                setCenterX(250 + (num-1)* 60);    // 250 .. 20
-                x = 250 + (num-1) * 60;   //      33
-                setCenterY(200);
-                y = 200;
+                setCenterX(250 + (num-1)* 54 + 80);    // 250 .. 20
+                x = 250 + (num-1) * 54 + 80;   //      33
+                setCenterY(200+ 50);
+                y = 200+ 50;
             }
             else if(num<=10){
-                setCenterX(280+(num-6)* 60);
-                x = 280+(num-6)* 60;                   // 250 + 60
-                setCenterY(200+30);
-                y = 200+30;
+                setCenterX(280+(num-6)* 54 + 80);
+                x = 277+(num-6)* 54 + 80;                   // 250 + 60
+                setCenterY(200+27+ 50);
+                y = 200+27+ 50;
             }
             else if(num<=15) {
-                setCenterX(250 + (num - 11) * 60);
-                x =250 + (num - 11) * 60;
-                setCenterY(200+30*2);
-                y =200+30*2;
+                setCenterX(250 + (num - 11) * 54 + 80);
+                x =250 + (num - 11) * 54 + 80;
+                setCenterY(200+27*2+ 50);
+                y =200+27*2+ 50;
             }
             else if(num<=20) {
-                setCenterX(280 + (num-16) * 60);
-                x = 280+(num-16)*60;
-                setCenterY(200+30*3);
-                y =200+30*3;
+                setCenterX(280 + (num-16) * 54 + 80);
+                x = 277+(num-16)*54 + 80;
+                setCenterY(200+27*3+ 50);
+                y =200+27*3+ 50;
             }
             else if(num<=25) {
-                setCenterX(250 + (num-21)*60);
-                x = 250 + (num-21) * 60;
-                setCenterY(200+30*4);
-                y =200+30*4;
+                setCenterX(250 + (num-21)*54+ 80);
+                x = 250 + (num-21) * 54+ 80;
+                setCenterY(200+27*4+ 50);
+                y =200+27*4+ 50;
             }
             setStroke(Color.gray(0.6));
             setFill(Color.gray(0.6));
         }
+        double distance(double x, double y) {
+            return Math.sqrt((x + 150 - getCenterX()) * (x + 150 - getCenterX()) + (y + 150 - getCenterY()) * (y + 150 - getCenterY()));
+        }
     }
 
-    private void makePegs() {
+    public static void makePegs() {
         pegs.getChildren().clear();
         for(int i = 1;i<=25;i++){
             pegs.getChildren().add(new Onepeg(i));
