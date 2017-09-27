@@ -643,7 +643,7 @@ public class StepsGame {
      * @return An array of strings, each describing a unique unordered solution to
      * the game given the starting point provided by placement.
      */
-    public static String[] getSolutions() {
+    public static String[] getSolutions(String placement) {
         // FIXME Task 9: determine all solutions to the game, given a particular starting placement
         return null;
     }
@@ -664,12 +664,21 @@ public class StepsGame {
         //boolean a = notObstruct("AALBBGCAkDBgEAoFDNGHS","HCi");
         //System.out.println(a);
 
-        for (String m : possibleSolutions("AALBBGCAk")){
+        for (String m : possibleSolutions("CEQEHuGEOBDxFGS")){
             System.out.println(m);
         }
+
+        /*Map<String,ArrayList<String>> newMap = new HashMap<>();
+        ArrayList<String> newArr1 = new ArrayList<>();
+        newArr1.add("AAL"); newArr1.add("DBg"); newArr1.add("HCi");
+        newMap.put("CEQEHuGEOBDxFGS",newArr1);
+        Set<String> orders = validOrders(newMap);
+        for (String a : orders){
+            System.out.println(a);
+        }*/
     }
 
-    public static ArrayList<String> possibleSolutions(String placement){
+    public static Set<String> possibleSolutions(String placement){
         ArrayList<String> A = maskGenerator1('A'); ArrayList<String> B = maskGenerator2();
         ArrayList<String> C = maskGenerator1('C'); ArrayList<String> D = maskGenerator1('D');
         ArrayList<String> E = maskGenerator3(); ArrayList<String> F = maskGenerator1('F');
@@ -692,9 +701,9 @@ public class StepsGame {
 
         ArrayList<Character> keyList = new ArrayList<>(key);
 
-        List<String[]> newList = new ArrayList<>();
+        //List<String[]> newList = new ArrayList<>();
 
-        for (int i = 0; i < keyList.size(); i++){
+        /*for (int i = 0; i < keyList.size(); i++){
             newMap.get(keyList.get(i));
             String [] c = newMap.get(keyList.get(i)).toArray(new String[newMap.get(keyList.get(i)).size()]);
             newList.add(c);
@@ -716,41 +725,57 @@ public class StepsGame {
             a = "";
         }
 
-        return outcome;
-        /*ArrayList<String> outcome = new ArrayList<>();
-
+        return outcome;*/
+        ArrayList<String> outcome = new ArrayList<>();
+        Set<String> orders = new HashSet<>();
         if (key.size() == 0){
-            outcome.add(placement);
-            return outcome;
+            orders.add(placement);
+            return orders;
         }else if (key.size() == 1){
             for (int i = 0; i < newMap.get(keyList.get(0)).size(); i++){
                 if (isPlacementSequenceValid(newMap.get(keyList.get(0)).get(i))){
-                    if (isPlacementSequenceValid(newMap.get(keyList.get(0)).get(i) + placement))
-                        outcome.add(newMap.get(keyList.get(0)).get(i) + placement);
+                    if (isPlacementSequenceValid(newMap.get(keyList.get(0)).get(i) + placement)){
+                        Map<String,ArrayList<String>> newap = new HashMap<>();
+                        ArrayList<String> k = new ArrayList<>();
+                        k.add(newMap.get(keyList.get(0)).get(i));
+                        newap.put(placement,k);
+                        orders = validOrders(newap);
+                    }
                 }
             }
-            return outcome;
+            return orders;
         }else if (key.size() == 2){
             for (int i = 0; i < newMap.get(keyList.get(0)).size(); i++){
                 for (int j = 0; j < newMap.get(keyList.get(1)).size(); j++){
                     if (isPlacementSequenceValid(newMap.get(keyList.get(0)).get(i)+newMap.get(keyList.get(1)).get(j))){
-                        if (isPlacementSequenceValid(newMap.get(keyList.get(0)).get(i)+newMap.get(keyList.get(1)).get(j)+placement))
-                            outcome.add(newMap.get(keyList.get(0)).get(i)+newMap.get(keyList.get(1)).get(j)+placement);
+                        if (isPlacementSequenceValid(newMap.get(keyList.get(0)).get(i)+newMap.get(keyList.get(1)).get(j)+placement)){
+                            Map<String,ArrayList<String>> newap = new HashMap<>();
+                            ArrayList<String> k = new ArrayList<>();
+                            k.add(newMap.get(keyList.get(0)).get(i));k.add(newMap.get(keyList.get(1)).get(j));
+                            newap.put(placement,k);
+                            orders = validOrders(newap);
+                        }
                     }
                 }
             }
-            return outcome;
+            return orders;
         }else if (key.size() == 3){
             for (int i = 0; i < newMap.get(keyList.get(0)).size(); i++){
                 for (int j = 0; j < newMap.get(keyList.get(1)).size(); j++){
                     for (int m = 0; m < newMap.get(keyList.get(2)).size(); m++){
-                        if (isPlacementSequenceValid(newMap.get(keyList.get(0)).get(i)+newMap.get(keyList.get(1)).get(j)+newMap.get(keyList.get(2)).get(m)))
-                            if (isPlacementSequenceValid(newMap.get(keyList.get(0)).get(i)+newMap.get(keyList.get(1)).get(j)+newMap.get(keyList.get(2)).get(m)+placement))
-                            outcome.add(newMap.get(keyList.get(0)).get(i)+newMap.get(keyList.get(1)).get(j)+newMap.get(keyList.get(2)).get(m)+placement);
+                        if (isPlacementSequenceValid(newMap.get(keyList.get(0)).get(i)+newMap.get(keyList.get(1)).get(j)+newMap.get(keyList.get(2)).get(m))){
+                            if (isPlacementSequenceValid(newMap.get(keyList.get(0)).get(i)+newMap.get(keyList.get(1)).get(j)+newMap.get(keyList.get(2)).get(m)+placement)){
+                                Map<String,ArrayList<String>> newap = new HashMap<>();
+                                ArrayList<String> k = new ArrayList<>();
+                                k.add(newMap.get(keyList.get(0)).get(i));k.add(newMap.get(keyList.get(1)).get(j));k.add(newMap.get(keyList.get(2)).get(m));
+                                newap.put(placement,k);
+                                orders = validOrders(newap);
+                            }
+                        }
                     }
                 }
             }
-            return outcome;
+            return orders;
         }else if (key.size() == 4) {
             for (int i = 0; i < newMap.get(keyList.get(0)).size(); i++) {
                 for (int j = 0; j < newMap.get(keyList.get(1)).size(); j++) {
@@ -763,7 +788,7 @@ public class StepsGame {
                     }
                 }
             }
-            return outcome;
+            return orders;
         }else if (key.size() == 5) {
             for (int i = 0; i < newMap.get(keyList.get(0)).size(); i++) {
                 for (int j = 0; j < newMap.get(keyList.get(1)).size(); j++) {
@@ -778,10 +803,10 @@ public class StepsGame {
                     }
                 }
             }
-            return outcome;
+            return orders;
         }else {
             return null;
-        }*/
+        }
     }
 
     public static List<List<String>> combineAlg(List<String[]> nArray) {
