@@ -12,14 +12,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * A very simple viewer for piece placements in the steps game.
@@ -116,7 +110,7 @@ public class Viewer extends Application {
      */
     public static class Onepeg extends Circle {
         double x,y;
-        String num;
+        //String peg;
         Onepeg(int num){
             setRadius(12);
             if(num<=5) {
@@ -126,7 +120,7 @@ public class Viewer extends Application {
                 y = 200+ 50;
             }
             else if(num<=10){
-                setCenterX(280+(num-6)* 54 + 80);
+                setCenterX(277+(num-6)* 54 + 80);
                 x = 277+(num-6)* 54 + 80;                   // 250 + 60
                 setCenterY(200+27+ 50);
                 y = 200+27+ 50;
@@ -138,7 +132,7 @@ public class Viewer extends Application {
                 y =200+27*2+ 50;
             }
             else if(num<=20) {
-                setCenterX(280 + (num-16) * 54 + 80);
+                setCenterX(277 + (num-16) * 54 + 80);
                 x = 277+(num-16)*54 + 80;
                 setCenterY(200+27*3+ 50);
                 y =200+27*3+ 50;
