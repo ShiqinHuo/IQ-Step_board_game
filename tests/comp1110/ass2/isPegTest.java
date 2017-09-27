@@ -3,9 +3,11 @@ package comp1110.ass2;
 /**
  * Created by DoubleHUO on 25/9/17.
  */
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
+
 import static comp1110.ass2.Alphabet.isPeg;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -44,7 +46,7 @@ public class isPegTest {
 
 //used an idea from a stackoverflow-question:
 //https://stackoverflow.com/questions/363681/how-do-i-generate-random-integers-within-a-specific-range-in-java
-    int randomNum = 0 + (int)(Math.random() * 49);
+    int randomNum = (int) (Math.random() * 49);
     @Test
     public void testRandomPos() {
         for (int j = 0; j<pegset.length;j++){
