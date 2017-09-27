@@ -643,7 +643,7 @@ public class StepsGame {
      * @return An array of strings, each describing a unique unordered solution to
      * the game given the starting point provided by placement.
      */
-    public static String[] getSolutions() {
+    public static String[] getSolutions(String placement) {
         // FIXME Task 9: determine all solutions to the game, given a particular starting placement
         return null;
     }
