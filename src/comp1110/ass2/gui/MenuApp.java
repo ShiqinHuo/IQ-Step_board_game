@@ -19,7 +19,6 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.util.Pair;
 
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -31,10 +30,10 @@ public class MenuApp extends Application {
     private static final int HEIGHT = 700;
 
     private List<Pair<String,Runnable>> menuData = Arrays.asList(
-            new Pair<String,Runnable>("Start",()->{}),
+            new Pair<String,Runnable>("Start",new Board()),
             new Pair<String,Runnable>("Difficulty",()->{}),
             new Pair<String,Runnable>("Reload",()->{}),
-            new Pair<String,Runnable>("Information",()->{}),
+            new Pair<String,Runnable>("Information",new Info()),
             new Pair<String,Runnable>("Exit to Desktop", Platform::exit)
     );//https://docs.oracle.com/javase/8/javafx/api/javafx/application/Platform.html
 
@@ -46,15 +45,11 @@ public class MenuApp extends Application {
     private Parent createContent() {
         addBackground();
         addTitle();
-
         double lineX = WIDTH / 2 - 100;//WIDTH / 2 - 100;
         double lineY = HEIGHT / 3 + 120;//HEIGHT / 3 + 50;
-
         addLine(lineX, lineY);
         addMenu(lineX + 5, lineY );
-
         startAnimation();
-
         return root;
     }
 
@@ -62,9 +57,9 @@ public class MenuApp extends Application {
         ImageView imageView = new ImageView(new Image(getClass().getResource("res/iqsteps.png").toExternalForm()));
         imageView.setFitWidth(WIDTH);
         imageView.setFitHeight(HEIGHT);
-
         root.getChildren().add(imageView);
     }
+
     private void addTitle() {
         Title title = new Title("IQ - STEPS");
         title.setTranslateX(WIDTH / 2 - title.getTitleWidth() / 2);

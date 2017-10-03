@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="comp1110-ass2-dev:jar">
+    <output-path>$PROJECT_DIR$/</output-path>
+    <root id="archive" name="game.jar">
+      <element id="module-output" name="comp1110-ass2-dev" />
+    </root>
+  </artifact>
+</component>
