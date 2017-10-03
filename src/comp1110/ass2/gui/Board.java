@@ -30,7 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public  class Board extends Application {
+public class Board extends Application implements Runnable  {
     private static final int BOARD_WIDTH = 933;
     private static final int BOARD_HEIGHT = 700;
     private static final int SQUARE_SIZE = 60;
@@ -74,6 +74,14 @@ public  class Board extends Application {
     private double useTime = 0;
     private BigDecimal UseTime;
 
+    @Override
+    public void run() {
+        try {
+            new Board().start(new Stage());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 
     class Picture extends ImageView{
@@ -90,7 +98,9 @@ public  class Board extends Application {
         }
     }
     private void addBackground(){
-        ImageView imageView = new ImageView(new Image(getClass().getResource("res/pinkblue.jpg").toExternalForm()));
+        ImageView imageView = new ImageView(new Image(getClass().getResource("res/Colourful.jpg").toExternalForm()));
+        //ImageView imageView = new ImageView(new Image(getClass().getResource("res/pinkblue.jpg").toExternalForm()));
+        //ImageView imageView = new ImageView(new Image(getClass().getResource("res/pinkpurple.jpg").toExternalForm()));
         imageView.setFitWidth(BOARD_WIDTH);
         imageView.setFitHeight(BOARD_HEIGHT);
 
@@ -146,7 +156,7 @@ public  class Board extends Application {
                         //hideSkulls();
                         checkMove();}
                 }
-                    });
+            });
 
             setOnMousePressed(event -> {
                 hideCompletion();
