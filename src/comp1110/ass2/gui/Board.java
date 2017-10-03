@@ -49,8 +49,6 @@ public  class Board extends Application {
 
     private static final String[] Pieceset = {"AA","AE","BA","BE","CA","CE","DA","DE","EA","EE","FA","FE","GA","GE","HA","HE"};
 
-    private static final String[] Pieceset_up = {"AA","AE","BA","BE","CA","CE","DA","DE"};
-
     private static final String[] Pieceset_left = {"AA","BA","CA","DA","EA","FA","GA","HA"};
 
     private static final String[] Pieceset_right = {"AE","BE","CE","DE","EE","FE","GE","HE"};
@@ -202,15 +200,16 @@ public  class Board extends Application {
         /** Whether the piece is beyond the pegs.
         * */  // --FixMe: Coordinates should be fixed
         private boolean isOnBoard ( double x, double y){
-            if (y < 30 || y > 374 || x < 151.5 || x > 781.5) {
+            if (y < 238 + 100 || y > 370 +100 || x < 318 + 114 || x > 558 + 114) {
                 return false;}
-            else if ((y >= 30 && y <= 116) || (y >= 202 && y <= 288)) {
+            else
+                return true;
+/*            else if ((y >= 30 && y <= 116) || (y >= 202 && y <= 288)) {
                 if (x < 141.5 && x > 741.5) {return false;}
             }
             else if (y > 30 || y < 374) {
                 if (x < 200.5 && x > 791.5) {return false;}
-                else {return true;}}
-                return true;
+                else {return true;}}*/
         }
 
         /** Check whether there are wrong connections between pieces.
