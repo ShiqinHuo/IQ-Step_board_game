@@ -33,7 +33,7 @@ public class MenuApp extends Application {
             new Pair<String,Runnable>("Start",new Board()),
             new Pair<String,Runnable>("Difficulty",()->{}),
             new Pair<String,Runnable>("Reload",()->{}),
-            new Pair<String,Runnable>("Information",()->{}),
+            new Pair<String,Runnable>("Information",new Info()),
             new Pair<String,Runnable>("Exit to Desktop", Platform::exit)
     );//https://docs.oracle.com/javase/8/javafx/api/javafx/application/Platform.html
 
