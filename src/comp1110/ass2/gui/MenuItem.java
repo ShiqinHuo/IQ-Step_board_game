@@ -47,8 +47,8 @@ public class MenuItem extends Pane{
         text.setFill(Color.WHITE);
         text.effectProperty().bind(
                 Bindings.when(hoverProperty())
-                        .then(shadow)
-                        .otherwise(blur)
+                        .then(blur)
+                        .otherwise(shadow)
         );//https://stackoverflow.com/questions/31572889/conditional-binding
         getChildren().addAll(bg, text);
     }
