@@ -647,6 +647,19 @@ public class StepsGame {
         // FIXME Task 9: determine all solutions to the game, given a particular starting placement
         return null;
     }
+    
+    public static PartialSolution solve(String placement, PartialSolution sol){
+        int exam = sol.examine();
+        if (exam == PartialSolution.ACCEPT){
+            return sol;
+        }else if (exam == PartialSolution.CONTINUE){
+            for (PartialSolution p : sol.extend()){
+                solve(placement,p);
+            }
+        }
+        return null;
+    }
+
 
     public static void main(String[] args) {
         Set<String> newSet = new HashSet<>();
@@ -667,15 +680,6 @@ public class StepsGame {
         for (String m : possibleSolutions("CEQEHuGEOBDxFGS")){
             System.out.println(m);
         }
-
-        /*Map<String,ArrayList<String>> newMap = new HashMap<>();
-        ArrayList<String> newArr1 = new ArrayList<>();
-        newArr1.add("AAL"); newArr1.add("DBg"); newArr1.add("HCi");
-        newMap.put("CEQEHuGEOBDxFGS",newArr1);
-        Set<String> orders = validOrders(newMap);
-        for (String a : orders){
-            System.out.println(a);
-        }*/
     }
 
     public static Set<String> possibleSolutions(String placement){

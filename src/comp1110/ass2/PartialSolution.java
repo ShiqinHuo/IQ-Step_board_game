@@ -60,6 +60,19 @@ public class PartialSolution {
     }
 
     public PartialSolution[] extend(){
-        return null;
+        PartialSolution[] result = new PartialSolution[NMASKS];
+        for (int i = 0; i < result.length; i++){
+
+            int size = solutions.length;
+
+            result[i] = new PartialSolution(size+1);
+
+            for (int j = 0; j < size; j++){
+                result[i].solutions[size] = solutions[j];
+            }
+
+            //result[i].solutions[size]
+        }
+        return result;
     }
 }
