@@ -58,6 +58,9 @@ public class TaskSixHelpersTest {
     public void testNotObstruct(){
 
         assertFalse("Obstruct next piece "+"FDN"+" passed",StepsGame.notObstruct("GBL","FDN"));
+        assertTrue(StepsGame.notObstruct("","FDN"));
+        assertTrue(StepsGame.notObstruct("","EEf"));
+
         assertTrue("Not obstruct example: ",StepsGame.notObstruct("EEfCHSAHQFDNGBLDAiHFl","BDx"));
     }
 
