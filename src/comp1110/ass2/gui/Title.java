@@ -4,8 +4,8 @@ package comp1110.ass2.gui;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 /**
  * Created by DoubleHUO on 8/9/17.
@@ -29,7 +29,4 @@ public class Title extends Pane{
         return text.getLayoutBounds().getWidth();
     }
 
-    public double getTitleHeight(){
-        return text.getLayoutBounds().getHeight();
-    }
 }
