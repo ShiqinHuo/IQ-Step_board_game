@@ -120,8 +120,8 @@ public class Info extends Application implements Runnable {
 
     private void addBackground(){
         //ImageView imageView = new ImageView(new Image(getClass().getResource("res/pinkblue.jpg").toExternalForm()));
-        ImageView imageView = new ImageView(new Image(getClass().getResource("res/Colourful.jpg").toExternalForm()));
-        //ImageView imageView = new ImageView(new Image(getClass().getResource("res/pinkpurple.jpg").toExternalForm()));
+        //ImageView imageView = new ImageView(new Image(getClass().getResource("res/Colourful.jpg").toExternalForm()));
+        ImageView imageView = new ImageView(new Image(getClass().getResource("res/pinkpurple.jpg").toExternalForm()));
         imageView.setFitWidth(BOARD_WIDTH);
         imageView.setFitHeight(BOARD_HEIGHT);
 
