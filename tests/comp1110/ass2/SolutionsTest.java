@@ -21,6 +21,7 @@ public class SolutionsTest {
     public Timeout globalTimeout = Timeout.seconds(120);
 
 
+
     private void testSingle(String placement, String reference) {
         String[] result = StepsGame.getSolutions(placement);
         assertTrue("Placement '"+placement+"' has solution '"+reference+"', but you returned a null array", result != null);
