@@ -1,5 +1,6 @@
 package comp1110.ass2.gui;
 
+import comp1110.ass2.SolverForHint;
 import comp1110.ass2.StepsGame;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -24,10 +25,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 
 public class Board extends Application implements Runnable  {
@@ -509,6 +507,33 @@ public class Board extends Application implements Runnable  {
     /** This method will hide the completion message mentioned above by adjusting its opacity
     * and making it to the back.
     * */
+
+    String nextMask(String placement){
+        Set<String> solution = SolverForHint.Solutions(placement);
+        ArrayList<String> temp = new ArrayList<>(solution);
+        int leng = placement.length();
+        String result = temp.get(0);
+        return result.substring(leng,leng+3);
+    }
+
+    boolean isValidCurrentStep(String pastPlacement,String appendMask){
+        Set<String> solution = SolverForHint.Solutions(pastPlacement);
+        ArrayList<String> temp = new ArrayList<>(solution);
+        int leng = pastPlacement.length();
+        String[] validAppendMask = new String[temp.size()];
+        for (int i = 0; i < validAppendMask.length; i++){
+            validAppendMask[i] = temp.get(i).substring(leng,leng+3);
+        }
+        for (int j = 0; j < validAppendMask.length; j++){
+            if (!validAppendMask[j].equals(appendMask)){
+                return false;
+            }else{
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void hideCompletion() {
         completionText.toBack();
         completionText.setOpacity(0);
