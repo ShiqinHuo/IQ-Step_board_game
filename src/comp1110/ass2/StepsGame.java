@@ -487,6 +487,10 @@ public class StepsGame {
     static Set<String> getViablePiecePlacements(String placement, String objective) {
         // FIXME Task 6: determine the correct order of piece placements
 
+        /*Consider valid object*/
+        if(!(isPiecePlacementWellFormed(objective)&&isPlacementSequenceValid(objective)))
+            return new HashSet<>();
+
         /*Consider no more piece can be used*/
         if(placement.length() == objective.length()) return new HashSet<>();
 
