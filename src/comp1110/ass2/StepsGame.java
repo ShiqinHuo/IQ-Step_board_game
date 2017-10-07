@@ -1039,7 +1039,9 @@ public class StepsGame {
             return outcome;
             }
         else if (key.size() == 6) {
-            
+            Set<String> outcome = new HashSet<>();
+
+            return outcome;
         }
         else {
             return null;
