@@ -18,6 +18,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
@@ -27,12 +28,10 @@ import javafx.stage.Stage;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 import static comp1110.ass2.Alphabet.isPeg;
-
 
 public class Board extends Application implements Runnable  {
     private static final int BOARD_WIDTH = 933;
@@ -51,11 +50,13 @@ public class Board extends Application implements Runnable  {
     private static final String[] Pieceset_left = {"AA","BA","CA","DA"};
     private static final String[] Pieceset_right = {"EA","FA","GA","HA"};
 
-    private final Group newPiece = new Group();
     private final Group root = new Group();
     private final Group controls = new Group();
-    private final Group pieces = new Group();
     private static final Group pegs = new Group();
+    private static final Group letters = new Group();
+    private final Group pieces = new Group();
+    Pane pane = new Pane();
+//https://docs.oracle.com/javase/8/javafx/api/javafx/scene/layout/StackPane.html
 /*
     ArrayList<Peg> circleList = new ArrayList<>();
     Peg highlightedCircle = null;
@@ -83,10 +84,11 @@ public class Board extends Application implements Runnable  {
         double x,y;
         Alphabet letter;
         Peg (int id){
-            setRadius(15);//https://stackoverflow.com/questions/1104975/a-for-loop-to-iterate-over-an-enum-in-java
+            setRadius(12);//https://stackoverflow.com/questions/1104975/a-for-loop-to-iterate-over-an-enum-in-java
             for (Alphabet a : Alphabet.values())
                 if (isPeg(id) && (a.getId() == id)){
                     letter = a;
+                    System.out.println("...."+letter);
                     setCenterX(pegmapX.get(id%10)+80);
                     x = pegmapX.get(id%10) ;
                     setCenterY(pegmapY.get(id/10));
@@ -96,14 +98,37 @@ public class Board extends Application implements Runnable  {
             }
         }
     }
+//https://stackoverflow.com/questions/17437411/how-to-put-a-text-into-a-circle-object-to-display-it-from-circles-center
     /** Show pegs in the original state */
-    private static void makePegs() {
+    private void makePegs() {
+        //pane.getChildren().clear();
         pegs.getChildren().clear();
         for(int i = 0;i<=49;i++){
-            pegs.getChildren().add(new Peg(i));
+            if (isPeg(i)) {
+                Peg onepeg = new Peg(i);
+                System.out.println("xxxxxxx"+ onepeg.x);
+                System.out.println("yyyyyy"+ onepeg.y);
+                System.out.println("hhhhh"+onepeg.letter);
+                Label letter = new Label(onepeg.letter.toString());
+                letter.setLayoutX(onepeg.x+73);
+                letter.setLayoutY(onepeg.y-18);
+                //https://www.dafont.com/top.php
+                letter.setFont(Font.loadFont(MenuApp.class.getResource("res/Meatloaf.ttf").toExternalForm(), 30));
+                //https://www.dafont.com/theme.php?cat=117
+                // http://docs.oracle.com/javafx/2/text/jfxpub-text.htm
+                letter.setTextFill(Color.WHITE);
+                letter.setEffect(new DropShadow(30,Color.DEEPPINK));
+                System.out.println("lllllletter"+letter);
+                letters.getChildren().add(letter);
+                letters.toFront();
+                //https://docs.oracle.com/javase/8/javafx/api/javafx/scene/layout/StackPane.html
+                //pegs.getChildren().add(onepeg);
+                pegs.getChildren().add(onepeg);
+            }
         }
     }
-
+//https://stackoverflow.com/questions/41246688/circle-wont-move-position-in-javafx/41247282
+//https://stackoverflow.com/questions/21118394/explicitly-positioning-nodes-in-javafx
     /** Assign the pieces' original coordinate */
     private static final Map<String,Integer> piecemap;
     static {
@@ -146,13 +171,11 @@ public class Board extends Application implements Runnable  {
         FlippableFXPiece(String piece) {
             super(piece);//https://docs.oracle.com/javase/8/javafx/api/javafx/scene/Node.html
             String char1 = String.valueOf(piece.charAt(0));
-            String char2 = String.valueOf(piece.charAt(1));
             homeY = piecemap.get(piece);
             if ("ABCD".contains(char1)){
                 homeX = 80;
             }
             else homeX = 750;
-            if (char2.equals("E")) setOpacity(0);
             setLayoutX(homeX);
             setLayoutY(homeY);
             if (piece.equals("FA") || piece.equals("GA") || piece.equals("CE") || piece.equals("DA"))
@@ -199,7 +222,6 @@ public class Board extends Application implements Runnable  {
             piecelist.add("HA");}
         // initialise
     }
-
     //https://www.mkyong.com/java/how-to-loop-arraylist-in-java/
     /** This method is used to show those draggable pieces on the board. **/
     private void makeOriginalPieces() {
@@ -219,7 +241,6 @@ public class Board extends Application implements Runnable  {
         }
         pieces.toFront();
     }
-
     // FIXME Task 7: Implement a basic playable Steps Game in JavaFX that only allows pieces to be placed in valid places
 
     class DraggableFXPiece extends FlippableFXPiece {
@@ -232,11 +253,10 @@ public class Board extends Application implements Runnable  {
             super(piece);
             for(String p : piecelist) {
                 if ( p.equals(piece)) {
-                    //if(i%2==0){
                     homeX = new FlippableFXPiece(p).homeX;
                     setLayoutX(homeX);
                     homeY = new FlippableFXPiece(p).homeY;
-                    setLayoutY(homeY);break;//}
+                    setLayoutY(homeY);break;
                 }
             }
             setOnScroll(event -> {
@@ -340,13 +360,11 @@ public class Board extends Application implements Runnable  {
 
         /** Make the pieces snap to their original position. */
         private void snapToHome() {
-            if (Arrays.asList(Pieceset_left).contains(piece)){
-                homeY = piecemap.get(piece);
-                homeX = 50;
-            }
-            else if  (Arrays.asList(Pieceset_right).contains(piece)){
-                homeX = 800;
-                homeY = piecemap.get(piece);}
+            homeY = piecemap.get(piece);
+            String char1 = String.valueOf(piece.charAt(0));
+            if ("ABCD".contains(char1)){
+                homeX = 80;}
+            else homeX = 750;
             setLayoutX(homeX);
             setLayoutY(homeY);
             if (piece.equals("FA") || piece.equals("GA") || piece.equals("CE") || piece.equals("DA"))
@@ -363,9 +381,7 @@ public class Board extends Application implements Runnable  {
 
         /** Make the piece rotate clockwise. Each time rotate 45 degrees. **/
         private void rotate() {
-            setRotate((getRotate() + 45) % 360);
-        }
-
+            setRotate((getRotate() + 45) % 360);}
     }
 
     // FIXME Task 8: Implement starting placements
@@ -411,7 +427,7 @@ public class Board extends Application implements Runnable  {
     * whole game at the specific difficulty. **/
     private void makeUsingTime() {
         timeUsing.setFill(Color.DEEPPINK);
-        timeUsing.setFont(Font.loadFont(MenuApp.class.getResource("res/Penumbra-HalfSerif-Std_35114.ttf").toExternalForm(), 25));
+        timeUsing.setFont(Font.loadFont(MenuApp.class.getResource("res/handwriting-draft_free-version.ttf").toExternalForm(), 25));
         timeUsing.setLayoutX(320);
         timeUsing.setLayoutY(500);
         root.getChildren().add(timeUsing);
@@ -436,7 +452,6 @@ public class Board extends Application implements Runnable  {
                     }
                 });}
 
-
     /** Coordinates helper functions */
     private static final Map<Integer,Integer> pegmapX;
     static {
@@ -456,7 +471,7 @@ public class Board extends Application implements Runnable  {
     static {
         pegmapY = new HashMap<>();
         pegmapY.put(0,250); //
-        pegmapY.put(1,280); // 2nd / 4th row ->  1st peg x-Coord
+        pegmapY.put(1,280); //                  y-Coord
         pegmapY.put(2,310); //
         pegmapY.put(3,340);
         pegmapY.put(4,370);
@@ -543,6 +558,8 @@ public class Board extends Application implements Runnable  {
         root.getChildren().add(pieces);
         root.getChildren().add(controls);
         root.getChildren().add(pegs);
+        root.getChildren().add(letters);
+        //root.getChildren().add(pane);
         //root.getChildren().add(newPiece);
         setUpHandlers(scene);
         makeControls();
