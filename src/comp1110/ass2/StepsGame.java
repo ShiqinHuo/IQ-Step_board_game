@@ -485,7 +485,12 @@ public class StepsGame {
      * @return An set of viable piece placements
      */
     static Set<String> getViablePiecePlacements(String placement, String objective) {
-        // FIXME Task 6: determine the correct order of piece placements
+
+        /*Consider valid object*/
+        if(!isPlacementSequenceValid(objective)){
+            return new HashSet<>();
+        }
+
 
         /*Consider no more piece can be used*/
         if(placement.length() == objective.length()) return new HashSet<>();
@@ -561,19 +566,23 @@ public class StepsGame {
         for(Map.Entry<String,ArrayList<String>> entry : starter.entrySet()) {
             String key = entry.getKey();
             ArrayList<String> value = entry.getValue();
+            //System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
 
             /*Clone the values*/
             ArrayList<String> delete = new ArrayList<>(value);
 
 
-            for (String de: value
-                 ) {
+
+            for (String de: value) {
                 if(notObstruct(key,de)){
                     delete.remove(de);
                     newStarter.put(key+de,delete);
+                    //System.out.println(newStarter);
 
                     /*Reset the array list delete*/
                     delete = new ArrayList<>(value);
+                }else{
+                    break;
                 }
             }
         }
@@ -594,7 +603,6 @@ public class StepsGame {
         }
         return false;
     }
-
 
 
     /**
@@ -644,49 +652,21 @@ public class StepsGame {
      * the game given the starting point provided by placement.
      */
     public static String[] getSolutions(String placement) {
-        // FIXME Task 9: determine all solutions to the game, given a particular starting placement
-        return null;
-    }
-    
-    public static PartialSolution solve(String placement, PartialSolution sol){
-        int exam = sol.examine();
-        if (exam == PartialSolution.ACCEPT){
-            return sol;
-        }else if (exam == PartialSolution.CONTINUE){
-            for (PartialSolution p : sol.extend()){
-                solve(placement,p);
-            }
-        }
-        return null;
-    }
+        Set<String> nl = possibleSolutions(placement);
+        ArrayList<String> out = new ArrayList<>(nl);
+        String[] outcome = new String[nl.size()];
 
-
-    public static void main(String[] args) {
-        Set<String> newSet = new HashSet<>();
-        //newSet = getViablePiecePlacements("CEQEHuGEO","CEQEHuGEOBDxFGSHCiAALDBg");
-        for (String k : newSet){
-            //System.out.println(k);
-        }
-
-        ArrayList<String> newArr = new ArrayList<>();
-        //newArr = getCandidates("CEQEHuGEO","CEQEHuGEOBDxFGSHCiAALDBg");
-        for (String m : newArr){
-            // System.out.println(m);
-        }
-
-        //boolean a = notObstruct("AALBBGCAkDBgEAoFDNGHS","HCi");
-        //System.out.println(a);
-
-        for (String m : possibleSolutions("CEQEHuGEOBDxFGS")){
-            System.out.println(m);
-        }
+       for (int i = 0; i < out.size(); i++){
+           outcome[i] = out.get(i);
+       }
+        return outcome;
     }
 
     public static Set<String> possibleSolutions(String placement){
-        ArrayList<String> A = maskGenerator1('A'); ArrayList<String> B = maskGenerator2();
-        ArrayList<String> C = maskGenerator1('C'); ArrayList<String> D = maskGenerator1('D');
-        ArrayList<String> E = maskGenerator3(); ArrayList<String> F = maskGenerator1('F');
-        ArrayList<String> G = maskGenerator1('G'); ArrayList<String> H = maskGenerator1('H');
+        ArrayList<String> A = MaskGenerator.maskGenerator1('A'); ArrayList<String> B = MaskGenerator.maskGenerator2();
+        ArrayList<String> C = MaskGenerator.maskGenerator1('C'); ArrayList<String> D = MaskGenerator.maskGenerator1('D');
+        ArrayList<String> E = MaskGenerator.maskGenerator3(); ArrayList<String> F = MaskGenerator.maskGenerator1('F');
+        ArrayList<String> G = MaskGenerator.maskGenerator1('G'); ArrayList<String> H = MaskGenerator.maskGenerator1('H');
 
         ArrayList<Character> firstAlphabet = new ArrayList<>();
 
@@ -705,199 +685,665 @@ public class StepsGame {
 
         ArrayList<Character> keyList = new ArrayList<>(key);
 
-        //List<String[]> newList = new ArrayList<>();
-
-        /*for (int i = 0; i < keyList.size(); i++){
-            newMap.get(keyList.get(i));
-            String [] c = newMap.get(keyList.get(i)).toArray(new String[newMap.get(keyList.get(i)).size()]);
-            newList.add(c);
-        }
-
-        List<List<String>> firstOutcome = combineAlg(newList);
-
-        ArrayList<String> outcome = new ArrayList<>();
-
-        String a = "";
-        for (int i = 0; i < firstOutcome.size(); i++){
-            for (int j = 0; j < firstOutcome.get(i).size(); j++){
-                a+=firstOutcome.get(i).get(j);
-            }
-            if (isPlacementSequenceValid(a))
-                if (isPlacementSequenceValid(a+placement)){
-                    outcome.add(a+placement);
-                }
-            a = "";
-        }
-
-        return outcome;*/
-        ArrayList<String> outcome = new ArrayList<>();
         Set<String> orders = new HashSet<>();
         if (key.size() == 0){
             orders.add(placement);
             return orders;
         }else if (key.size() == 1){
+            ArrayList<String> one = new ArrayList<>();
+            String process;
             for (int i = 0; i < newMap.get(keyList.get(0)).size(); i++){
-                if (isPlacementSequenceValid(newMap.get(keyList.get(0)).get(i))){
-                    if (isPlacementSequenceValid(newMap.get(keyList.get(0)).get(i) + placement)){
-                        Map<String,ArrayList<String>> newap = new HashMap<>();
-                        ArrayList<String> k = new ArrayList<>();
-                        k.add(newMap.get(keyList.get(0)).get(i));
-                        newap.put(placement,k);
-                        orders = validOrders(newap);
-                    }
+                if (notObstruct(placement,newMap.get(keyList.get(0)).get(i))){
+                        process = placement + newMap.get(keyList.get(0)).get(i);
+                        one.add(process);
                 }
             }
-            return orders;
+            Set<String> two = new HashSet<>(one);
+            return two;
         }else if (key.size() == 2){
+            ArrayList<String> one = new ArrayList<>();
+            Set<String> two = new HashSet<>();
+            String process1;
             for (int i = 0; i < newMap.get(keyList.get(0)).size(); i++){
-                for (int j = 0; j < newMap.get(keyList.get(1)).size(); j++){
-                    if (isPlacementSequenceValid(newMap.get(keyList.get(0)).get(i)+newMap.get(keyList.get(1)).get(j))){
-                        if (isPlacementSequenceValid(newMap.get(keyList.get(0)).get(i)+newMap.get(keyList.get(1)).get(j)+placement)){
-                            Map<String,ArrayList<String>> newap = new HashMap<>();
-                            ArrayList<String> k = new ArrayList<>();
-                            k.add(newMap.get(keyList.get(0)).get(i));k.add(newMap.get(keyList.get(1)).get(j));
-                            newap.put(placement,k);
-                            orders = validOrders(newap);
+                if (notObstruct(placement,newMap.get(keyList.get(0)).get(i))){
+                    process1 = placement + newMap.get(keyList.get(0)).get(i);
+                    one.add(process1);
+                }
+                for (String b : one){
+                    for (int j = 0; j < newMap.get(keyList.get(1)).size(); j++){
+                        if (notObstruct(b,newMap.get(keyList.get(1)).get(j))){
+                        b = b + newMap.get(keyList.get(1)).get(j);
+                        two.add(b);
                         }
                     }
                 }
             }
-            return orders;
+
+            ArrayList<String> three = new ArrayList<>();
+            Set<String> four = new HashSet<>();
+            String process2;
+
+            if (two.isEmpty()){
+                for (int i = 0; i < newMap.get(keyList.get(1)).size(); i++){
+                    if (notObstruct(placement,newMap.get(keyList.get(1)).get(i))){
+                        process2 = placement + newMap.get(keyList.get(1)).get(i);
+                        three.add(process2);
+                    }
+                    for (String b : three){
+                        for (int j = 0; j < newMap.get(keyList.get(0)).size(); j++){
+                            if (notObstruct(b,newMap.get(keyList.get(0)).get(j))){
+                                b = b + newMap.get(keyList.get(0)).get(j);
+                                four.add(b);
+                            }
+                        }
+                    }
+                }
+            }
+            if (two.isEmpty()){
+                return four;
+            }else {
+                return two;
+            }
         }else if (key.size() == 3){
+            ArrayList<String> one = new ArrayList<>();
+            String process0; String process1; String process2;
             for (int i = 0; i < newMap.get(keyList.get(0)).size(); i++){
-                for (int j = 0; j < newMap.get(keyList.get(1)).size(); j++){
-                    for (int m = 0; m < newMap.get(keyList.get(2)).size(); m++){
-                        if (isPlacementSequenceValid(newMap.get(keyList.get(0)).get(i)+newMap.get(keyList.get(1)).get(j)+newMap.get(keyList.get(2)).get(m))){
-                            if (isPlacementSequenceValid(newMap.get(keyList.get(0)).get(i)+newMap.get(keyList.get(1)).get(j)+newMap.get(keyList.get(2)).get(m)+placement)){
-                                Map<String,ArrayList<String>> newap = new HashMap<>();
-                                ArrayList<String> k = new ArrayList<>();
-                                k.add(newMap.get(keyList.get(0)).get(i));k.add(newMap.get(keyList.get(1)).get(j));k.add(newMap.get(keyList.get(2)).get(m));
-                                newap.put(placement,k);
-                                orders = validOrders(newap);
-                            }
+                if (notObstruct(placement,newMap.get(keyList.get(0)).get(i))){
+                    process0 = placement + newMap.get(keyList.get(0)).get(i);
+                    one.add(process0);
+                }
+            }
+            for (int i = 0; i < newMap.get(keyList.get(1)).size(); i++){
+                if (notObstruct(placement,newMap.get(keyList.get(1)).get(i))){
+                    process1 = placement + newMap.get(keyList.get(1)).get(i);
+                    one.add(process1);
+                }
+            }
+            for (int i = 0; i < newMap.get(keyList.get(2)).size(); i++){
+                if (notObstruct(placement,newMap.get(keyList.get(2)).get(i))){
+                    process2 = placement + newMap.get(keyList.get(2)).get(i);
+                    one.add(process2);
+                }
+            }
+
+
+            ArrayList<String> two = new ArrayList<>();
+            String process5; String process6; String process7;
+            for (String s : one){
+                for (int i = 0; i < newMap.get(keyList.get(0)).size(); i++){
+                    if (notObstruct(s,newMap.get(keyList.get(0)).get(i))){
+                        process5 = s + newMap.get(keyList.get(0)).get(i);
+                        if (isPlacementSequenceValid(process5)){
+                            two.add(process5);
                         }
                     }
                 }
             }
-            return orders;
+            for (String s : one){
+                for (int i = 0; i < newMap.get(keyList.get(1)).size(); i++){
+                    if (notObstruct(s,newMap.get(keyList.get(1)).get(i))){
+                        process6 = s + newMap.get(keyList.get(1)).get(i);
+                        if (isPlacementSequenceValid(process6)){
+                            two.add(process6);
+                        }
+                    }
+                }
+            }
+            for (String s : one){
+                for (int i = 0; i < newMap.get(keyList.get(2)).size(); i++){
+                    if (notObstruct(s,newMap.get(keyList.get(2)).get(i))){
+                        process7 = s + newMap.get(keyList.get(2)).get(i);
+                        if (isPlacementSequenceValid(process7)){
+                            two.add(process7);
+                        }
+                    }
+                }
+            }
+
+
+            ArrayList<String> three = new ArrayList<>();
+            String process10; String process11; String process12;
+            for (String s : two){
+                for (int i = 0; i < newMap.get(keyList.get(0)).size(); i++){
+                    if (notObstruct(s,newMap.get(keyList.get(0)).get(i))){
+                        process10 = s + newMap.get(keyList.get(0)).get(i);
+                        if (isPlacementSequenceValid(process10)){
+                            three.add(process10);
+                        }
+                    }
+                }
+            }
+            for (String s : two){
+                for (int i = 0; i < newMap.get(keyList.get(1)).size(); i++){
+                    if (notObstruct(s,newMap.get(keyList.get(1)).get(i))){
+                        process11 = s + newMap.get(keyList.get(1)).get(i);
+                        if (isPlacementSequenceValid(process11)){
+                            three.add(process11);
+                        }
+                    }
+                }
+            }
+            for (String s : two){
+                for (int i = 0; i < newMap.get(keyList.get(2)).size(); i++){
+                    if (notObstruct(s,newMap.get(keyList.get(2)).get(i))){
+                        process12 = s + newMap.get(keyList.get(2)).get(i);
+                        if (isPlacementSequenceValid(process12)){
+                            three.add(process12);
+                        }
+                    }
+                }
+            }
+            return afterSort(three);
         }else if (key.size() == 4) {
-            for (int i = 0; i < newMap.get(keyList.get(0)).size(); i++) {
-                for (int j = 0; j < newMap.get(keyList.get(1)).size(); j++) {
-                    for (int m = 0; m < newMap.get(keyList.get(2)).size(); m++) {
-                        for (int n = 0; n < newMap.get(keyList.get(3)).size(); n++) {
-                            if (isPlacementSequenceValid(newMap.get(keyList.get(0)).get(i) + newMap.get(keyList.get(1)).get(j) + newMap.get(keyList.get(2)).get(m) + newMap.get(keyList.get(3)).get(n)))
-                                if (isPlacementSequenceValid(newMap.get(keyList.get(0)).get(i) + newMap.get(keyList.get(1)).get(j) + newMap.get(keyList.get(2)).get(m) + newMap.get(keyList.get(3)).get(n) + placement))
-                                outcome.add(newMap.get(keyList.get(0)).get(i) + newMap.get(keyList.get(1)).get(j) + newMap.get(keyList.get(2)).get(m) + newMap.get(keyList.get(3)).get(n) + placement);
+            ArrayList<String> one = new ArrayList<>();
+            String process0; String process1; String process2; String process3;
+            for (int i = 0; i < newMap.get(keyList.get(0)).size(); i++){
+                if (notObstruct(placement,newMap.get(keyList.get(0)).get(i))){
+                    process0 = placement + newMap.get(keyList.get(0)).get(i);
+                    one.add(process0);
+                }
+            }
+            for (int i = 0; i < newMap.get(keyList.get(1)).size(); i++){
+                if (notObstruct(placement,newMap.get(keyList.get(1)).get(i))){
+                    process1 = placement + newMap.get(keyList.get(1)).get(i);
+                    one.add(process1);
+                }
+            }
+            for (int i = 0; i < newMap.get(keyList.get(2)).size(); i++){
+                if (notObstruct(placement,newMap.get(keyList.get(2)).get(i))){
+                    process2 = placement + newMap.get(keyList.get(2)).get(i);
+                    one.add(process2);
+                }
+            }
+            for (int i = 0; i < newMap.get(keyList.get(3)).size(); i++){
+                if (notObstruct(placement,newMap.get(keyList.get(3)).get(i))){
+                    process3 = placement + newMap.get(keyList.get(3)).get(i);
+                    one.add(process3);
+                }
+            }
+
+            ArrayList<String> two = new ArrayList<>();
+            String process5; String process6; String process7; String process8;
+            for (String s : one){
+                for (int i = 0; i < newMap.get(keyList.get(0)).size(); i++){
+                    if (notObstruct(s,newMap.get(keyList.get(0)).get(i))){
+                        process5 = s + newMap.get(keyList.get(0)).get(i);
+                        if (isPlacementSequenceValid(process5)){
+                            two.add(process5);
                         }
                     }
                 }
             }
-            return orders;
+            for (String s : one){
+                for (int i = 0; i < newMap.get(keyList.get(1)).size(); i++){
+                    if (notObstruct(s,newMap.get(keyList.get(1)).get(i))){
+                        process6 = s + newMap.get(keyList.get(1)).get(i);
+                        if (isPlacementSequenceValid(process6)){
+                            two.add(process6);
+                        }
+                    }
+                }
+            }
+            for (String s : one){
+                for (int i = 0; i < newMap.get(keyList.get(2)).size(); i++){
+                    if (notObstruct(s,newMap.get(keyList.get(2)).get(i))){
+                        process7 = s + newMap.get(keyList.get(2)).get(i);
+                        if (isPlacementSequenceValid(process7)){
+                            two.add(process7);
+                        }
+                    }
+                }
+            }
+            for (String s : one){
+                for (int i = 0; i < newMap.get(keyList.get(3)).size(); i++){
+                    if (notObstruct(s,newMap.get(keyList.get(3)).get(i))){
+                        process8 = s + newMap.get(keyList.get(3)).get(i);
+                        if (isPlacementSequenceValid(process8)){
+                            two.add(process8);
+                        }
+                    }
+                }
+            }
+
+            ArrayList<String> three = new ArrayList<>();
+            String process10; String process11; String process12; String process13;
+            for (String s : two){
+                for (int i = 0; i < newMap.get(keyList.get(0)).size(); i++){
+                    if (notObstruct(s,newMap.get(keyList.get(0)).get(i))){
+                        process10 = s + newMap.get(keyList.get(0)).get(i);
+                        if (isPlacementSequenceValid(process10)){
+                            three.add(process10);
+                        }
+                    }
+                }
+            }
+            for (String s : two){
+                for (int i = 0; i < newMap.get(keyList.get(1)).size(); i++){
+                    if (notObstruct(s,newMap.get(keyList.get(1)).get(i))){
+                        process11 = s + newMap.get(keyList.get(1)).get(i);
+                        if (isPlacementSequenceValid(process11)){
+                            three.add(process11);
+                        }
+                    }
+                }
+            }
+            for (String s : two){
+                for (int i = 0; i < newMap.get(keyList.get(2)).size(); i++){
+                    if (notObstruct(s,newMap.get(keyList.get(2)).get(i))){
+                        process12 = s + newMap.get(keyList.get(2)).get(i);
+                        if (isPlacementSequenceValid(process12)){
+                            three.add(process12);
+                        }
+                    }
+                }
+            }
+            for (String s : two){
+                for (int i = 0; i < newMap.get(keyList.get(3)).size(); i++){
+                    if (notObstruct(s,newMap.get(keyList.get(3)).get(i))){
+                        process13 = s + newMap.get(keyList.get(3)).get(i);
+                        if (isPlacementSequenceValid(process13)){
+                            three.add(process13);
+                        }
+                    }
+                }
+            }
+
+            ArrayList<String> four = new ArrayList<>();
+            String process15; String process16; String process17; String process18;
+            for (String s : three){
+                for (int i = 0; i < newMap.get(keyList.get(0)).size(); i++){
+                    if (notObstruct(s,newMap.get(keyList.get(0)).get(i))){
+                        process15 = s + newMap.get(keyList.get(0)).get(i);
+                        if (isPlacementSequenceValid(process15)){
+                            four.add(process15);
+                        }
+                    }
+                }
+            }
+            for (String s : three){
+                for (int i = 0; i < newMap.get(keyList.get(1)).size(); i++){
+                    if (notObstruct(s,newMap.get(keyList.get(1)).get(i))){
+                        process16 = s + newMap.get(keyList.get(1)).get(i);
+                        if (isPlacementSequenceValid(process16)){
+                            four.add(process16);
+                        }
+                    }
+                }
+            }
+            for (String s : three){
+                for (int i = 0; i < newMap.get(keyList.get(2)).size(); i++){
+                    if (notObstruct(s,newMap.get(keyList.get(2)).get(i))){
+                        process17 = s + newMap.get(keyList.get(2)).get(i);
+                        if (isPlacementSequenceValid(process17)){
+                            four.add(process17);
+                        }
+                    }
+                }
+            }
+            for (String s : three){
+                for (int i = 0; i < newMap.get(keyList.get(3)).size(); i++){
+                    if (notObstruct(s,newMap.get(keyList.get(3)).get(i))){
+                        process18 = s + newMap.get(keyList.get(3)).get(i);
+                        if (isPlacementSequenceValid(process18)){
+                            four.add(process18);
+                        }
+                    }
+                }
+            }
+
+            return afterSort(four);
         }else if (key.size() == 5) {
-            for (int i = 0; i < newMap.get(keyList.get(0)).size(); i++) {
-                for (int j = 0; j < newMap.get(keyList.get(1)).size(); j++) {
-                    for (int m = 0; m < newMap.get(keyList.get(2)).size(); m++) {
-                        for (int n = 0; n < newMap.get(keyList.get(3)).size(); n++) {
-                            for (int a = 0; a < newMap.get(keyList.get(4)).size(); a++){
-                                if (isPlacementSequenceValid(newMap.get(keyList.get(0)).get(i) + newMap.get(keyList.get(1)).get(j) + newMap.get(keyList.get(2)).get(m) + newMap.get(keyList.get(3)).get(n)+newMap.get(keyList.get(4)).get(a)))
-                                    if (isPlacementSequenceValid(newMap.get(keyList.get(0)).get(i) + newMap.get(keyList.get(1)).get(j) + newMap.get(keyList.get(2)).get(m) + newMap.get(keyList.get(3)).get(n) + newMap.get(keyList.get(4)).get(a)+ placement))
-                                        outcome.add(newMap.get(keyList.get(0)).get(i) + newMap.get(keyList.get(1)).get(j) + newMap.get(keyList.get(2)).get(m) + newMap.get(keyList.get(3)).get(n) +newMap.get(keyList.get(4)).get(a)+ placement);
-                            }
+            ArrayList<String> one = new ArrayList<>();
+            String process1; String process3; String process4;
+            for (int i = 0; i < newMap.get(keyList.get(1)).size(); i++){
+                if (notObstruct(placement,newMap.get(keyList.get(1)).get(i))){
+                    process1 = placement + newMap.get(keyList.get(1)).get(i);
+                    one.add(process1);
+                }
+            }
+            for (int i = 0; i < newMap.get(keyList.get(3)).size(); i++){
+                if (notObstruct(placement,newMap.get(keyList.get(3)).get(i))){
+                    process3 = placement + newMap.get(keyList.get(3)).get(i);
+                    one.add(process3);
+                }
+            }
+            for (int i = 0; i < newMap.get(keyList.get(4)).size(); i++){
+                if (notObstruct(placement,newMap.get(keyList.get(4)).get(i))){
+                    process4 = placement + newMap.get(keyList.get(4)).get(i);
+                    one.add(process4);
+                }
+            }
+
+            ArrayList<String> two = new ArrayList<>();
+            String process5; String process6; String process7; String process9;
+            for (String s : one){
+                for (int i = 0; i < newMap.get(keyList.get(0)).size(); i++){
+                    if (notObstruct(s,newMap.get(keyList.get(0)).get(i))){
+                        process5 = s + newMap.get(keyList.get(0)).get(i);
+                        if (isPlacementSequenceValid(process5)){
+                            two.add(process5);
                         }
                     }
                 }
             }
-            return orders;
-        }else {
+            for (String s : one){
+                for (int i = 0; i < newMap.get(keyList.get(1)).size(); i++){
+                    if (notObstruct(s,newMap.get(keyList.get(1)).get(i))){
+                        process6 = s + newMap.get(keyList.get(1)).get(i);
+                        if (isPlacementSequenceValid(process6)){
+                            two.add(process6);
+                        }
+                    }
+                }
+            }
+            for (String s : one){
+                for (int i = 0; i < newMap.get(keyList.get(2)).size(); i++){
+                    if (notObstruct(s,newMap.get(keyList.get(2)).get(i))){
+                        process7 = s + newMap.get(keyList.get(2)).get(i);
+                        if (isPlacementSequenceValid(process7)){
+                            two.add(process7);
+                        }
+                    }
+                }
+            }
+            for (String s : one){
+                for (int i = 0; i < newMap.get(keyList.get(4)).size(); i++){
+                    if (notObstruct(s,newMap.get(keyList.get(4)).get(i))){
+                        process9 = s + newMap.get(keyList.get(4)).get(i);
+                        if (isPlacementSequenceValid(process9)){
+                            two.add(process9);
+                        }
+                    }
+                }
+            }
+
+            ArrayList<String> three = new ArrayList<>();
+            String process10; String process12; String process14;
+            for (String s : two){
+                for (int i = 0; i < newMap.get(keyList.get(0)).size(); i++){
+                    if (notObstruct(s,newMap.get(keyList.get(0)).get(i))){
+                        process10 = s + newMap.get(keyList.get(0)).get(i);
+                        if (isPlacementSequenceValid(process10)){
+                        three.add(process10);
+                        }
+                    }
+                }
+            }
+            for (String s : two){
+                for (int i = 0; i < newMap.get(keyList.get(2)).size(); i++){
+                    if (notObstruct(s,newMap.get(keyList.get(2)).get(i))){
+                        process12 = s + newMap.get(keyList.get(2)).get(i);
+                        if (isPlacementSequenceValid(process12)){
+                            three.add(process12);
+                        }
+                    }
+                }
+            }
+            for (String s : two){
+                for (int i = 0; i < newMap.get(keyList.get(4)).size(); i++){
+                    if (notObstruct(s,newMap.get(keyList.get(4)).get(i))){
+                        process14 = s + newMap.get(keyList.get(4)).get(i);
+                        if (isPlacementSequenceValid(process14)){
+                            three.add(process14);
+                        }
+                    }
+                }
+            }
+
+            ArrayList<String> four = new ArrayList<>();
+            String process15; String process16; String process17; String process18; String process19;
+            for (String s : three){
+                for (int i = 0; i < newMap.get(keyList.get(0)).size(); i++){
+                    if (notObstruct(s,newMap.get(keyList.get(0)).get(i))){
+                        process15 = s + newMap.get(keyList.get(0)).get(i);
+                        if (isPlacementSequenceValid(process15)){
+                            four.add(process15);
+                        }
+                    }
+                }
+            }
+            for (String s : three){
+                for (int i = 0; i < newMap.get(keyList.get(1)).size(); i++){
+                    if (notObstruct(s,newMap.get(keyList.get(1)).get(i))){
+                        process16 = s + newMap.get(keyList.get(1)).get(i);
+                        if (isPlacementSequenceValid(process16)){
+                            four.add(process16);
+                        }
+                    }
+                }
+            }
+            for (String s : three){
+                for (int i = 0; i < newMap.get(keyList.get(2)).size(); i++){
+                    if (notObstruct(s,newMap.get(keyList.get(2)).get(i))){
+                        process17 = s + newMap.get(keyList.get(2)).get(i);
+                        if (isPlacementSequenceValid(process17)){
+                            four.add(process17);
+                        }
+                    }
+                }
+            }
+
+            ArrayList<String> five = new ArrayList<>();
+            String process21; String process22; String process23;
+            for (String s : four){
+                for (int i = 0; i < newMap.get(keyList.get(1)).size(); i++){
+                    if (notObstruct(s,newMap.get(keyList.get(1)).get(i))){
+                        process21 = s + newMap.get(keyList.get(1)).get(i);
+                        if (isPlacementSequenceValid(process21)){
+                            five.add(process21);
+                        }
+                    }
+                }
+            }
+            for (String s : four){
+                for (int i = 0; i < newMap.get(keyList.get(2)).size(); i++){
+                    if (notObstruct(s,newMap.get(keyList.get(2)).get(i))){
+                        process22 = s + newMap.get(keyList.get(2)).get(i);
+                        if (isPlacementSequenceValid(process22)){
+                            five.add(process22);
+                        }
+                    }
+                }
+            }
+            for (String s : four){
+                for (int i = 0; i < newMap.get(keyList.get(3)).size(); i++){
+                    if (notObstruct(s,newMap.get(keyList.get(3)).get(i))){
+                        process23 = s + newMap.get(keyList.get(3)).get(i);
+                        if (isPlacementSequenceValid(process23)){
+                            five.add(process23);
+                        }
+                    }
+                }
+            }
+            return afterSort(five);
+        } else if (key.size() == 6) {
+            ArrayList<String> one = new ArrayList<>();
+            String process0; String process1; String process2; String process3; String process4; String process100;
+            for (int i = 0; i < newMap.get(keyList.get(0)).size(); i++){
+                if (notObstruct(placement,newMap.get(keyList.get(0)).get(i))){
+                    process0 = placement + newMap.get(keyList.get(0)).get(i);
+                    one.add(process0);
+                }
+            }
+            for (int i = 0; i < newMap.get(keyList.get(1)).size(); i++){
+                if (notObstruct(placement,newMap.get(keyList.get(1)).get(i))){
+                    process1 = placement + newMap.get(keyList.get(1)).get(i);
+                    one.add(process1);
+                }
+            }
+            for (int i = 0; i < newMap.get(keyList.get(2)).size(); i++){
+                if (notObstruct(placement,newMap.get(keyList.get(2)).get(i))){
+                    process2 = placement + newMap.get(keyList.get(2)).get(i);
+                    one.add(process2);
+                }
+            }
+            for (int i = 0; i < newMap.get(keyList.get(3)).size(); i++){
+                if (notObstruct(placement,newMap.get(keyList.get(3)).get(i))){
+                    process3 = placement + newMap.get(keyList.get(3)).get(i);
+                    one.add(process3);
+                }
+            }
+            for (int i = 0; i < newMap.get(keyList.get(4)).size(); i++){
+                if (notObstruct(placement,newMap.get(keyList.get(4)).get(i))){
+                    process4 = placement + newMap.get(keyList.get(4)).get(i);
+                    one.add(process4);
+                }
+            }
+            for (int i = 0; i < newMap.get(keyList.get(5)).size(); i++){
+                if (notObstruct(placement,newMap.get(keyList.get(5)).get(i))){
+                    process100 = placement + newMap.get(keyList.get(5)).get(i);
+                    one.add(process100);
+                }
+            }
+
+            ArrayList<String> two = new ArrayList<>();
+            String process5; String process6; String process7; String process8; String process9; String process101;
+            for (String s : one){
+                for (int i = 0; i < newMap.get(keyList.get(0)).size(); i++){
+                    if (notObstruct(s,newMap.get(keyList.get(0)).get(i))){
+                        process5 = s + newMap.get(keyList.get(0)).get(i);
+                        if (isPlacementSequenceValid(process5)){
+                            two.add(process5);
+                        }
+                    }
+                }
+            }
+            for (String s : one){
+                for (int i = 0; i < newMap.get(keyList.get(1)).size(); i++){
+                    if (notObstruct(s,newMap.get(keyList.get(1)).get(i))){
+                        process6 = s + newMap.get(keyList.get(1)).get(i);
+                        if (isPlacementSequenceValid(process6)){
+                            two.add(process6);
+                        }
+                    }
+                }
+            }
+            for (String s : one){
+                for (int i = 0; i < newMap.get(keyList.get(2)).size(); i++){
+                    if (notObstruct(s,newMap.get(keyList.get(2)).get(i))){
+                        process7 = s + newMap.get(keyList.get(2)).get(i);
+                        if (isPlacementSequenceValid(process7)){
+                            two.add(process7);
+                        }
+                    }
+                }
+            }
+            for (String s : one){
+                for (int i = 0; i < newMap.get(keyList.get(3)).size(); i++){
+                    if (notObstruct(s,newMap.get(keyList.get(3)).get(i))){
+                        process8 = s + newMap.get(keyList.get(3)).get(i);
+                        if (isPlacementSequenceValid(process8)){
+                            two.add(process8);
+                        }
+                    }
+                }
+            }
+            for (String s : one){
+                for (int i = 0; i < newMap.get(keyList.get(4)).size(); i++){
+                    if (notObstruct(s,newMap.get(keyList.get(4)).get(i))){
+                        process9 = s + newMap.get(keyList.get(4)).get(i);
+                        if (isPlacementSequenceValid(process9)){
+                            two.add(process9);
+                        }
+                    }
+                }
+            }
+            for (String s : one){
+                for (int i = 0; i < newMap.get(keyList.get(5)).size(); i++){
+                    if (notObstruct(s,newMap.get(keyList.get(5)).get(i))){
+                        process101 = s + newMap.get(keyList.get(5)).get(i);
+                        if (isPlacementSequenceValid(process101)){
+                            two.add(process101);
+                        }
+                    }
+                }
+            }
+
+            ArrayList<String> three = new ArrayList<>();
+            String process11;
+            for (String s : two){
+                for (int i = 0; i < newMap.get(keyList.get(1)).size(); i++){
+                    if (notObstruct(s,newMap.get(keyList.get(1)).get(i))){
+                        process11 = s + newMap.get(keyList.get(1)).get(i);
+                        if (isPlacementSequenceValid(process11)){
+                            three.add(process11);
+                        }
+                    }
+                }
+            }
+
+            ArrayList<String> four = new ArrayList<>();
+            String process18;
+            for (String s : three){
+                for (int i = 0; i < newMap.get(keyList.get(3)).size(); i++){
+                    if (notObstruct(s,newMap.get(keyList.get(3)).get(i))){
+                        process18 = s + newMap.get(keyList.get(3)).get(i);
+                        if (isPlacementSequenceValid(process18)){
+                            four.add(process18);
+                        }
+                    }
+                }
+            }
+
+            ArrayList<String> five = new ArrayList<>();
+            String process20;
+            for (String s : four){
+                for (int i = 0; i < newMap.get(keyList.get(0)).size(); i++){
+                    if (notObstruct(s,newMap.get(keyList.get(0)).get(i))){
+                        process20 = s + newMap.get(keyList.get(0)).get(i);
+                        if (isPlacementSequenceValid(process20)){
+                            five.add(process20);
+                        }
+                    }
+                }
+            }
+
+            ArrayList<String> six = new ArrayList<>();
+            String process27;
+            for (String s : five){
+                for (int i = 0; i < newMap.get(keyList.get(2)).size(); i++){
+                    if (notObstruct(s,newMap.get(keyList.get(2)).get(i))){
+                        process27 = s + newMap.get(keyList.get(2)).get(i);
+                        if (isPlacementSequenceValid(process27)){
+                            six.add(process27);
+                        }
+                    }
+                }
+            }
+            return afterSort(six);
+        } else {
             return null;
         }
     }
 
-    public static List<List<String>> combineAlg(List<String[]> nArray) {
-        List<List<String>> values = new LinkedList<List<String>>();
-        int[] x = new int[nArray.size()];
-        for (int i = 0; i < x.length; i++) {
-            x[i] = 0;
+
+    public static Set<String> afterSort(ArrayList<String> outcome){
+        ArrayList<String> ll = new ArrayList<>();
+        Map<String,Character[]> gg = new HashMap<>();
+        for (int i = 0; i < outcome.size(); i++){
+            gg.put(outcome.get(i),SelectionSorter.sort(MaskStringSplit(outcome.get(i))));
         }
 
-        int flag = 0;
-        do {
-            List<String> objs = new LinkedList<String>();
-            for (int looper = 0; looper < nArray.size(); looper++) {
-                objs.add(nArray.get(looper)[x[looper]]);
+        for (int i = 0 ; i < outcome.size();i++){
+            int flag = 0;
+            for (int j = 0 ; j < i;j++){
+                if (Arrays.equals(gg.get(outcome.get(i)),gg.get(outcome.get(j)))){
+                    flag = 1;
+                }
             }
-            flag = NextPermutation(x, nArray);
-            values.add(objs);
-        } while (flag != 1);
-        return values;
-    }
-
-    public static int NextPermutation(int[] x, List<String[]> nArray) {
-        int carry = 0;
-        for (int looper = nArray.size() - 1; looper >= 0; looper--) {
-            if (x[looper] + 1 == nArray.get(looper).length) {
-                carry = 1;
-                x[looper] = 0;
-            } else {
-                x[looper] = x[looper] + 1;
-                carry = 0;
-                return 0;
+            if (flag == 0){
+                ll.add(outcome.get(i));
             }
         }
-
-        if (carry == 1)
-            return 1;
-        else
-            return 0;
+        Set<String> result = new HashSet<>(ll);
+        return result;
     }
 
-    public static ArrayList<String> maskGenerator1(char first){
-        char[] ACDFGH1 = {'L', 'N', 'P', 'R', 'W', 'Y', 'b', 'd', 'g', 'i', 'k', 'm'};
-        char[] ACDFGH2 = {'M', 'O', 'Q', 'S', 'V', 'X', 'a', 'c', 'h', 'j', 'l', 'n'};
-        ArrayList<String> newArr = new ArrayList<>();
-        char[] second1 = {'A','B','C','D'};  char[] second2 = {'E','F','G','H'};
-        for (int i = 0; i < 4; i++){
-            for (int j = 0; j < ACDFGH1.length; j++){
-                newArr.add(String.valueOf(first)+String.valueOf(second1[i])+String.valueOf(ACDFGH1[j]));
-            }
+    public static Character[] MaskStringSplit(String a){
+        Character[] outcome = new Character[24];
+        for (int i = 0; i < a.length(); i++){
+            outcome[i] = a.charAt(i);
         }
-        for (int i = 0; i < 4; i++){
-            for (int j = 0; j < ACDFGH2.length; j++){
-                newArr.add(String.valueOf(first)+String.valueOf(second2[i])+String.valueOf(ACDFGH2[j]));
-            }
-        }
-        return newArr;
+        return outcome;
     }
-
-    public static ArrayList<String> maskGenerator2(){
-        char[] BAEC = {'L', 'N', 'P', 'R', 'U', 'W', 'Y', 'b', 'd', 'g', 'i', 'k', 'm'}; char[] BCEA = {'L', 'N', 'P', 'R', 'T', 'W', 'Y', 'b', 'd', 'g', 'i', 'k', 'm', 'o'};
-        char[] BBED = {'C', 'E', 'G', 'I', 'L', 'N', 'P', 'R', 'W', 'Y', 'b', 'd', 'g', 'i', 'k', 'm'}; char[] BDEB = {'L', 'N', 'P', 'R', 'W', 'Y', 'b', 'd', 'g', 'i', 'k', 'm', 'r', 't', 'v', 'x'};
-        char[] BEEG = {'M', 'O', 'Q', 'S', 'V', 'X', 'a', 'c', 'e', 'h', 'j', 'l', 'n'}; char[] BGEE = {'K', 'M', 'O', 'Q', 'S', 'V', 'X', 'a', 'c', 'f', 'h', 'j', 'l', 'n'};
-        char[] BFEH = {'M', 'O', 'Q', 'S', 'V', 'X', 'a', 'c', 'h', 'j', 'l', 'n', 'q', 's', 'u', 'w'}; char[] BHEF = {'B', 'D', 'F', 'H', 'M', 'O', 'Q', 'S', 'V', 'X', 'a', 'c', 'h', 'j', 'l', 'n'};
-
-        ArrayList<String> newArr = new ArrayList<>();
-        for (int i = 0; i < BAEC.length; i++){newArr.add("BA"+BAEC[i]);} for (int i = 0; i < BBED.length; i++){newArr.add("BB"+BBED[i]);}
-        for (int i = 0; i < BEEG.length; i++){newArr.add("BE"+BEEG[i]);} for (int i = 0; i < BFEH.length; i++){newArr.add("BF"+BFEH[i]);}
-        for (int i = 0; i < BCEA.length; i++){newArr.add("BC"+BCEA[i]);} for (int i = 0; i < BDEB.length; i++){newArr.add("BD"+BDEB[i]);}
-        for (int i = 0; i < BGEE.length; i++){newArr.add("BG"+BGEE[i]);} for (int i = 0; i < BHEF.length; i++){newArr.add("BH"+BHEF[i]);}
-
-        return newArr;
-    }
-
-    public static ArrayList<String> maskGenerator3(){
-        char[] BAEC = {'L', 'N', 'P', 'R', 'U', 'W', 'Y', 'b', 'd', 'g', 'i', 'k', 'm'}; char[] BCEA = {'L', 'N', 'P', 'R', 'T', 'W', 'Y', 'b', 'd', 'g', 'i', 'k', 'm', 'o'};
-        char[] BBED = {'C', 'E', 'G', 'I', 'L', 'N', 'P', 'R', 'W', 'Y', 'b', 'd', 'g', 'i', 'k', 'm'}; char[] BDEB = {'L', 'N', 'P', 'R', 'W', 'Y', 'b', 'd', 'g', 'i', 'k', 'm', 'r', 't', 'v', 'x'};
-        char[] BEEG = {'M', 'O', 'Q', 'S', 'V', 'X', 'a', 'c', 'e', 'h', 'j', 'l', 'n'}; char[] BGEE = {'K', 'M', 'O', 'Q', 'S', 'V', 'X', 'a', 'c', 'f', 'h', 'j', 'l', 'n'};
-        char[] BFEH = {'M', 'O', 'Q', 'S', 'V', 'X', 'a', 'c', 'h', 'j', 'l', 'n', 'q', 's', 'u', 'w'}; char[] BHEF = {'B', 'D', 'F', 'H', 'M', 'O', 'Q', 'S', 'V', 'X', 'a', 'c', 'h', 'j', 'l', 'n'};
-
-        ArrayList<String> newArr = new ArrayList<>();
-        for (int i = 0; i < BAEC.length; i++){newArr.add("EC"+BAEC[i]);} for (int i = 0; i < BBED.length; i++){newArr.add("ED"+BBED[i]);}
-        for (int i = 0; i < BEEG.length; i++){newArr.add("EG"+BEEG[i]);} for (int i = 0; i < BFEH.length; i++){newArr.add("EH"+BFEH[i]);}
-        for (int i = 0; i < BCEA.length; i++){newArr.add("EA"+BCEA[i]);} for (int i = 0; i < BDEB.length; i++){newArr.add("EB"+BDEB[i]);}
-        for (int i = 0; i < BGEE.length; i++){newArr.add("EE"+BGEE[i]);} for (int i = 0; i < BHEF.length; i++){newArr.add("EF"+BHEF[i]);}
-
-        return newArr;
-    }
-
-
 }
