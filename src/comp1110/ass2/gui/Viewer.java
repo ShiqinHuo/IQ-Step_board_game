@@ -41,8 +41,6 @@ public class Viewer extends Application {
 
     TextField textField;
 
-
-
     /**
      * Draw a placement in the window, removing any previously drawn one
      *
@@ -108,40 +106,40 @@ public class Viewer extends Application {
     /**
      * Construct a particular peg at a particular place
      */
-    public static class Onepeg extends Circle {
+    private static class Onepeg extends Circle {
         double x,y;
         //String peg;
         Onepeg(int num){
-            setRadius(12);
+            setRadius(10);
             if(num<=5) {
-                setCenterX(250 + (num-1)* 54 + 80);    // 250 .. 20
-                x = 250 + (num-1) * 54 + 80;   //      33
-                setCenterY(200+ 50);
-                y = 200+ 50;
+                setCenterX(250 + (num-1)* 60);    // 250 .. 20
+                x = 250 + (num-1) * 60;   //      33
+                setCenterY(200);
+                y = 200;
             }
             else if(num<=10){
-                setCenterX(277+(num-6)* 54 + 80);
-                x = 277+(num-6)* 54 + 80;                   // 250 + 60
-                setCenterY(200+27+ 50);
-                y = 200+27+ 50;
+                setCenterX(280+(num-6)* 60);
+                x = 280+(num-6)* 60;                   // 250 + 60
+                setCenterY(200+30);
+                y = 200+30;
             }
             else if(num<=15) {
-                setCenterX(250 + (num - 11) * 54 + 80);
-                x =250 + (num - 11) * 54 + 80;
-                setCenterY(200+27*2+ 50);
-                y =200+27*2+ 50;
+                setCenterX(250 + (num - 11) * 60);
+                x =250 + (num - 11) * 60;
+                setCenterY(200+30*2);
+                y =200+30*2;
             }
             else if(num<=20) {
-                setCenterX(277 + (num-16) * 54 + 80);
-                x = 277+(num-16)*54 + 80;
-                setCenterY(200+27*3+ 50);
-                y =200+27*3+ 50;
+                setCenterX(280 + (num-16) * 60);
+                x = 280+(num-16)*60;
+                setCenterY(200+30*3);
+                y =200+30*3;
             }
             else if(num<=25) {
-                setCenterX(250 + (num-21)*54+ 80);
-                x = 250 + (num-21) * 54+ 80;
-                setCenterY(200+27*4+ 50);
-                y =200+27*4+ 50;
+                setCenterX(250 + (num-21)*60);
+                x = 250 + (num-21) * 60;
+                setCenterY(200+30*4);
+                y =200+30*4;
             }
             setStroke(Color.gray(0.6));
             setFill(Color.gray(0.6));
@@ -219,10 +217,7 @@ public class Viewer extends Application {
 //        root.getChildren().add(controls);
         root.getChildren().add(pegs);
         makePegs();
-
         makeControls();
-
-
         primaryStage.setScene(scene);
         primaryStage.show();
         }
