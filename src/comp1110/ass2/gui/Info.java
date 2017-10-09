@@ -25,6 +25,8 @@ import java.util.List;
 
 /**
  * Created by DoubleHUO on 3/10/17.
+ * This class is based on
+ * https://github.com/AlmasB/FXTutorials/tree/master/src/com/almasb/civ6menu
  */
 
 public class Info extends Application implements Runnable {
