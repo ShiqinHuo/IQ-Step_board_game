@@ -24,7 +24,10 @@ import java.util.List;
 
 /**
  * Created by DoubleHUO on 8/9/17.
+ * This class is based on
+ * https://github.com/AlmasB/FXTutorials/tree/master/src/com/almasb/civ6menu
  */
+
 public class MenuApp extends Application {
     private static final int WIDTH  = 933;
     private static final int HEIGHT = 700;
