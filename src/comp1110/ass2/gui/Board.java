@@ -18,7 +18,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
@@ -50,12 +49,17 @@ public class Board extends Application implements Runnable  {
     private static final String[] Pieceset_left = {"AA","BA","CA","DA"};
     private static final String[] Pieceset_right = {"EA","FA","GA","HA"};
 
+
+    HashMap<String,Double> hashCoordX = new HashMap();
+    HashMap<String,Double> hashCoordY = new HashMap();
+    HashMap<String,Double> placedRotated = new HashMap<>();
+
     private final Group root = new Group();
     private final Group controls = new Group();
     private static final Group pegs = new Group();
     private static final Group letters = new Group();
     private final Group pieces = new Group();
-    Pane pane = new Pane();
+    private final Group correctpieces = new Group();
 //https://docs.oracle.com/javase/8/javafx/api/javafx/scene/layout/StackPane.html
 /*
     ArrayList<Peg> circleList = new ArrayList<>();
@@ -164,12 +168,35 @@ public class Board extends Application implements Runnable  {
                     setFitWidth(80);
                     break;}}}}
 
+    class FXPiece extends Picture{
+        double fixedX;
+        double fixedY;
+        double rotate;
+        FXPiece(String piece){
+            super(piece);
+            if (placedpieces.contains(piece)){
+                fixedX = hashCoordX.get(piece);
+                fixedY = hashCoordY.get(piece);
+                rotate = placedRotated.get(piece);
+                setLayoutX(fixedX);
+                System.out.println("fffffffxxxxxx"+fixedX);
+                setLayoutY(fixedY);
+                System.out.println("fffffffyyyyy"+fixedY);
+                setRotate(rotate);
+                setFitHeight(110);
+                setFitWidth(110);
+                setOpacity(1);
+            }
+        }
+    }
+
     /** Assign the coordinate for all pieces */
     class FlippableFXPiece extends Picture{
         double homeX;
         double homeY;
         FlippableFXPiece(String piece) {
             super(piece);//https://docs.oracle.com/javase/8/javafx/api/javafx/scene/Node.html
+            if (piecelist.contains(piece)){
             String char1 = String.valueOf(piece.charAt(0));
             homeY = piecemap.get(piece);
             if ("ABCD".contains(char1)){
@@ -187,8 +214,12 @@ public class Board extends Application implements Runnable  {
             if (piece.equals("EE"))
                 setRotate(-90);
             setFitHeight(80);
-            setFitWidth(80);
-        }
+            setFitWidth(80);}
+
+        }//ttps://stackoverflow.com/questions/3290681/initializing-a-double-object-with-a-primitive-double-value
+/*        HashMap<String,Double> hashCoordX = new HashMap();
+        HashMap<String,Double> hashCoordY = new HashMap();
+        HashMap<String,Double> placedRotated = new HashMap<>();*/
 //https://stackoverflow.com/questions/5617175/arraylist-replace-element-if-exists-at-a-given-index
         void flippedPieces(){
             String char1 = String.valueOf(piece.charAt(0));
@@ -205,10 +236,14 @@ public class Board extends Application implements Runnable  {
             System.out.println("changed????"+newpiece);
             System.out.println("clear....");
             System.out.println(piecelist.contains(piece));
-            System.out.println(piecelist);
+            System.out.println("listtodoooooo"+piecelist);
+            System.out.println("donedonedone"+placedpieces);
             makeUpdatedPieces();
+            makeCorrectPieces();
+            System.out.println("corrrrrrrrrrrrrr"+correctpieces);
         }
     }
+
     private ArrayList<String> piecelist = new ArrayList<>();
     private void originalPieces(){
         if(piecelist.size()==0){
@@ -222,6 +257,8 @@ public class Board extends Application implements Runnable  {
             piecelist.add("HA");}
         // initialise
     }
+    private ArrayList<String> placedpieces = new ArrayList<>();
+
     //https://www.mkyong.com/java/how-to-loop-arraylist-in-java/
     /** This method is used to show those draggable pieces on the board. **/
     private void makeOriginalPieces() {
@@ -236,11 +273,53 @@ public class Board extends Application implements Runnable  {
     /** This method is used to show those draggable pieces on the board. **/
     private void makeUpdatedPieces() {
         pieces.getChildren().clear();
+        //updatedPieces();
         for (String piece : piecelist) {
             pieces.getChildren().add(new DraggableFXPiece(piece));
         }
+/*        for (String piece : placedpieces) {
+            pieces.getChildren().add(new DraggableFXPiece(piece));
+        }*/
         pieces.toFront();
     }
+
+    private void makeCorrectPieces(){
+        correctpieces.getChildren().clear();
+        for (String piece : placedpieces) {
+            correctpieces.getChildren().add(new FXPiece(piece));
+        }
+        System.out.println("ccccooooooooooooorect111");
+        correctpieces.toFront();
+    }
+
+
+/*    public class Coord<X,Y>{
+        private final X x;
+        private final Y y;
+        public Coord(X x, Y y){
+            this.x = x;
+            this.y = y;
+        }
+        public X getXcoord(){return x;}
+        public Y getYcoord(){return y;}
+
+        @Override
+        public int hashCode(){return x.hashCode()^y.hashCode();}
+
+        @Override
+        public boolean equals(Object o){
+            if (!(o instanceof Coord)) return false;
+            Coord coord_o = (Coord) o;
+            return this.x.equals(coord_o.getXcoord())&&
+                    this.y.equals(coord_o.getYcoord());
+        }
+        public void add(X x, Y y){
+
+        }
+    }*/
+
+
+
     // FIXME Task 7: Implement a basic playable Steps Game in JavaFX that only allows pieces to be placed in valid places
 
     class DraggableFXPiece extends FlippableFXPiece {
@@ -259,23 +338,25 @@ public class Board extends Application implements Runnable  {
                     setLayoutY(homeY);break;
                 }
             }
-            setOnScroll(event -> {
+            setOnScroll(event -> {if (!isOnBoard()) {
                 hideCompletion();
                 hideUsingTime();
                 rotate();
                 checkMove();
                 event.consume();
-                    });
+            }});
 //https://stackoverflow.com/questions/22542015/how-to-add-a-mouse-doubleclick-event-listener-to-the-cells-of-a-listview-in-java
             setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent click) {
-                    if (click.getClickCount() == 2) {
+                    if (homeX == getLayoutX() & homeY == getLayoutY()){
+                        if (click.getClickCount() == 2) {
                         //updatePieces(piece);// flip
-                        flippedPieces();
-                        hideCompletion();
-                        hideUsingTime();
-                        checkMove();}
+                            flippedPieces();
+                            makeCorrectPieces();//fixed
+                            hideCompletion();
+                            hideUsingTime();
+                            checkMove();}}
                 }
             });
 
@@ -303,14 +384,47 @@ public class Board extends Application implements Runnable  {
                     });
 
             setOnMouseReleased(event -> {
-                setOpacity(1);
-               // snapToGrid();
-                hideCompletion();
-                hideUsingTime();
-                checkMove();
-                event.consume();
-                    });
+                if (isOnBoard()) {
+                    System.out.println("onononXXXXX"+getLayoutX());
+                    System.out.println("ooooonnYYYYY"+getLayoutY());
+                    setOpacity(1);
+                    // snapToGrid();
+                    updatedPieces();
+                    hideCompletion();
+                    hideUsingTime();
+                    checkMove();
+                    event.consume();
                 }
+                else {
+                    System.out.println("gggggXXX"+getLayoutX());
+                    System.out.println("ggggYYY"+getLayoutY());
+                    snapToHome();
+                    setOpacity(1);}
+            });
+                }
+
+//https://stackoverflow.com/questions/521171/a-java-collection-of-value-pairs-tuples
+
+        /** remove pieces already on the board from the piecelist. **/
+        public void updatedPieces() {
+            if (piecelist.contains(piece)){
+                int index = piecelist.indexOf(piece);
+                piecelist.remove(index);
+                if (! placedpieces.contains(piece)){
+                placedpieces.add(piece);
+                System.out.println("ppppppplaced"+placedpieces);
+                System.out.println("pairXXXXX"+getLayoutX());
+                System.out.println("pairYYYYY"+getLayoutY());
+                hashCoordX.put(piece,getLayoutX());
+                hashCoordY.put(piece,getLayoutY());
+                placedRotated.put(piece,getRotate());}}
+        }
+
+        boolean isOnBoard(){
+            if (getLayoutX()<304 || getLayoutX()>517 || getLayoutY()<222 || getLayoutY()>289){
+                return false;}
+            return true;
+        }
 
         /** Check whether there are wrong connections between pieces.
         *   If so, show the skulls to mention the wrong piece placement. **/
@@ -382,6 +496,7 @@ public class Board extends Application implements Runnable  {
         /** Make the piece rotate clockwise. Each time rotate 45 degrees. **/
         private void rotate() {
             setRotate((getRotate() + 45) % 360);}
+
     }
 
     // FIXME Task 8: Implement starting placements
@@ -555,10 +670,11 @@ public class Board extends Application implements Runnable  {
         addBackground();
         addTitle();
         primaryStage.setScene(scene);
-        root.getChildren().add(pieces);
-        root.getChildren().add(controls);
         root.getChildren().add(pegs);
         root.getChildren().add(letters);
+        root.getChildren().add(controls);
+        root.getChildren().add(pieces);
+        root.getChildren().add(correctpieces);
         //root.getChildren().add(pane);
         //root.getChildren().add(newPiece);
         setUpHandlers(scene);
