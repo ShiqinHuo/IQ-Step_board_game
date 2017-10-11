@@ -387,8 +387,8 @@ public class Board extends Application implements Runnable  {
                     updatedPieces();
                 }
                 else {
-                   // System.out.println("gggggXXX"+getLayoutX());
-                   // System.out.println("ggggYYY"+getLayoutY());
+                    System.out.println("gggggXXX"+getLayoutX());
+                    System.out.println("ggggYYY"+getLayoutY());
                     snapToHome();
                     setOpacity(1);}
             });
@@ -415,8 +415,25 @@ public class Board extends Application implements Runnable  {
         }
 
         boolean isOnBoard(){
-            if (getLayoutX()<304 || getLayoutX()>517 || getLayoutY()<222 || getLayoutY()>289){
-                return false;}
+            if ( piece.equals("BA") && getRotate() == 0 || piece.equals("EA") && getRotate() == 180){
+                if (getLayoutX()<270||getLayoutX()>520 || getLayoutY()<220 || getLayoutY()>290){
+                    return false;
+                }}
+            if ( piece.equals("BA") && getRotate() == 90 || piece.equals("EA") && getRotate() == 270){
+                if (getLayoutX()<300 || getLayoutX()>520||getLayoutY()<190 || getLayoutY()>290){
+                    return false;
+                }}
+            if (piece.equals("BA") && getRotate() == 180 || piece.equals("EA") && getRotate() == 0){
+                if (getLayoutX()<300 || getLayoutX()>550 || getLayoutY()<220 || getLayoutY()>290){
+                    return false;
+                }}
+            if (piece.equals("BA") && getRotate() == 270 || piece.equals("EA") && getRotate() == 90) {
+                if (getLayoutX() < 300 || getLayoutX() > 520 || getLayoutY() < 220 || getLayoutY() > 320) {
+                    return false;
+                }}
+            else if (getLayoutX()<300 || getLayoutX()>520 || getLayoutY()<220 || getLayoutY()>290){
+                return false;
+            }
             return true;
         }
 
