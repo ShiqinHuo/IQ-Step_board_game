@@ -45,10 +45,6 @@ public class Board extends Application implements Runnable  {
     private final DropShadow dropShadow = new DropShadow();
 
     private static String newstart = "";
-    private static final String[] Pieceset = {"AA","AE","BA","BE","CA","CE","DA","DE","EA","EE","FA","FE","GA","GE","HA","HE"};
-    private static final String[] Pieceset_left = {"AA","BA","CA","DA"};
-    private static final String[] Pieceset_right = {"EA","FA","GA","HA"};
-
 
     HashMap<String,Double> hashCoordX = new HashMap();
     HashMap<String,Double> hashCoordY = new HashMap();
@@ -60,6 +56,8 @@ public class Board extends Application implements Runnable  {
     private static final Group letters = new Group();
     private final Group pieces = new Group();
     private final Group correctpieces = new Group();
+    private final Group newpieces = new Group();
+    private final Group boardpieces = new Group();
 //https://docs.oracle.com/javase/8/javafx/api/javafx/scene/layout/StackPane.html
 /*
     ArrayList<Peg> circleList = new ArrayList<>();
@@ -83,6 +81,8 @@ public class Board extends Application implements Runnable  {
             e.printStackTrace();
         }
     }
+    /* initialize : preparation for the pegs arrangement & original pieces' arrangement */
+
     /** Create pegs helper class */
     private static class Peg extends Circle {
         double x,y;
@@ -92,7 +92,7 @@ public class Board extends Application implements Runnable  {
             for (Alphabet a : Alphabet.values())
                 if (isPeg(id) && (a.getId() == id)){
                     letter = a;
-                    System.out.println("...."+letter);
+                    //System.out.println("...."+letter);
                     setCenterX(pegmapX.get(id%10)+80);
                     x = pegmapX.get(id%10) ;
                     setCenterY(pegmapY.get(id/10));
@@ -110,9 +110,9 @@ public class Board extends Application implements Runnable  {
         for(int i = 0;i<=49;i++){
             if (isPeg(i)) {
                 Peg onepeg = new Peg(i);
-                System.out.println("xxxxxxx"+ onepeg.x);
-                System.out.println("yyyyyy"+ onepeg.y);
-                System.out.println("hhhhh"+onepeg.letter);
+               // System.out.println("xxxxxxx"+ onepeg.x);
+               // System.out.println("yyyyyy"+ onepeg.y);
+                System.out.println("peg letter: "+onepeg.letter+" x-pos: "+onepeg.x+" y-pos: "+onepeg.y);
                 Label letter = new Label(onepeg.letter.toString());
                 letter.setLayoutX(onepeg.x+73);
                 letter.setLayoutY(onepeg.y-18);
@@ -122,7 +122,7 @@ public class Board extends Application implements Runnable  {
                 // http://docs.oracle.com/javafx/2/text/jfxpub-text.htm
                 letter.setTextFill(Color.WHITE);
                 letter.setEffect(new DropShadow(30,Color.DEEPPINK));
-                System.out.println("lllllletter"+letter);
+              //  System.out.println("lllllletter"+letter);
                 letters.getChildren().add(letter);
                 letters.toFront();
                 //https://docs.oracle.com/javase/8/javafx/api/javafx/scene/layout/StackPane.html
@@ -174,7 +174,7 @@ public class Board extends Application implements Runnable  {
         double rotate;
         FXPiece(String piece){
             super(piece);
-            if (placedpieces.contains(piece)){
+            //if (placedpieces.contains(piece)){
                 fixedX = hashCoordX.get(piece);
                 fixedY = hashCoordY.get(piece);
                 rotate = placedRotated.get(piece);
@@ -183,10 +183,11 @@ public class Board extends Application implements Runnable  {
                 setLayoutY(fixedY);
                 System.out.println("fffffffyyyyy"+fixedY);
                 setRotate(rotate);
+                System.out.println("rotateeeeeeee"+rotate);
                 setFitHeight(110);
                 setFitWidth(110);
                 setOpacity(1);
-            }
+            //}
         }
     }
 
@@ -228,19 +229,19 @@ public class Board extends Application implements Runnable  {
             //System.out.println(char2 == "A"); cannot use == but .equals()
             if (char2.equals("A") ) newpiece = char1 + "E";
             else newpiece = char1 + "A";
-            System.out.println("newpiece..."+newpiece);
+            //System.out.println("newpiece..."+newpiece);
             int index = piecelist.indexOf(piece);
             System.out.println("index"+index);
-            System.out.println(piecelist);
+            //System.out.println(piecelist);
             piecelist.set(index,newpiece);// replace the piece with its flipped counterpart
-            System.out.println("changed????"+newpiece);
-            System.out.println("clear....");
-            System.out.println(piecelist.contains(piece));
+            //System.out.println("changed????"+newpiece);
+            //System.out.println("clear....");
+            //System.out.println(piecelist.contains(piece));
             System.out.println("listtodoooooo"+piecelist);
             System.out.println("donedonedone"+placedpieces);
             makeUpdatedPieces();
-            makeCorrectPieces();
-            System.out.println("corrrrrrrrrrrrrr"+correctpieces);
+           // makeCorrectPieces();
+            //System.out.println("corrrrrrrrrrrrrr"+correctpieces);
         }
     }
 
@@ -263,61 +264,38 @@ public class Board extends Application implements Runnable  {
     /** This method is used to show those draggable pieces on the board. **/
     private void makeOriginalPieces() {
         originalPieces();
-        pieces.getChildren().clear();
+        pieces.getChildren().clear(); // updated piecelist states : including the flipped side
+        newpieces.getChildren().clear();
         for (String piece : piecelist) {
-            pieces.getChildren().add(new DraggableFXPiece(piece));
-        }
-        pieces.toFront();
+            newpieces.getChildren().add(new DraggableFXPiece(piece));
+        } // newpieces : original group
+        newpieces.toFront();
     }
 
     /** This method is used to show those draggable pieces on the board. **/
     private void makeUpdatedPieces() {
+        newpieces.getChildren().clear();// initial pieces
+        boardpieces.getChildren().clear();
         pieces.getChildren().clear();
-        //updatedPieces();
-        for (String piece : piecelist) {
+
+/*        for (String piece : placedpieces) {// boardpieces : arranged group
+
+            boardpieces.getChildren().add(new DraggableFXPiece(piece)); // pieces on board
+        }*/
+        for (String piece : piecelist) { // disarranged group : pieces
             pieces.getChildren().add(new DraggableFXPiece(piece));
         }
-/*        for (String piece : placedpieces) {
-            pieces.getChildren().add(new DraggableFXPiece(piece));
-        }*/
-        pieces.toFront();
+        boardpieces.toFront();
     }
 
-    private void makeCorrectPieces(){
+/*    private void makeCorrectPieces(){
         correctpieces.getChildren().clear();
         for (String piece : placedpieces) {
             correctpieces.getChildren().add(new FXPiece(piece));
         }
         System.out.println("ccccooooooooooooorect111");
         correctpieces.toFront();
-    }
-
-
-/*    public class Coord<X,Y>{
-        private final X x;
-        private final Y y;
-        public Coord(X x, Y y){
-            this.x = x;
-            this.y = y;
-        }
-        public X getXcoord(){return x;}
-        public Y getYcoord(){return y;}
-
-        @Override
-        public int hashCode(){return x.hashCode()^y.hashCode();}
-
-        @Override
-        public boolean equals(Object o){
-            if (!(o instanceof Coord)) return false;
-            Coord coord_o = (Coord) o;
-            return this.x.equals(coord_o.getXcoord())&&
-                    this.y.equals(coord_o.getYcoord());
-        }
-        public void add(X x, Y y){
-
-        }
     }*/
-
 
 
     // FIXME Task 7: Implement a basic playable Steps Game in JavaFX that only allows pieces to be placed in valid places
@@ -330,14 +308,33 @@ public class Board extends Application implements Runnable  {
 
         DraggableFXPiece(String piece) {
             super(piece);
+            if (placedpieces.contains(piece))
+            for (String p : placedpieces) {
+                //System.out.println("placedpieces"+placedpieces);
+                //System.out.println("pppppp"+p+"iiii"+piece);
+                //System.out.println(p.equals(piece));
+                //System.out.println("innnnnnnnnn");// bug : spacename
+                if (p.equals(piece)) {
+                  //  System.out.println("nonghaode dongxi");
+                    homeX = new FXPiece(p).fixedX;
+                    homeY = new FXPiece(p).fixedY;
+                    setLayoutX(homeX);
+                    setLayoutY(homeY);
+                    setRotate(new FXPiece(p).rotate);
+                    break;}
+            }
+            if (piecelist.contains(piece))
             for(String p : piecelist) {
                 if ( p.equals(piece)) {
+                   // System.out.println("piecelist"+piecelist);
+                    //System.out.println("to do");
                     homeX = new FlippableFXPiece(p).homeX;
                     setLayoutX(homeX);
                     homeY = new FlippableFXPiece(p).homeY;
-                    setLayoutY(homeY);break;
+                    setLayoutY(homeY);
                 }
             }
+
             setOnScroll(event -> {if (!isOnBoard()) {
                 hideCompletion();
                 hideUsingTime();
@@ -353,7 +350,7 @@ public class Board extends Application implements Runnable  {
                         if (click.getClickCount() == 2) {
                         //updatePieces(piece);// flip
                             flippedPieces();
-                            makeCorrectPieces();//fixed
+                           // makeCorrectPieces();//fixed
                             hideCompletion();
                             hideUsingTime();
                             checkMove();}}
@@ -385,19 +382,19 @@ public class Board extends Application implements Runnable  {
 
             setOnMouseReleased(event -> {
                 if (isOnBoard()) {
-                    System.out.println("onononXXXXX"+getLayoutX());
-                    System.out.println("ooooonnYYYYY"+getLayoutY());
+                   // System.out.println("onononXXXXX"+getLayoutX());
+                    //System.out.println("ooooonnYYYYY"+getLayoutY());
                     setOpacity(1);
                     // snapToGrid();
-                    updatedPieces();
                     hideCompletion();
                     hideUsingTime();
                     checkMove();
                     event.consume();
+                    updatedPieces();
                 }
                 else {
-                    System.out.println("gggggXXX"+getLayoutX());
-                    System.out.println("ggggYYY"+getLayoutY());
+                   // System.out.println("gggggXXX"+getLayoutX());
+                   // System.out.println("ggggYYY"+getLayoutY());
                     snapToHome();
                     setOpacity(1);}
             });
@@ -411,13 +408,16 @@ public class Board extends Application implements Runnable  {
                 int index = piecelist.indexOf(piece);
                 piecelist.remove(index);
                 if (! placedpieces.contains(piece)){
-                placedpieces.add(piece);
-                System.out.println("ppppppplaced"+placedpieces);
-                System.out.println("pairXXXXX"+getLayoutX());
-                System.out.println("pairYYYYY"+getLayoutY());
-                hashCoordX.put(piece,getLayoutX());
-                hashCoordY.put(piece,getLayoutY());
-                placedRotated.put(piece,getRotate());}}
+                    boardpieces.getChildren().add(new DraggableFXPiece(piece));
+                    placedpieces.add(piece);
+                  //  System.out.println("ppppppplaced"+placedpieces);
+                  //  System.out.println("pairXXXXX"+getLayoutX());
+                  //  System.out.println("pairYYYYY"+getLayoutY()); // on-board coordinates
+                    hashCoordX.put(piece,getLayoutX());
+                    hashCoordY.put(piece,getLayoutY());
+                    placedRotated.put(piece,getRotate());
+                }
+            }
         }
 
         boolean isOnBoard(){
@@ -667,14 +667,16 @@ public class Board extends Application implements Runnable  {
         primaryStage.setTitle("IQ-Steps Viewer");
         Scene scene = new Scene(root, BOARD_WIDTH, BOARD_HEIGHT);
         makePegs();
-        addBackground();
+        //addBackground();
         addTitle();
         primaryStage.setScene(scene);
         root.getChildren().add(pegs);
         root.getChildren().add(letters);
         root.getChildren().add(controls);
+        root.getChildren().add(newpieces);
         root.getChildren().add(pieces);
-        root.getChildren().add(correctpieces);
+        root.getChildren().add(boardpieces);
+        //root.getChildren().add(correctpieces);
         //root.getChildren().add(pane);
         //root.getChildren().add(newPiece);
         setUpHandlers(scene);
