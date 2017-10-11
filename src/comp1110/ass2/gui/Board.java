@@ -45,6 +45,7 @@ public class Board extends Application implements Runnable  {
     private final DropShadow dropShadow = new DropShadow();
 
     private static String newstart = "";
+    private static String placement = "";
 
     HashMap<String,Double> hashCoordX = new HashMap();
     HashMap<String,Double> hashCoordY = new HashMap();
@@ -55,12 +56,12 @@ public class Board extends Application implements Runnable  {
     private static final Group pegs = new Group();
     private static final Group letters = new Group();
     private final Group pieces = new Group();
-    private final Group correctpieces = new Group();
+    //private final Group correctpieces = new Group();
     private final Group newpieces = new Group();
     private final Group boardpieces = new Group();
+    ArrayList<Peg> peglist = new ArrayList<>();
 //https://docs.oracle.com/javase/8/javafx/api/javafx/scene/layout/StackPane.html
 /*
-    ArrayList<Peg> circleList = new ArrayList<>();
     Peg highlightedCircle = null;
     ArrayList<Double> diff_Zero = new ArrayList<>();
     ArrayList<Double> diff_One = new ArrayList<>();
@@ -113,6 +114,7 @@ public class Board extends Application implements Runnable  {
                // System.out.println("xxxxxxx"+ onepeg.x);
                // System.out.println("yyyyyy"+ onepeg.y);
                 System.out.println("peg letter: "+onepeg.letter+" x-pos: "+onepeg.x+" y-pos: "+onepeg.y);
+                peglist.add(onepeg);
                 Label letter = new Label(onepeg.letter.toString());
                 letter.setLayoutX(onepeg.x+73);
                 letter.setLayoutY(onepeg.y-18);
@@ -206,14 +208,15 @@ public class Board extends Application implements Runnable  {
             else homeX = 750;
             setLayoutX(homeX);
             setLayoutY(homeY);
-            if (piece.equals("FA") || piece.equals("GA") || piece.equals("CE") || piece.equals("DA"))
+/*            if (piece.equals("FA") || piece.equals("GA") || piece.equals("CE") || piece.equals("DA"))
                 setRotate(45);
             if (piece.equals("FE") || piece.equals("GE") || piece.equals("CA") || piece.equals("DE"))
                 setRotate(-45);
             if (piece.equals("EA"))
                 setRotate(90);
             if (piece.equals("EE"))
-                setRotate(-90);
+                setRotate(-90);*/
+            setRotate(0);
             setFitHeight(80);
             setFitWidth(80);}
 
@@ -229,7 +232,8 @@ public class Board extends Application implements Runnable  {
             //System.out.println(char2 == "A"); cannot use == but .equals()
             if (char2.equals("A") ) newpiece = char1 + "E";
             else newpiece = char1 + "A";
-            //System.out.println("newpiece..."+newpiece);
+            System.out.println("newpiece..."+newpiece);
+            if (piecelist.contains(piece)){
             int index = piecelist.indexOf(piece);
             System.out.println("index"+index);
             //System.out.println(piecelist);
@@ -239,9 +243,9 @@ public class Board extends Application implements Runnable  {
             //System.out.println(piecelist.contains(piece));
             System.out.println("listtodoooooo"+piecelist);
             System.out.println("donedonedone"+placedpieces);
-            makeUpdatedPieces();
+            makeUpdatedPieces();}
            // makeCorrectPieces();
-            //System.out.println("corrrrrrrrrrrrrr"+correctpieces);
+           //System.out.println("corrrrrrrrrrrrrr"+correctpieces);
         }
     }
 
@@ -279,24 +283,14 @@ public class Board extends Application implements Runnable  {
         pieces.getChildren().clear();
 
 /*        for (String piece : placedpieces) {// boardpieces : arranged group
-
             boardpieces.getChildren().add(new DraggableFXPiece(piece)); // pieces on board
         }*/
+
         for (String piece : piecelist) { // disarranged group : pieces
             pieces.getChildren().add(new DraggableFXPiece(piece));
         }
         boardpieces.toFront();
     }
-
-/*    private void makeCorrectPieces(){
-        correctpieces.getChildren().clear();
-        for (String piece : placedpieces) {
-            correctpieces.getChildren().add(new FXPiece(piece));
-        }
-        System.out.println("ccccooooooooooooorect111");
-        correctpieces.toFront();
-    }*/
-
 
     // FIXME Task 7: Implement a basic playable Steps Game in JavaFX that only allows pieces to be placed in valid places
 
@@ -385,7 +379,7 @@ public class Board extends Application implements Runnable  {
                    // System.out.println("onononXXXXX"+getLayoutX());
                     //System.out.println("ooooonnYYYYY"+getLayoutY());
                     setOpacity(1);
-                    // snapToGrid();
+                    snapToGrid();
                     hideCompletion();
                     hideUsingTime();
                     checkMove();
@@ -481,25 +475,74 @@ public class Board extends Application implements Runnable  {
             else homeX = 750;
             setLayoutX(homeX);
             setLayoutY(homeY);
-            if (piece.equals("FA") || piece.equals("GA") || piece.equals("CE") || piece.equals("DA"))
+/*            if (piece.equals("FA") || piece.equals("GA") || piece.equals("CE") || piece.equals("DA"))
                 setRotate(45);
             if (piece.equals("FE") || piece.equals("GE") || piece.equals("CA") || piece.equals("DE"))
                 setRotate(-45);
             if (piece.equals("EA"))
                 setRotate(90);
             if (piece.equals("EE"))
-                setRotate(-90);
+                setRotate(-90);*/
+            setRotate(0);
             setFitHeight(80);
             setFitWidth(80);
         }
 
+        private void snapToGrid(){
+            String ori = "";
+            String pieceplacement = "";
+            String char1 = String.valueOf(piece.charAt(0));
+            String char2 = String.valueOf(piece.charAt(1));
+            System.out.println("grid??");
+            for (Peg a : peglist){
+                //System.out.println("layout x: " +getLayoutX()+" xpos: "+a.x+" peg: "+a.letter.toString());
+                //System.out.println("layout y: " +getLayoutY()+" ypos: "+a.y+" peg: "+a.letter.toString());
+                if(getLayoutX()-25 <= a.x+20 && getLayoutX()-25 >= a.x-20 && getLayoutY()+ 55 <= a.y+20 && getLayoutY()+55  >= a.y-20){
+                    setLayoutY(a.y - 55); // getLayoutY() - 20 <= pos <= getLayoutY() + 20
+                    setLayoutX(a.x + 25);
+                    setFitHeight(110);
+                    setFitWidth(110);
+                }else continue;
+                if (char2 == "E") { // flipped
+                    ori =  String.valueOf('E'+(getRotate()/90)); // E F G H
+                }
+                else if (char2 == "A") {// non-flipped
+                    ori = String.valueOf('A'+(getRotate()/90));}
+                pieceplacement = char1 + ori + a.letter.toString();
+                if (placement.length()==0)
+                    placement = newstart + pieceplacement;
+                else
+                    placement = placement + pieceplacement;
+                break;
+            }
+            if (pieceplacement.equals(""))
+                snapToHome();
+            else if(StepsGame.isPlacementSequenceValid(placement)){
+                snapToHome();
+                placement = placement.substring(0,placement.length()-3);
+            }
+        }
+
         /** Make the piece rotate clockwise. Each time rotate 45 degrees. **/
         private void rotate() {
-            setRotate((getRotate() + 45) % 360);}
+            setRotate((getRotate() + 90) % 360);}
 
     }
 
     // FIXME Task 8: Implement starting placements
+
+
+/*
+    class NewPiece extends FXPiece{
+        NewPiece(String piece, String placement){
+            super(piece);
+            String
+
+        }
+    }
+*/
+
+
 
 
 
@@ -598,9 +641,9 @@ public class Board extends Application implements Runnable  {
         ImageView imageView = new ImageView(new Image(getClass().getResource("res/pinkpurple.jpg").toExternalForm()));
         imageView.setFitWidth(BOARD_WIDTH);
         imageView.setFitHeight(BOARD_HEIGHT);
-
         root.getChildren().add(imageView);
     }
+
     private void addTitle() {
         Title title = new Title("IQ - STEPS");
         title.setTranslateX(BOARD_WIDTH / 2 - title.getTitleWidth() / 2);
@@ -676,7 +719,7 @@ public class Board extends Application implements Runnable  {
         root.getChildren().add(newpieces);
         root.getChildren().add(pieces);
         root.getChildren().add(boardpieces);
-        //root.getChildren().add(correctpieces);
+        //root.getChildren().add(correct-pieces);
         //root.getChildren().add(pane);
         //root.getChildren().add(newPiece);
         setUpHandlers(scene);
