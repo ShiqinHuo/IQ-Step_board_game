@@ -6,6 +6,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -18,11 +19,13 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.math.BigDecimal;
@@ -39,7 +42,8 @@ public class Board extends Application implements Runnable  {
 
     TextField textField;
     /** message on completion */
-    private final Text completionText = new Text("Well done!");
+    private final Text completionText = new Text("Good Job!");
+    private final Text insText = new Text("Press Q to quit game.\n Press '/'to see the game hint.\nPress S to see the best score at the specific difficulty.\\nUse mouse to manipulate the pieces, \nsuch as doouble clicking to flip, using mouse scroll to rotate.\nSlide the \"Difficulty\" to change the difficuly level.\nPress \"Start\" to play a new game. ");
     private Text timeUsing = new Text("Shows timeUsing");
     private final Slider difficulty = new Slider();
     private final DropShadow dropShadow = new DropShadow();
@@ -47,32 +51,32 @@ public class Board extends Application implements Runnable  {
     private static String newstart = "";
     private static String placement = "";
 
-    HashMap<String,Double> hashCoordX = new HashMap();
-    HashMap<String,Double> hashCoordY = new HashMap();
-    HashMap<String,Double> placedRotated = new HashMap<>();
+    private HashMap<String,Double> hashCoordX = new HashMap();
+    private HashMap<String,Double> hashCoordY = new HashMap();
+    private HashMap<String,Double> placedRotated = new HashMap<>();
 
     private final Group root = new Group();
     private final Group controls = new Group();
     private static final Group pegs = new Group();
     private static final Group letters = new Group();
     private final Group pieces = new Group();
-    //private final Group correctpieces = new Group();
     private final Group newpieces = new Group();
     private final Group boardpieces = new Group();
-    ArrayList<Peg> peglist = new ArrayList<>();
-//https://docs.oracle.com/javase/8/javafx/api/javafx/scene/layout/StackPane.html
-/*
-    Peg highlightedCircle = null;
-    ArrayList<Double> diff_Zero = new ArrayList<>();
-    ArrayList<Double> diff_One = new ArrayList<>();
-    ArrayList<Double> diff_Two = new ArrayList<>();
-    ArrayList<Double> diff_Three = new ArrayList<>();
-    ArrayList<Double> diff_Four = new ArrayList<>();
-*/
+    private final Group solution = new Group();
+    private ArrayList<Peg> peglist = new ArrayList<>();
+
+    private ArrayList<Double> diff_0 = new ArrayList<>();
+    private ArrayList<Double> diff_1 = new ArrayList<>();
+    private ArrayList<Double> diff_2 = new ArrayList<>();
+    private ArrayList<Double> diff_3 = new ArrayList<>();
+    private ArrayList<Double> diff_4 = new ArrayList<>();
+
+
     private double startMilli = 0;
     private double endMilli = 0;
     private double useTime = 0;
     private BigDecimal UseTime;
+
 
     @Override
     public void run() {
@@ -81,8 +85,7 @@ public class Board extends Application implements Runnable  {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-    /* initialize : preparation for the pegs arrangement & original pieces' arrangement */
+    }/* initialize : preparation for the pegs arrangement & original pieces' arrangement */
 
     /** Create pegs helper class */
     private static class Peg extends Circle {
@@ -93,7 +96,6 @@ public class Board extends Application implements Runnable  {
             for (Alphabet a : Alphabet.values())
                 if (isPeg(id) && (a.getId() == id)){
                     letter = a;
-                    //System.out.println("...."+letter);
                     setCenterX(pegmapX.get(id%10)+80);
                     x = pegmapX.get(id%10) ;
                     setCenterY(pegmapY.get(id/10));
@@ -111,24 +113,18 @@ public class Board extends Application implements Runnable  {
         for(int i = 0;i<=49;i++){
             if (isPeg(i)) {
                 Peg onepeg = new Peg(i);
-               // System.out.println("xxxxxxx"+ onepeg.x);
-               // System.out.println("yyyyyy"+ onepeg.y);
                 System.out.println("peg letter: "+onepeg.letter+" x-pos: "+onepeg.x+" y-pos: "+onepeg.y);
                 peglist.add(onepeg);
                 Label letter = new Label(onepeg.letter.toString());
                 letter.setLayoutX(onepeg.x+73);
-                letter.setLayoutY(onepeg.y-18);
-                //https://www.dafont.com/top.php
+                letter.setLayoutY(onepeg.y-18);//https://www.dafont.com/top.php
                 letter.setFont(Font.loadFont(MenuApp.class.getResource("res/Meatloaf.ttf").toExternalForm(), 30));
                 //https://www.dafont.com/theme.php?cat=117
                 // http://docs.oracle.com/javafx/2/text/jfxpub-text.htm
                 letter.setTextFill(Color.WHITE);
                 letter.setEffect(new DropShadow(30,Color.DEEPPINK));
-              //  System.out.println("lllllletter"+letter);
                 letters.getChildren().add(letter);
                 letters.toFront();
-                //https://docs.oracle.com/javase/8/javafx/api/javafx/scene/layout/StackPane.html
-                //pegs.getChildren().add(onepeg);
                 pegs.getChildren().add(onepeg);
             }
         }
@@ -169,7 +165,7 @@ public class Board extends Application implements Runnable  {
                     setFitHeight(80);
                     setFitWidth(80);
                     break;}}}}
-
+    /**  */
     class FXPiece extends Picture{
         double fixedX;
         double fixedY;
@@ -189,9 +185,9 @@ public class Board extends Application implements Runnable  {
                 setFitHeight(110);
                 setFitWidth(110);
                 setOpacity(1);
-            //}
         }
     }
+
 
     /** Assign the coordinate for all pieces */
     class FlippableFXPiece extends Picture{
@@ -211,21 +207,19 @@ public class Board extends Application implements Runnable  {
             setRotate(0);
             setFitHeight(80);
             setFitWidth(80);}
-
-        }//ttps://stackoverflow.com/questions/3290681/initializing-a-double-object-with-a-primitive-double-value
-
+        }
+//https://stackoverflow.com/questions/3290681/initializing-a-double-object-with-a-primitive-double-value
 //https://stackoverflow.com/questions/5617175/arraylist-replace-element-if-exists-at-a-given-index
         void flippedPieces(){
             String char1 = String.valueOf(piece.charAt(0));
             String char2 = String.valueOf(piece.charAt(1));
             String newpiece;
-            //System.out.println(char2 == "A"); cannot use == but .equals()
             if (char2.equals("A") ) newpiece = char1 + "E";
             else newpiece = char1 + "A";
             System.out.println("newpiece..."+newpiece);
             if (piecelist.contains(piece)){
             int index = piecelist.indexOf(piece);
-            System.out.println("index"+index);
+            //System.out.println("index"+index);
             //System.out.println(piecelist);
             piecelist.set(index,newpiece);// replace the piece with its flipped counterpart
             //System.out.println("changed????"+newpiece);
@@ -234,8 +228,8 @@ public class Board extends Application implements Runnable  {
             System.out.println("listtodoooooo"+piecelist);
             System.out.println("donedonedone"+placedpieces);
             makeUpdatedPieces();}
-           // makeCorrectPieces();
-           //System.out.println("corrrrrrrrrrrrrr"+correctpieces);
+            //makeCorrectPieces();
+            //System.out.println("corrrrrrrrrrrrrr"+correctpieces);
         }
     }
 
@@ -254,7 +248,7 @@ public class Board extends Application implements Runnable  {
     }
     private ArrayList<String> placedpieces = new ArrayList<>();
 
-    //https://www.mkyong.com/java/how-to-loop-arraylist-in-java/
+//https://www.mkyong.com/java/how-to-loop-arraylist-in-java/
     /** This method is used to show those draggable pieces on the board. **/
     private void makeOriginalPieces() {
         originalPieces();
@@ -272,7 +266,7 @@ public class Board extends Application implements Runnable  {
         boardpieces.getChildren().clear();
         pieces.getChildren().clear();
 
-/*        for (String piece : placedpieces) {// boardpieces : arranged group
+/*      for (String piece : placedpieces) {// boardpieces : arranged group
             boardpieces.getChildren().add(new DraggableFXPiece(piece)); // pieces on board
         }*/
 
@@ -300,8 +294,9 @@ public class Board extends Application implements Runnable  {
                 //System.out.println("innnnnnnnnn");// bug : spacename
                 if (p.equals(piece)) {
                   //System.out.println("nonghaode dongxi");
-                    homeX = new FXPiece(p).fixedX;
-                    homeY = new FXPiece(p).fixedY;
+                    //homeX = new FXPiece(p).fixedX;
+                    //homeY = new FXPiece(p).fixedY;
+                    //-- Fixme
                     setLayoutX(homeX);
                     setLayoutY(homeY);
                     setRotate(new FXPiece(p).rotate);
@@ -310,7 +305,7 @@ public class Board extends Application implements Runnable  {
             if (piecelist.contains(piece))
             for(String p : piecelist) {
                 if ( p.equals(piece)) {
-                   // System.out.println("piecelist"+piecelist);
+                    //System.out.println("piecelist"+piecelist);
                     //System.out.println("to do");
                     homeX = new FlippableFXPiece(p).homeX;
                     setLayoutX(homeX);
@@ -376,8 +371,8 @@ public class Board extends Application implements Runnable  {
                     updatedPieces();
                 }
                 else {
-                    System.out.println("gggggXXX"+getLayoutX());
-                    System.out.println("ggggYYY"+getLayoutY());
+                    //System.out.println("gggggXXX"+getLayoutX());
+                    //System.out.println("ggggYYY"+getLayoutY());
                     snapToHome();
                     setOpacity(1);}
             });
@@ -386,7 +381,7 @@ public class Board extends Application implements Runnable  {
 //https://stackoverflow.com/questions/521171/a-java-collection-of-value-pairs-tuples
 
         /** remove pieces already on the board from the piecelist. **/
-        public void updatedPieces() {
+        private void updatedPieces() {
             if (piecelist.contains(piece)){
                 int index = piecelist.indexOf(piece);
                 piecelist.remove(index);
@@ -394,8 +389,6 @@ public class Board extends Application implements Runnable  {
                     boardpieces.getChildren().add(new DraggableFXPiece(piece));
                     placedpieces.add(piece);
                   //  System.out.println("ppppppplaced"+placedpieces);
-                  //  System.out.println("pairXXXXX"+getLayoutX());
-                  //  System.out.println("pairYYYYY"+getLayoutY()); // on-board coordinates
                     hashCoordX.put(piece,getLayoutX());
                     hashCoordY.put(piece,getLayoutY());
                     placedRotated.put(piece,getRotate());
@@ -442,19 +435,19 @@ public class Board extends Application implements Runnable  {
                     useTime = endMilli - startMilli;
                     if (useTime != startMilli) {
                         if (difficulty.getValue() == 0) {
-                       //     diff_Zero.add(useTime);
+                             diff_0.add(useTime);
                             }
                         else if (difficulty.getValue() == 1) {
-                         //   diff_One.add(useTime);
+                             diff_1.add(useTime);
                             }
                         else if (difficulty.getValue() == 2) {
-                        //    diff_Two.add(useTime);
+                            diff_2.add(useTime);
                             }
                         else if (difficulty.getValue() == 3) {
-                         //   diff_Three.add(useTime);
+                            diff_3.add(useTime);
                             }
                         else if (difficulty.getValue() == 4) {
-                         //   diff_Four.add(useTime);
+                            diff_4.add(useTime);
                             }
                     }
                     if (useTime > 60000) {
@@ -538,7 +531,6 @@ public class Board extends Application implements Runnable  {
 
     // FIXME Task 8: Implement starting placements
 
-
 /*
     class NewPiece extends FXPiece{
         NewPiece(String piece, String placement){
@@ -550,17 +542,14 @@ public class Board extends Application implements Runnable  {
 */
 
 
-
-
-
     // FIXME Task 10: Implement hints
     /* Hints helper functions */
 
-    /** This method is used to make the completion message, adjust its position, size and add it to root.
-      * When this method is invoked, the program will record the end time automatically which is the time player complete the game. **/
-    private void makeCompletion() {
-        completionText.setFill(Color.NAVY);
-        completionText.setFont(Font.font("Georgia", 80));
+    /** helps to set the effect of text, arranging the text's position, size.
+      * When called, record current time automatically.**/
+    private void compTextEffect() {
+        completionText.setFill(Color.DEEPPINK);
+        completionText.setFont(Font.loadFont(MenuApp.class.getResource("res/handwriting-draft_free-version.ttf").toExternalForm(), 25));
         completionText.setLayoutX(300);
         completionText.setLayoutY(250);
         completionText.setTextAlignment(TextAlignment.CENTER);
@@ -568,8 +557,7 @@ public class Board extends Application implements Runnable  {
         endMilli = System.currentTimeMillis();
     }
 
-    /** This method will show the completion message mentioned above by adjusting its opacity and making
-    *it to the front. **/
+    /** This method helps to show the completion text -> set it front **/
     private void showCompletion() {
         //newPiece.setOpacity(0.3);
         pieces.setOpacity(0.3);
@@ -579,8 +567,7 @@ public class Board extends Application implements Runnable  {
 
     }
 
-    /** This method will hide the completion message mentioned above by adjusting its opacity
-    * and making it to the back. **/
+    /** helps to hide the completion message  **/
     private void hideCompletion() {
         completionText.toBack();
         completionText.setOpacity(0);
@@ -588,8 +575,8 @@ public class Board extends Application implements Runnable  {
         //newPiece.setOpacity(1);
     }
 
-    /** This method is used to make the text of how many times you spend to complete the
-    * whole game at the specific difficulty. **/
+    /** helps to set properties for the "timeUsing" text
+    * the total time to complete the game at the corresponding difficulty. **/
     private void makeUsingTime() {
         timeUsing.setFill(Color.DEEPPINK);
         timeUsing.setFont(Font.loadFont(MenuApp.class.getResource("res/handwriting-draft_free-version.ttf").toExternalForm(), 25));
@@ -597,25 +584,141 @@ public class Board extends Application implements Runnable  {
         timeUsing.setLayoutY(500);
         root.getChildren().add(timeUsing);
     }
-    /** This method will show the text mentioned above. **/
+    /** helps to show the "timeUsing" text. **/
     private void showUsingTime() {
         timeUsing.toFront();
         timeUsing.setOpacity(1);
     }
 
-    /** This method will hide the text mentioned above. **/
+    /** helps to hide the "timeUsing" text. **/
     private void hideUsingTime() {
         timeUsing.toBack();
         timeUsing.setOpacity(0);
     }
 
-    private void setUpHandlers(Scene scene) {
+    /**
+     * This method helps to catch the keyboard code and activate the corresponding operation.
+     * Specifically,
+     * SLASH -> hints for the next step appears
+     *     Q -> quit the game viewer and back to the menu
+     *     S -> inner stage will appear with the best score in current difficulty
+     *     I -> the instruction text appears
+     * @param scene the current game scene
+     */
+    private void keyboardHandlers(Scene scene) {
+        System.out.println("Handlers up");
         scene.setOnKeyPressed(event -> {
                     if (event.getCode() == KeyCode.Q) {
                         Platform.exit();
                         event.consume();
                     }
+                    else if (event.getCode() == KeyCode.SLASH){
+                        this.solution.setOpacity(0.8);
+                        event.consume();
+                    }
+                    else if (event.getCode() == KeyCode.I){
+                        showInsturnction();
+                        event.consume();
+                    } // show an inner stage with the best score in this difficulty
+                    else if (event.getCode() == KeyCode.S){
+                        if(BestScore(difficulty.getValue())>1000000){
+                            double best = BestScore(difficulty.getValue());
+                            BigDecimal Best = new BigDecimal(best/6000);
+                            best = Best.setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
+                            new innerStage().display("The best score for "+ difficulty.getValue(),+best+" min!");
+                        }
+                        else if (BestScore(difficulty.getValue()) == 0){
+                            new innerStage().display("The best score for "+ difficulty.getValue(), "No record yet!");
+                        }
+                        else{
+                            double best = BestScore(difficulty.getValue());
+                            BigDecimal Best = new BigDecimal(best/1000);
+                            best = Best.setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
+                            new innerStage().display("The best score for "+ difficulty.getValue(), +best+ " s!");
+                        }
+                    }
+                });
+                scene.setOnKeyReleased(event -> {
+                    if (event.getCode() == KeyCode.SLASH){
+                        this.solution.setOpacity(0);
+                        event.consume();}
+                    else if (event.getCode() == KeyCode.I){
+                        hideInstruction();
+                    }
                 });}
+
+ /** helper functions to show the hints' text */
+    private void InsTextEffect(){
+        insText.setFill(Color.DEEPPINK);
+        insText.setFont(Font.loadFont(MenuApp.class.getResource("res/handwriting-draft_free-version.ttf").toExternalForm(), 25));
+        insText.setLayoutX(250);
+        insText.setLayoutY(220);
+        root.getChildren().add(insText);
+    }
+
+   private void showInsturnction (){
+        insText.toFront();
+        insText.setOpacity(1);
+   }
+
+   private void hideInstruction () {
+       insText.toBack();
+       insText.setOpacity(0);
+   }
+ /** helper class to show the best score in an inner stage */
+//https://stackoverflow.com/questions/38062219/how-can-i-get-textfield-from-inner-stage-in-javafx
+   private class innerStage{
+       private void display(String title, String message){
+           Stage inner = new Stage();
+           inner.setTitle(title);
+           inner.initModality(Modality.APPLICATION_MODAL);
+           inner.setMinWidth(300);
+           inner.setMinHeight(100);
+
+           Label label = new Label(message);
+           VBox layout = new VBox(10);
+           layout.getChildren().addAll(label);
+           layout.setAlignment(Pos.CENTER);
+
+           Scene scene = new Scene(layout);
+           inner.setScene(scene);
+           inner.showAndWait();
+       }
+   }
+  /* add "if-statement" to return the best corresponding to current difficulty */
+   private double BestScore(double difficulty){
+       double best = 0; // initialise
+       if (difficulty == 0){
+            best = getBest(diff_0);
+       }
+       else if (difficulty == 1){
+           best = getBest(diff_1);
+       }
+       else if (difficulty == 2){
+           best = getBest(diff_2);
+       }
+       else if (difficulty == 3){
+           best = getBest(diff_3);
+       }
+       else if (difficulty == 4){
+           best = getBest(diff_4);
+       }
+       return best;
+
+   }
+    /* find the best result in one certain difficulty */
+   private double getBest (ArrayList<Double> list){
+       double min = 1000000; //initialise
+       if (list.size() == 0){
+           min = 0;
+       }
+       else {
+           for (Double i : list){ // traversal through the list to get the min
+               if (i<min)  min = i;
+           }
+       }
+       return min; // represents the best score
+   }
 
     /** Coordinates helper functions */
     private static final Map<Integer,Integer> pegmapX;
@@ -729,9 +832,13 @@ public class Board extends Application implements Runnable  {
         //root.getChildren().add(correct-pieces);
         //root.getChildren().add(pane);
         //root.getChildren().add(newPiece);
-        setUpHandlers(scene);
+        keyboardHandlers(scene);
+        InsTextEffect();
+        compTextEffect();
         makeControls();
         makeUsingTime();
+
+
         primaryStage.setScene(scene);
         primaryStage.show();
         }}
