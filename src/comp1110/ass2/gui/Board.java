@@ -208,22 +208,12 @@ public class Board extends Application implements Runnable  {
             else homeX = 750;
             setLayoutX(homeX);
             setLayoutY(homeY);
-/*            if (piece.equals("FA") || piece.equals("GA") || piece.equals("CE") || piece.equals("DA"))
-                setRotate(45);
-            if (piece.equals("FE") || piece.equals("GE") || piece.equals("CA") || piece.equals("DE"))
-                setRotate(-45);
-            if (piece.equals("EA"))
-                setRotate(90);
-            if (piece.equals("EE"))
-                setRotate(-90);*/
             setRotate(0);
             setFitHeight(80);
             setFitWidth(80);}
 
         }//ttps://stackoverflow.com/questions/3290681/initializing-a-double-object-with-a-primitive-double-value
-/*        HashMap<String,Double> hashCoordX = new HashMap();
-        HashMap<String,Double> hashCoordY = new HashMap();
-        HashMap<String,Double> placedRotated = new HashMap<>();*/
+
 //https://stackoverflow.com/questions/5617175/arraylist-replace-element-if-exists-at-a-given-index
         void flippedPieces(){
             String char1 = String.valueOf(piece.charAt(0));
@@ -309,7 +299,7 @@ public class Board extends Application implements Runnable  {
                 //System.out.println(p.equals(piece));
                 //System.out.println("innnnnnnnnn");// bug : spacename
                 if (p.equals(piece)) {
-                  //  System.out.println("nonghaode dongxi");
+                  //System.out.println("nonghaode dongxi");
                     homeX = new FXPiece(p).fixedX;
                     homeY = new FXPiece(p).fixedY;
                     setLayoutX(homeX);
@@ -344,7 +334,7 @@ public class Board extends Application implements Runnable  {
                         if (click.getClickCount() == 2) {
                         //updatePieces(piece);// flip
                             flippedPieces();
-                           // makeCorrectPieces();//fixed
+                            //makeCorrectPieces();//fixed
                             hideCompletion();
                             hideUsingTime();
                             checkMove();}}
@@ -370,7 +360,6 @@ public class Board extends Application implements Runnable  {
                 setLayoutY(getLayoutY() + movementY);
                 mouseX = event.getSceneX();
                 mouseY = event.getSceneY();
-                //board.highlightNearestCircle(getLayoutX(), getLayoutY());
                 event.consume();
                     });
 
@@ -419,15 +408,15 @@ public class Board extends Application implements Runnable  {
                 if (getLayoutX()<270||getLayoutX()>520 || getLayoutY()<220 || getLayoutY()>290){
                     return false;
                 }}
-            if ( piece.equals("BA") && getRotate() == 90 || piece.equals("EA") && getRotate() == 270){
+            else if ( piece.equals("BA") && getRotate() == 90 || piece.equals("EA") && getRotate() == 270){
                 if (getLayoutX()<300 || getLayoutX()>520||getLayoutY()<190 || getLayoutY()>290){
                     return false;
                 }}
-            if (piece.equals("BA") && getRotate() == 180 || piece.equals("EA") && getRotate() == 0){
+            else if (piece.equals("BA") && getRotate() == 180 || piece.equals("EA") && getRotate() == 0){
                 if (getLayoutX()<300 || getLayoutX()>550 || getLayoutY()<220 || getLayoutY()>290){
                     return false;
                 }}
-            if (piece.equals("BA") && getRotate() == 270 || piece.equals("EA") && getRotate() == 90) {
+            else if (piece.equals("BA") && getRotate() == 270 || piece.equals("EA") && getRotate() == 90) {
                 if (getLayoutX() < 300 || getLayoutX() > 520 || getLayoutY() < 220 || getLayoutY() > 320) {
                     return false;
                 }}
@@ -445,6 +434,7 @@ public class Board extends Application implements Runnable  {
                 placement += p.toString();}
             if (!StepsGame.isPlacementSequenceValid(placement)) {
                 //showSkulls(StepsGame.getError(placement));
+                //snapToHome();
             }
             else {
                 if (StepsGame.isPlacementSequenceValid(placement) && placement.length() > 34) {
