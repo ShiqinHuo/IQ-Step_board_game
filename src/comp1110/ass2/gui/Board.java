@@ -1,6 +1,7 @@
 package comp1110.ass2.gui;
 
 import comp1110.ass2.Alphabet;
+import comp1110.ass2.SolverForHint;
 import comp1110.ass2.StepsGame;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -32,6 +33,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import static comp1110.ass2.Alphabet.isPeg;
 
@@ -425,7 +427,7 @@ public class Board extends Application implements Runnable  {
                 placement += p.toString();}
             if (!StepsGame.isPlacementSequenceValid(placement)) {
                 //showSkulls(StepsGame.getError(placement));
-                //snapToHome();
+                //snapToHome(); -- Fixme
             }
             else {
                 if (StepsGame.isPlacementSequenceValid(placement) && placement.length() > 34) {
@@ -514,6 +516,8 @@ public class Board extends Application implements Runnable  {
             }
         }
 
+
+
         /** Make the piece rotate clockwise. Each time rotate 45 degrees. **/
         private void rotate() {
             setRotate((getRotate() + 90) % 360);}
@@ -524,6 +528,29 @@ public class Board extends Application implements Runnable  {
 
 
     // FIXME Task 10: Implement hints
+
+    String nextMask(String placement){
+        Set<String> solution = SolverForHint.Solutions(placement);
+        ArrayList<String> temp = new ArrayList<>(solution);
+        int leng = placement.length();
+        String result = temp.get(0);
+        return result.substring(leng,leng+3);
+    }
+
+    boolean isValidCurrentStep(String pastPlacement,String appendMask){
+        Set<String> solution = SolverForHint.Solutions (pastPlacement);
+        ArrayList<String> temp = new ArrayList<>(solution);
+        int leng = pastPlacement.length();
+        String[] validAppendMask = new String[temp.size()];
+        for (int i = 0; i < validAppendMask.length; i++){
+            validAppendMask[i] = temp.get(i).substring(leng,leng+3);
+        }
+        for (int j = 0; j < validAppendMask.length; j++){
+            return  (validAppendMask[j].equals(appendMask));
+        }
+        return false;
+    }
+
     /* Hints helper functions */
 
     /** helps to set the effect of text, arranging the text's position, size.
