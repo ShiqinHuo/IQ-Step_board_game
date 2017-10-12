@@ -26,17 +26,13 @@ import javafx.stage.Stage;
 public class Viewer extends Application {
 
     /* board layout */
-    public static final int SQUARE_SIZE = 60;
     private static final int VIEWER_WIDTH = 750;
     private static final int VIEWER_HEIGHT = 500;
     private static int refershed = 0;
-    private static final String URI_BASE = "assets/";
 
     /* node groups */
     private final Group root = new Group();
-    private final Group pieces = new Group();
     private final Group controls = new Group();
-    private final Group newPiece = new Group();
     private static final Group pegs = new Group();
 
     TextField textField;
@@ -77,7 +73,7 @@ public class Viewer extends Application {
             imageName = char1 + "E";
         Image name = new Image(Viewer.class.getResource("assets/"+imageName+".png").toString());
         Piece.setImage(name);
-        Piece.setFitWidth(110);  //PIECE_IMAGE_SIZE
+        Piece.setFitWidth(110);  //image-size
         Piece.setFitHeight(110);
 
         // rotate the pieces
@@ -112,14 +108,14 @@ public class Viewer extends Application {
         Onepeg(int num){
             setRadius(10);
             if(num<=5) {
-                setCenterX(250 + (num-1)* 60);    // 250 .. 20
-                x = 250 + (num-1) * 60;   //      33
+                setCenterX(250 + (num-1)* 60);
+                x = 250 + (num-1) * 60;
                 setCenterY(200);
                 y = 200;
             }
             else if(num<=10){
                 setCenterX(280+(num-6)* 60);
-                x = 280+(num-6)* 60;                   // 250 + 60
+                x = 280+(num-6)* 60;
                 setCenterY(200+30);
                 y = 200+30;
             }
@@ -143,9 +139,6 @@ public class Viewer extends Application {
             }
             setStroke(Color.gray(0.6));
             setFill(Color.gray(0.6));
-        }
-        double distance(double x, double y) {
-            return Math.sqrt((x + 150 - getCenterX()) * (x + 150 - getCenterX()) + (y + 150 - getCenterY()) * (y + 150 - getCenterY()));
         }
     }
 
@@ -210,11 +203,6 @@ public class Viewer extends Application {
         primaryStage.setTitle("StepsGame Viewer");
         Scene scene = new Scene(root, VIEWER_WIDTH, VIEWER_HEIGHT);
         root.getChildren().add(controls);
-        root.getChildren().add(pieces);
-        root.getChildren().add(newPiece);
-//        root.getChildren().add(board);
-//        root.getChildren().add(solution);
-//        root.getChildren().add(controls);
         root.getChildren().add(pegs);
         makePegs();
         makeControls();

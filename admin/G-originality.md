@@ -19,6 +19,12 @@ We declare that the work we have submitted for Stage G of this assignment and al
 * The code in class <Board.java> is based on a solution we found when researching the book (<Book: JavaFX essentials>)
 * The code in class <Board.java> is based on a solution we found when researching the book (<Book: JavaFX 8: Introduction by Example>)
 * The code in class <Board.java> is based on a solution we found when researching the problem (<https://github.com/Apress/javafx-8-intro-by-example>)
+* The code in class <Board.java> is based on a solution we found when researching the problem (<https://docs.oracle.com/javase/8/javafx/api/javafx/scene/layout/HBox.html>)
+* The code in class <Board.java> is based on a solution we found when researching the problem (<https://stackoverflow.com/questions/363681/how-do-i-generate-random-integers-within-a-specific-range-in-java>)
+* The code in class <Board.java> is based on a solution we found when researching the problem (<https://www.quora.com/How-do-you-compare-chars-in-Java>)
+* The code in class <Board.java> is based on a solution we found when researching the problem (<https://www.cs.cmu.edu/~pattis/15-1XX/common/handouts/ascii.html>)
+* The code in class <Board.java> is based on a solution we found when researching the problem (<//https://stackoverflow.com/questions/8330747/doing-minus-operation-on-string>)
+* The code in class <Board.java> is based on a solution we found when researching the problem (<https://stackoverflow.com/questions/363681/how-do-i-generate-random-integers-within-a-specific-range-in-java>)
 
 
-Signed: Mary Jones (u2345678), Bob Smith (u3456789), and Sue Black (u0123456)
+Signed: Shiqin Huo (u5949730), Bob Smith (u3456789), and Sue Black (u0123456)

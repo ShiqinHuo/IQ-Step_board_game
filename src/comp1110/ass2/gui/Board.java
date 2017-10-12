@@ -29,10 +29,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static comp1110.ass2.Alphabet.isPeg;
 import static comp1110.ass2.StepsGame.notObstruct;
@@ -57,7 +54,7 @@ public class Board extends Application implements Runnable  {
     private final Group controls = new Group();
     private static final Group pegs = new Group();
     private static final Group letters = new Group();
-    private final Group pieces = new Group();
+    private final Group startpieces = new Group();
     private final Group newpieces = new Group();
     private final Group solution = new Group();
     private ArrayList<Peg> peglist = new ArrayList<>();
@@ -66,7 +63,7 @@ public class Board extends Application implements Runnable  {
     private ArrayList<Double> diff_1 = new ArrayList<>();
     private ArrayList<Double> diff_2 = new ArrayList<>();
     private ArrayList<Double> diff_3 = new ArrayList<>();
-    private ArrayList<Double> diff_4 = new ArrayList<>();
+    //private ArrayList<Double> diff_4 = new ArrayList<>();
 
 
     private double startMilli = 0;
@@ -76,15 +73,19 @@ public class Board extends Application implements Runnable  {
     private String done = ""; // initialise the placed pieces
 
     public static final String[][] TaskEleven_OBJECTIVE ={
+            //diff_3
             {"HHnBFOGDL", "EEfHALAHS", "HFSGFlBDx", "EFBFCgBGS", "BFqHALAHS",
                     "EFBAFnGFS", "CHSGHnBGK", "DGSGHnBHF", "FBmBCoCEj", "HGnGAREBv",
                     "BGKFCNGFn", "FBgEElBEe", "BGKFCNCAg", "EFBAFnDHS", "GDLCGOEEn"},
+            //diff_3
             {"FCLBFqEFjCCW", "AHSEHlBDxFBg", "EFBBFqCHSGHn", "BGSGHnDGQEEf", "EFBHAgDGSAHQ",
                     "BGSAHQEFBHAg", "BHFFCLHBNDFl", "BHFFCLHBNGGn", "BGSAHQEFBHFn", "EFBFCNCHSBBG",
                     "BFOGDLADgDFj", "EEfFBiCCLBGS", "HFSFDbEAoBHD", "DGSBGlEAoCEj", "HFSFDPBGKADg"},
+            //diff_2
             {"BFOGDLADgDFjHEQ", "BHFFCLHBNGGnEDI", "EFBFCNCHSBBGADg", "BGKAFjGCNHAPCAg", "HFSFDbEAoBHDGDL",
                     "EFBAFjGCNHAPCAg", "FCLBFqDAWHEjEFF", "AEnCElFFSBHFDGj", "AHSEHlBDxFBgHCP", "FBmBCoCEjABRDCP",
                     "GDLCGOEEnADgDAi", "HHnBFOGDLADgDAi", "BGKFCNEEnDHSGEQ", "BFqEFlHDiAFnCCL", "GDLADgBGODAiHAk"},
+            //diff_0
             {"AHSEHlBDxFBgHCPGBi", "EFBHAgDGSAHQCDNGHj", "DGSGHnBHFFDNCAkHCi", "EFBFCNCHSBBGADgHAi", "GDLADgBGODAiHAkCGc",
                     "BHFFCLHBNGGnEDIADg", "HHnBFOGDLADgDAiCCk", "BFqHALAHSFDPCDNDAi", "FBmBCoCEjABRDCPHCN", "CHSGHnBGKFCNADgHAi",
                     "HFSFDbEAoBHDGDLADg", "EEfFBiCCLBGSHANAHQ", "FCLBFqDAWHEjEFFCGl", "BHDHBLADgCGQDFlFEj", "EFBFCNDAgCEnAESGEQ"}
@@ -98,6 +99,7 @@ public class Board extends Application implements Runnable  {
             e.printStackTrace();
         }
     }/* initialize : preparation for the pegs arrangement & original pieces' arrangement */
+
 
     /** Create pegs helper class */
     private static class Peg extends Circle {
@@ -219,16 +221,18 @@ public class Board extends Application implements Runnable  {
 
     private ArrayList<String> piecelist = new ArrayList<>();
     private void originalPieces(){
+        String temp = "ABCDEFGH";
+        System.out.println("make ... home");
+        System.out.println("home done~~~"+ done);
         if(piecelist.size()==0){
-            piecelist.add("AA");
-            piecelist.add("BA");
-            piecelist.add("CA");
-            piecelist.add("DA");
-            piecelist.add("EA");
-            piecelist.add("FA");
-            piecelist.add("GA");
-            piecelist.add("HA");}
-        // initialise
+            for (int j = 0; j < 8; j++) {
+                if (!done.contains(String.valueOf(temp.charAt(j)))) {
+                    piecelist.add(String.valueOf(temp.charAt(j)) + "A");
+                    System.out.println("piecelist: " +piecelist);
+                }
+                else continue;//https://stackoverflow.com/questions/8330747/doing-minus-operation-on-string
+            }
+        }
     }
     private ArrayList<String> placedpieces = new ArrayList<>();
 
@@ -236,7 +240,7 @@ public class Board extends Application implements Runnable  {
     /** This method is used to show those draggable pieces on the board. **/
     private void makeOriginalPieces() {
         originalPieces();
-        pieces.getChildren().clear(); // updated piecelist states : including the flipped side
+        //pieces.getChildren().clear(); // updated piecelist states : including the flipped side
         newpieces.getChildren().clear();
         for (String piece : piecelist) {
             newpieces.getChildren().add(new DraggableFXPiece(piece));
@@ -276,6 +280,7 @@ public class Board extends Application implements Runnable  {
             setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent click) {
+
                     if (homeX == getLayoutX() & homeY == getLayoutY()){
                         if (click.getClickCount() == 2) { // double click to flip the piece -> only at the origin
                             flippedPieces();
@@ -297,6 +302,8 @@ public class Board extends Application implements Runnable  {
                 setFitHeight(110);
                 setFitWidth(110);
                 setOpacity(0.3);
+                System.out.println("mouse X: "+ mouseX);
+                System.out.println("mouse Y: "+ mouseY);
                 double movementX = event.getSceneX() - mouseX;
                 double movementY = event.getSceneY() - mouseY;
                 setLayoutX(getLayoutX() + movementX);
@@ -434,8 +441,11 @@ public class Board extends Application implements Runnable  {
                     //System.out.println("orientation : " + ori);
                     System.out.println("this current placement: " + pieceplacement);
 
-                    if (pastplacement.length()==0) // first piece to place
+                    if (pastplacement.length()==0) {// first piece to place
                         pastplacement = newstart + pieceplacement; // add the given string: "newstart"
+                       // viewNewStart(newstart);
+                    }
+                        //continue; // -- fixme
                     else // Updated ( try )
 
                         if (!done.contains(char1))
@@ -468,9 +478,6 @@ public class Board extends Application implements Runnable  {
                             }
                             else if (difficulty.getValue() == 3) {
                                 diff_3.add(useTime);
-                            }
-                            else if (difficulty.getValue() == 4) {
-                                diff_4.add(useTime);
                             }
                         }
                         if (useTime > 60000) {
@@ -507,7 +514,7 @@ public class Board extends Application implements Runnable  {
                     System.out.println("comfirmed pastplacement: " + pastplacement);}
                 else {
                     count += 1;
-                    System.out.println("count pegs: "+count);
+                    //System.out.println("count pegs: "+count);
                     if (count == 25) {
                         snapToHome();
                         System.out.println("not on grid! ->  home");
@@ -569,7 +576,8 @@ public class Board extends Application implements Runnable  {
     /** This method helps to show the completion text -> set it front **/
     private void showCompletion() {
         //newPiece.setOpacity(0.3);
-        pieces.setOpacity(0.3);
+        newpieces.setOpacity(0.3);
+        startpieces.setOpacity(0.3);
         completionText.toFront();
         completionText.setOpacity(1);
         completionText.setEffect(dropShadow);
@@ -579,7 +587,8 @@ public class Board extends Application implements Runnable  {
     private void hideCompletion() {
         completionText.toBack();
         completionText.setOpacity(0);
-        pieces.setOpacity(1);
+        newpieces.setOpacity(1);
+        startpieces.setOpacity(1);
         //newPiece.setOpacity(1);
     }
 
@@ -708,9 +717,6 @@ public class Board extends Application implements Runnable  {
        else if (difficulty == 3){
            best = getBest(diff_3);
        }
-       else if (difficulty == 4){
-           best = getBest(diff_4);
-       }
        return best;
 
    }
@@ -771,6 +777,77 @@ public class Board extends Application implements Runnable  {
     }
 
     // FIXME Task 11: Generate interesting starting placements
+//https://stackoverflow.com/questions/363681/how-do-i-generate-random-integers-within-a-specific-range-in-java
+    /** generates interesting starting placements with only one solution  */
+    private void setNewstart (){
+        int diff = (int) difficulty.getValue();
+        int row = 3 - diff;
+        int random = new Random().nextInt(15);
+        newstart = TaskEleven_OBJECTIVE[row][random];
+}
+    /** Place the generated pieces to the board according to the string */
+    // similar to Viewer.java
+    private void  viewNewStart (String newstart){
+        int num = newstart.length()/3;
+        for(int i=0;i<num;i++){
+            placePieces(newstart.substring(3*i,3*i+3));
+            done += String.valueOf(newstart.charAt(3*i));
+            System.out.println("initial done: " + done);
+            System.out.println("newstart: " + newstart);
+        }
+    }
+    //https://www.quora.com/How-do-you-compare-chars-in-Java
+    private void placePieces (String pieceplacement){
+        String p = String.valueOf(pieceplacement.charAt(0));
+        char ori = pieceplacement.charAt(1);
+        char location = pieceplacement.charAt(2);
+        //https://docs.oracle.com/javase/8/javafx/api/javafx/scene/image/ImageView.html
+        ImageView StartPiece =new ImageView();
+        //https://stackoverflow.com/questions/27785917/javafx-mouseposition
+        //https://www.cs.cmu.edu/~pattis/15-1XX/common/handouts/ascii.html
+        if ("ABCDEFGHIJ".contains(String.valueOf(location))){
+            StartPiece.setLayoutY(195);
+            StartPiece.setLayoutX(275+30*(location-'A'));
+        }
+        else if ("KLMNOPQRST".contains((String.valueOf(location)))){
+            StartPiece.setLayoutY(225);
+            StartPiece.setLayoutX(275+30*(location-'K'));
+        }
+        else if ("UVWXY".contains((String.valueOf(location)))){
+            StartPiece.setLayoutY(255);
+            StartPiece.setLayoutX(275+30*(location-'U'));
+        }
+        else if ("abcde".contains((String.valueOf(location)))){
+            StartPiece.setLayoutY(255);
+            StartPiece.setLayoutX(425+30*(location-'a'));
+        }
+        else if ("fghijklmno".contains((String.valueOf(location)))){
+            StartPiece.setLayoutY(285);
+            StartPiece.setLayoutX(275+30*(location-'f'));
+        }
+        else if ("pqrstuvwxy".contains((String.valueOf((location))))){
+            StartPiece.setLayoutY(285);
+            StartPiece.setLayoutX(275+30*(location-'p'));
+        }
+
+        if (ori >='A' && ori <'E'){
+            StartPiece.setRotate((ori-'A')*90);
+            StartPiece.setFitHeight(110);
+            StartPiece.setFitWidth(110);
+            StartPiece.setImage(new Image(Viewer.class.getResource(URI_BASE+ p+"A"+".png").toString()));
+        }
+        else if (ori >='E' && ori <='H'){
+            StartPiece.setRotate((ori-'E')*90);
+            StartPiece.setFitHeight(110);
+            StartPiece.setFitWidth(110);
+            StartPiece.setImage(new Image(Viewer.class.getResource(URI_BASE+ p+"E"+".png").toString()));
+        }
+        startpieces.getChildren().add(StartPiece);
+    }
+
+
+    /** Helper for position  */
+
 
     /**
      * Set slide bar for difficulty
@@ -780,7 +857,7 @@ public class Board extends Application implements Runnable  {
      * "2" represents hard level
      * "3" represents hardest level
      * */
-
+//https://docs.oracle.com/javase/8/javafx/api/javafx/scene/layout/HBox.html
     private void makeControls() {
         Button button = new Button("Start");
         button.setLayoutX(600);
@@ -790,13 +867,32 @@ public class Board extends Application implements Runnable  {
             public void handle(ActionEvent e) {
                 startMilli = System.currentTimeMillis();
                 //xia.play();
-                pieces.setOpacity(1);
+                //pieces.setOpacity(1);
                 //laugh.stop();
                 hideCompletion();
                 //hideSkulls();
                 hideUsingTime();
+                startpieces.getChildren().clear();
+
                 //makePlacement();
                 //makeSolution(StepsGame.getSolutions());
+                /*
+                root.getChildren().clear();
+                makePegs();
+                addBackground();
+                addTitle();
+
+                root.getChildren().add(pegs);
+                root.getChildren().add(letters);
+                root.getChildren().add(controls);
+                root.getChildren().add(newpieces);
+                root.getChildren().add(pieces);*/
+
+
+                //keyboardHandlers(scene);
+
+                setNewstart ();
+                viewNewStart(newstart);
                 makeOriginalPieces();
                 pastplacement ="";
                 done ="";
@@ -832,21 +928,19 @@ public class Board extends Application implements Runnable  {
         primaryStage.setTitle("IQ-Steps Viewer");
         Scene scene = new Scene(root, BOARD_WIDTH, BOARD_HEIGHT);
         makePegs();
-        //addBackground();
-        //pastplacement = "";
+        addBackground();
         addTitle();
         primaryStage.setScene(scene);
         root.getChildren().add(pegs);
         root.getChildren().add(letters);
         root.getChildren().add(controls);
         root.getChildren().add(newpieces);
-        root.getChildren().add(pieces);
+        root.getChildren().add(startpieces);
         keyboardHandlers(scene);
         InsTextEffect();
         compTextEffect();
         makeControls();
         makeUsingTime();
-
 
         primaryStage.setScene(scene);
         primaryStage.show();
