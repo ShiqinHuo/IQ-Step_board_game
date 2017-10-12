@@ -43,7 +43,7 @@ public class Board extends Application implements Runnable  {
     TextField textField;
     /** message on completion */
     private final Text completionText = new Text("Good Job!");
-    private final Text insText = new Text("Press Q to quit game.\n Press '/'to see the game hint.\nPress S to see the best score at the specific difficulty.\\nUse mouse to manipulate the pieces, \nsuch as doouble clicking to flip, using mouse scroll to rotate.\nSlide the \"Difficulty\" to change the difficuly level.\nPress \"Start\" to play a new game. ");
+    private final Text insText = new Text(" Press Q =>to=> Quit game\n Press '/' =>to=> Game hints.\n Press S =>to=> best score \n Mouse =>to=> control the pieces: \n Double click =>to=> flip\n Mouse scroll =>to=> rotate.\n Slide the \"Difficulty\" =>to=> change difficulty levels.\n Press \"Start\" =>to=> a new game. ");
     private Text timeUsing = new Text("Shows timeUsing");
     private final Slider difficulty = new Slider();
     private final DropShadow dropShadow = new DropShadow();
@@ -217,19 +217,18 @@ public class Board extends Application implements Runnable  {
             if (char2.equals("A") ) newpiece = char1 + "E";
             else newpiece = char1 + "A";
             System.out.println("newpiece..."+newpiece);
-            if (piecelist.contains(piece)){
-            int index = piecelist.indexOf(piece);
-            //System.out.println("index"+index);
-            //System.out.println(piecelist);
-            piecelist.set(index,newpiece);// replace the piece with its flipped counterpart
-            //System.out.println("changed????"+newpiece);
-            //System.out.println("clear....");
-            //System.out.println(piecelist.contains(piece));
-            System.out.println("listtodoooooo"+piecelist);
-            System.out.println("donedonedone"+placedpieces);
-            makeUpdatedPieces();}
-            //makeCorrectPieces();
-            //System.out.println("corrrrrrrrrrrrrr"+correctpieces);
+            if (piecelist.contains(piece)) {
+                int index = piecelist.indexOf(piece);
+                //System.out.println("index"+index);
+                //System.out.println(piecelist);
+                piecelist.set(index, newpiece);// replace the piece with its flipped counterpart
+                System.out.println("listtodoooooo" + piecelist);
+                System.out.println("donedonedone" + placedpieces);
+                setImage(new Image(Viewer.class.getResource(URI_BASE+newpiece+".png").toString()));
+                setFitHeight(80);
+                setFitWidth(80);
+            }
+            //makeUpdatedPieces();}
         }
     }
 
@@ -260,21 +259,21 @@ public class Board extends Application implements Runnable  {
         newpieces.toFront();
     }
 
-    /** This method is used to show those draggable pieces on the board. **/
+/*    *//** This method is used to show those draggable pieces on the board. **//*
     private void makeUpdatedPieces() {
         newpieces.getChildren().clear();// initial pieces
         boardpieces.getChildren().clear();
         pieces.getChildren().clear();
 
-/*      for (String piece : placedpieces) {// boardpieces : arranged group
+*//*      for (String piece : placedpieces) {// boardpieces : arranged group
             boardpieces.getChildren().add(new DraggableFXPiece(piece)); // pieces on board
-        }*/
+        }*//*
 
         for (String piece : piecelist) { // disarranged group : pieces
             pieces.getChildren().add(new DraggableFXPiece(piece));
         }
         boardpieces.toFront();
-    }
+    }*/
 
     // FIXME Task 7: Implement a basic playable Steps Game in JavaFX that only allows pieces to be placed in valid places
 
@@ -388,7 +387,6 @@ public class Board extends Application implements Runnable  {
                 if (! placedpieces.contains(piece)){
                     boardpieces.getChildren().add(new DraggableFXPiece(piece));
                     placedpieces.add(piece);
-                  //  System.out.println("ppppppplaced"+placedpieces);
                     hashCoordX.put(piece,getLayoutX());
                     hashCoordY.put(piece,getLayoutY());
                     placedRotated.put(piece,getRotate());
@@ -475,14 +473,6 @@ public class Board extends Application implements Runnable  {
             else homeX = 750;
             setLayoutX(homeX);
             setLayoutY(homeY);
-/*            if (piece.equals("FA") || piece.equals("GA") || piece.equals("CE") || piece.equals("DA"))
-                setRotate(45);
-            if (piece.equals("FE") || piece.equals("GE") || piece.equals("CA") || piece.equals("DE"))
-                setRotate(-45);
-            if (piece.equals("EA"))
-                setRotate(90);
-            if (piece.equals("EE"))
-                setRotate(-90);*/
             setRotate(0);
             setFitHeight(80);
             setFitWidth(80);
@@ -500,6 +490,7 @@ public class Board extends Application implements Runnable  {
                 if(getLayoutX()-25 <= a.x+20 && getLayoutX()-25 >= a.x-20 && getLayoutY()+ 55 <= a.y+20 && getLayoutY()+55  >= a.y-20){
                     setLayoutY(a.y - 55); // getLayoutY() - 20 <= pos <= getLayoutY() + 20
                     setLayoutX(a.x + 25);
+                    System.out.println();
                     setFitHeight(110);
                     setFitWidth(110);
                 }else continue;
@@ -531,16 +522,6 @@ public class Board extends Application implements Runnable  {
 
     // FIXME Task 8: Implement starting placements
 
-/*
-    class NewPiece extends FXPiece{
-        NewPiece(String piece, String placement){
-            super(piece);
-            String
-
-        }
-    }
-*/
-
 
     // FIXME Task 10: Implement hints
     /* Hints helper functions */
@@ -549,9 +530,9 @@ public class Board extends Application implements Runnable  {
       * When called, record current time automatically.**/
     private void compTextEffect() {
         completionText.setFill(Color.DEEPPINK);
-        completionText.setFont(Font.loadFont(MenuApp.class.getResource("res/handwriting-draft_free-version.ttf").toExternalForm(), 25));
-        completionText.setLayoutX(300);
-        completionText.setLayoutY(250);
+        completionText.setFont(Font.loadFont(MenuApp.class.getResource("res/handwriting-draft_free-version.ttf").toExternalForm(), 15));
+        //completionText.setLayoutX(300);
+        completionText.setLayoutY(200);
         completionText.setTextAlignment(TextAlignment.CENTER);
         root.getChildren().add(completionText);
         endMilli = System.currentTimeMillis();
@@ -579,7 +560,7 @@ public class Board extends Application implements Runnable  {
     * the total time to complete the game at the corresponding difficulty. **/
     private void makeUsingTime() {
         timeUsing.setFill(Color.DEEPPINK);
-        timeUsing.setFont(Font.loadFont(MenuApp.class.getResource("res/handwriting-draft_free-version.ttf").toExternalForm(), 25));
+        timeUsing.setFont(Font.loadFont(MenuApp.class.getResource("res/handwriting-draft_free-version.ttf").toExternalForm(), 15));
         timeUsing.setLayoutX(320);
         timeUsing.setLayoutY(500);
         root.getChildren().add(timeUsing);
@@ -650,9 +631,9 @@ public class Board extends Application implements Runnable  {
  /** helper functions to show the hints' text */
     private void InsTextEffect(){
         insText.setFill(Color.DEEPPINK);
-        insText.setFont(Font.loadFont(MenuApp.class.getResource("res/handwriting-draft_free-version.ttf").toExternalForm(), 25));
-        insText.setLayoutX(250);
-        insText.setLayoutY(220);
+        insText.setFont(Font.loadFont(MenuApp.class.getResource("res/handwriting-draft_free-version.ttf").toExternalForm(), 10));
+        insText.setTextAlignment(TextAlignment.LEFT);
+        insText.setLayoutY(100);
         root.getChildren().add(insText);
     }
 
@@ -793,13 +774,13 @@ public class Board extends Application implements Runnable  {
         controls.getChildren().add(button);
 
         difficulty.setMin(0);
-        difficulty.setMax(4);
+        difficulty.setMax(3);
         difficulty.setValue(0);
         difficulty.setPrefWidth(250);
         difficulty.setShowTickLabels(true);
         difficulty.setShowTickMarks(true);
-        difficulty.setMajorTickUnit(5);
-        difficulty.setMinorTickCount(4);
+        difficulty.setMajorTickUnit(4);
+        difficulty.setMinorTickCount(3);
         difficulty.setSnapToTicks(true);
 
         difficulty.setLayoutX(300);
