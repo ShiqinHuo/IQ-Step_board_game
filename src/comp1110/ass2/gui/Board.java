@@ -45,7 +45,7 @@ public class Board extends Application implements Runnable  {
     TextField textField;
     /** message on completion */
     private final Text completionText = new Text("Good Job!");
-    private final Text insText = new Text(" Press Q =>to=> Quit game\n Press '/' =>to=> Game hints.\n Press S =>to=> best score \n Mouse =>to=> control the pieces: \n Double click =>to=> flip\n Mouse scroll =>to=> rotate.\n Slide the \"Difficulty\" =>to=> change difficulty levels.\n Press \"Start\" =>to=> a new game. ");
+    private final Text insText = new Text(" Press Q =>to=> Quit game\n\n Press '/' =>to=> Show/Hide Game hints.\n\n Press S =>to=> Show best score \n\n Mouse Double click =>to=> flip piece\n\n Mouse scroll =>to=> rotate.\n\n Slide the \"Difficulty\" =>to=> change difficulty levels.\n\n Press \"Start\" =>to=> a new game. ");
     private Text timeUsing = new Text("Shows timeUsing");
     private final Slider difficulty = new Slider();
     private final DropShadow dropShadow = new DropShadow();
@@ -557,10 +557,10 @@ public class Board extends Application implements Runnable  {
       * When called, record current time automatically.**/
     private void compTextEffect() {
         completionText.setFill(Color.DEEPPINK);
-        completionText.setFont(Font.loadFont(MenuApp.class.getResource("res/handwriting-draft_free-version.ttf").toExternalForm(), 15));
-        //completionText.setLayoutX(300);
-        completionText.setLayoutY(200);
-        completionText.setTextAlignment(TextAlignment.CENTER);
+        completionText.setFont(Font.loadFont(MenuApp.class.getResource("res/handwriting-draft_free-version.ttf").toExternalForm(), 20));
+        completionText.setLayoutX(400);
+        completionText.setLayoutY(70);
+        //completionText.setTextAlignment(TextAlignment.CENTER);
         root.getChildren().add(completionText);
         endMilli = System.currentTimeMillis();
     }
@@ -588,8 +588,8 @@ public class Board extends Application implements Runnable  {
     private void makeUsingTime() {
         timeUsing.setFill(Color.DEEPPINK);
         timeUsing.setFont(Font.loadFont(MenuApp.class.getResource("res/handwriting-draft_free-version.ttf").toExternalForm(), 15));
-        timeUsing.setLayoutX(320);
-        timeUsing.setLayoutY(500);
+        timeUsing.setTextAlignment(TextAlignment.LEFT);
+        timeUsing.setLayoutY(650);
         root.getChildren().add(timeUsing);
     }
     /** helps to show the "timeUsing" text. **/
@@ -659,8 +659,8 @@ public class Board extends Application implements Runnable  {
     private void InsTextEffect(){
         insText.setFill(Color.DEEPPINK);
         insText.setFont(Font.loadFont(MenuApp.class.getResource("res/handwriting-draft_free-version.ttf").toExternalForm(), 10));
-        insText.setTextAlignment(TextAlignment.LEFT);
-        insText.setLayoutY(100);
+        insText.setLayoutX(330);
+        insText.setLayoutY(430);
         root.getChildren().add(insText);
     }
 
