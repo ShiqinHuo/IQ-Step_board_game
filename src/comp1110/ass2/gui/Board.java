@@ -75,6 +75,22 @@ public class Board extends Application implements Runnable  {
     private double useTime = 0;
     private BigDecimal UseTime;
 
+    public static final String[][] TaskEleven_OBJECTIVE ={
+            {"HHnBFOGDL", "EEfHALAHS", "HFSGFlBDx", "EFBFCgBGS", "BFqHALAHS",
+             "EFBAFnGFS", "CHSGHnBGK", "DGSGHnBHF", "FBmBCoCEj", "HGnGAREBv",
+             "BGKFCNGFn", "FBgEElBEe", "BGKFCNCAg", "EFBAFnDHS", "GDLCGOEEn"},
+            {"FCLBFqEFjCCW", "AHSEHlBDxFBg", "EFBBFqCHSGHn", "BGSGHnDGQEEf", "EFBHAgDGSAHQ",
+             "BGSAHQEFBHAg", "BHFFCLHBNDFl", "BHFFCLHBNGGn", "BGSAHQEFBHFn", "EFBFCNCHSBBG",
+             "BFOGDLADgDFj", "EEfFBiCCLBGS", "HFSFDbEAoBHD", "DGSBGlEAoCEj", "HFSFDPBGKADg"},
+            {"BFOGDLADgDFjHEQ", "BHFFCLHBNGGnEDI", "EFBFCNCHSBBGADg", "BGKAFjGCNHAPCAg", "HFSFDbEAoBHDGDL",
+             "EFBAFjGCNHAPCAg", "FCLBFqDAWHEjEFF", "AEnCElFFSBHFDGj", "AHSEHlBDxFBgHCP", "FBmBCoCEjABRDCP",
+             "GDLCGOEEnADgDAi", "HHnBFOGDLADgDAi", "BGKFCNEEnDHSGEQ", "BFqEFlHDiAFnCCL", "GDLADgBGODAiHAk"},
+            {"AHSEHlBDxFBgHCPGBi", "EFBHAgDGSAHQCDNGHj", "DGSGHnBHFFDNCAkHCi", "EFBFCNCHSBBGADgHAi", "GDLADgBGODAiHAkCGc",
+             "BHFFCLHBNGGnEDIADg", "HHnBFOGDLADgDAiCCk", "BFqHALAHSFDPCDNDAi", "FBmBCoCEjABRDCPHCN", "CHSGHnBGKFCNADgHAi",
+             "HFSFDbEAoBHDGDLADg", "EEfFBiCCLBGSHANAHQ", "FCLBFqDAWHEjEFFCGl", "BHDHBLADgCGQDFlFEj", "EFBFCNDAgCEnAESGEQ"}
+    };
+
+
 
     @Override
     public void run() {
