@@ -873,6 +873,8 @@ public class Board extends Application implements Runnable  {
                 //hideSkulls();
                 hideUsingTime();
                 startpieces.getChildren().clear();
+                newpieces.getChildren().clear();
+                piecelist = new ArrayList<>();
 
                 //makePlacement();
                 //makeSolution(StepsGame.getSolutions());
