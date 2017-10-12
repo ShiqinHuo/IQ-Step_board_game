@@ -826,7 +826,7 @@ public class Board extends Application implements Runnable  {
             StartPiece.setLayoutX(275+30*(location-'f'));
         }
         else if ("pqrstuvwxy".contains((String.valueOf((location))))){
-            StartPiece.setLayoutY(285);
+            StartPiece.setLayoutY(315);
             StartPiece.setLayoutX(275+30*(location-'p'));
         }
 
