@@ -53,10 +53,6 @@ public class Board extends Application implements Runnable  {
     private static String newstart = "";
     private static String placement = "";
 
-    private HashMap<String,Double> hashCoordX = new HashMap();
-    private HashMap<String,Double> hashCoordY = new HashMap();
-    private HashMap<String,Double> placedRotated = new HashMap<>();
-
     private final Group root = new Group();
     private final Group controls = new Group();
     private static final Group pegs = new Group();
@@ -131,29 +127,36 @@ public class Board extends Application implements Runnable  {
             }
         }
     }
+    private HashMap<String,Double> hashCoordX = new HashMap();
+    private HashMap<String,Double> hashCoordY = new HashMap();
+    /* Record the rotated */
+    private HashMap<String,Double> mapRotated = new HashMap<>();
+
 //https://stackoverflow.com/questions/41246688/circle-wont-move-position-in-javafx/41247282
 //https://stackoverflow.com/questions/21118394/explicitly-positioning-nodes-in-javafx
-    /** Assign the pieces' original coordinate */
-    private static final Map<String,Integer> piecemap;
+/** Assign the pieces' original coordinate */
+    private static final Map<String,Integer> piecemapY;
     static {
-        piecemap = new HashMap<>();
-        piecemap.put("AA",50);
-        piecemap.put("AE",50);
-        piecemap.put("BA",190);
-        piecemap.put("BE",190);
-        piecemap.put("CA",330);
-        piecemap.put("CE",330);
-        piecemap.put("DA",470);
-        piecemap.put("DE",470);
-        piecemap.put("EA",50);
-        piecemap.put("EE",50);
-        piecemap.put("FA",190);
-        piecemap.put("FE",190);
-        piecemap.put("GA",330);
-        piecemap.put("GE",330);
-        piecemap.put("HA",470);
-        piecemap.put("HE",470);
+        piecemapY = new HashMap<>();
+        piecemapY.put("AA",50);
+        piecemapY.put("AE",50);
+        piecemapY.put("BA",190);
+        piecemapY.put("BE",190);
+        piecemapY.put("CA",330);
+        piecemapY.put("CE",330);
+        piecemapY.put("DA",470);
+        piecemapY.put("DE",470);
+        piecemapY.put("EA",50);
+        piecemapY.put("EE",50);
+        piecemapY.put("FA",190);
+        piecemapY.put("FE",190);
+        piecemapY.put("GA",330);
+        piecemapY.put("GE",330);
+        piecemapY.put("HA",470);
+        piecemapY.put("HE",470);
     }
+
+
 
     /* Helpers function to show the images in assets folder */
     /** Traversal through the assets images and pick up the given piece to show */
@@ -167,7 +170,7 @@ public class Board extends Application implements Runnable  {
                     setFitHeight(80);
                     setFitWidth(80);
                     break;}}}}
-    /**  */
+/**  */
     class FXPiece extends Picture{
         double fixedX;
         double fixedY;
@@ -177,7 +180,7 @@ public class Board extends Application implements Runnable  {
             //if (placedpieces.contains(piece)){
                 fixedX = hashCoordX.get(piece);
                 fixedY = hashCoordY.get(piece);
-                rotate = placedRotated.get(piece);
+                rotate = mapRotated.get(piece);
                 setLayoutX(fixedX);
                 System.out.println("fffffffxxxxxx"+fixedX);
                 setLayoutY(fixedY);
@@ -199,7 +202,7 @@ public class Board extends Application implements Runnable  {
             super(piece);//https://docs.oracle.com/javase/8/javafx/api/javafx/scene/Node.html
             if (piecelist.contains(piece)){
             String char1 = String.valueOf(piece.charAt(0));
-            homeY = piecemap.get(piece);
+            homeY = piecemapY.get(piece);
             if ("ABCD".contains(char1)){
                 homeX = 80;
             }
@@ -215,22 +218,15 @@ public class Board extends Application implements Runnable  {
         void flippedPieces(){
             String char1 = String.valueOf(piece.charAt(0));
             String char2 = String.valueOf(piece.charAt(1));
-            String newpiece;
+            String newpiece = "";
             if (char2.equals("A") ) newpiece = char1 + "E";
-            else newpiece = char1 + "A";
-            System.out.println("newpiece..."+newpiece);
-            if (piecelist.contains(piece)) {
-                int index = piecelist.indexOf(piece);
-                //System.out.println("index"+index);
-                //System.out.println(piecelist);
-                piecelist.set(index, newpiece);// replace the piece with its flipped counterpart
-                System.out.println("listtodoooooo" + piecelist);
-                System.out.println("donedonedone" + placedpieces);
-                setImage(new Image(Viewer.class.getResource(URI_BASE+newpiece+".png").toString()));
-                setFitHeight(80);
-                setFitWidth(80);
-            }
-            //makeUpdatedPieces();}
+            else if (char2.equals("E")) newpiece = char1 + "A";
+            this.piece = newpiece;
+            System.out.println(piece + " ->updated-> " +newpiece );
+            setImage(new Image(Viewer.class.getResource(URI_BASE+newpiece+".png").toString()));
+            setFitHeight(80);
+            setFitWidth(80);
+
         }
     }
 
@@ -261,21 +257,6 @@ public class Board extends Application implements Runnable  {
         newpieces.toFront();
     }
 
-/*    *//** This method is used to show those draggable pieces on the board. **//*
-    private void makeUpdatedPieces() {
-        newpieces.getChildren().clear();// initial pieces
-        boardpieces.getChildren().clear();
-        pieces.getChildren().clear();
-
-*//*      for (String piece : placedpieces) {// boardpieces : arranged group
-            boardpieces.getChildren().add(new DraggableFXPiece(piece)); // pieces on board
-        }*//*
-
-        for (String piece : piecelist) { // disarranged group : pieces
-            pieces.getChildren().add(new DraggableFXPiece(piece));
-        }
-        boardpieces.toFront();
-    }*/
 
     // FIXME Task 7: Implement a basic playable Steps Game in JavaFX that only allows pieces to be placed in valid places
 
@@ -287,27 +268,10 @@ public class Board extends Application implements Runnable  {
 
         DraggableFXPiece(String piece) {
             super(piece);
-            if (placedpieces.contains(piece))
-            for (String p : placedpieces) {
-                //System.out.println("placedpieces"+placedpieces);
-                //System.out.println("pppppp"+p+"iiii"+piece);
-                //System.out.println(p.equals(piece));
-                //System.out.println("innnnnnnnnn");// bug : spacename
-                if (p.equals(piece)) {
-                  //System.out.println("nonghaode dongxi");
-                    //homeX = new FXPiece(p).fixedX;
-                    //homeY = new FXPiece(p).fixedY;
-                    //-- Fixme
-                    setLayoutX(homeX);
-                    setLayoutY(homeY);
-                    setRotate(new FXPiece(p).rotate);
-                    break;}
-            }
             if (piecelist.contains(piece))
             for(String p : piecelist) {
                 if ( p.equals(piece)) {
-                    //System.out.println("piecelist"+piecelist);
-                    //System.out.println("to do");
+
                     homeX = new FlippableFXPiece(p).homeX;
                     setLayoutX(homeX);
                     homeY = new FlippableFXPiece(p).homeY;
@@ -328,9 +292,7 @@ public class Board extends Application implements Runnable  {
                 public void handle(MouseEvent click) {
                     if (homeX == getLayoutX() & homeY == getLayoutY()){
                         if (click.getClickCount() == 2) {
-                        //updatePieces(piece);// flip
                             flippedPieces();
-                            //makeCorrectPieces();//fixed
                             hideCompletion();
                             hideUsingTime();
                             checkMove();}}
@@ -381,7 +343,7 @@ public class Board extends Application implements Runnable  {
 
 //https://stackoverflow.com/questions/521171/a-java-collection-of-value-pairs-tuples
 
-        /** remove pieces already on the board from the piecelist. **/
+        //** remove pieces already on the board from the piecelist. **//*
         private void updatedPieces() {
             if (piecelist.contains(piece)){
                 int index = piecelist.indexOf(piece);
@@ -391,10 +353,10 @@ public class Board extends Application implements Runnable  {
                     placedpieces.add(piece);
                     hashCoordX.put(piece,getLayoutX());
                     hashCoordY.put(piece,getLayoutY());
-                    placedRotated.put(piece,getRotate());
+                    mapRotated.put(piece,getRotate());
                 }
-            }
-        }
+            }}
+
 
         boolean isOnBoard(){
             if ( piece.equals("BA") && getRotate() == 0 || piece.equals("EA") && getRotate() == 180){
@@ -468,7 +430,7 @@ public class Board extends Application implements Runnable  {
 
         /** Make the pieces snap to their original position. */
         private void snapToHome() {
-            homeY = piecemap.get(piece);
+            homeY = piecemapY.get(piece);
             String char1 = String.valueOf(piece.charAt(0));
             if ("ABCD".contains(char1)){
                 homeX = 80;}
@@ -521,7 +483,6 @@ public class Board extends Application implements Runnable  {
         /** Make the piece rotate clockwise. Each time rotate 45 degrees. **/
         private void rotate() {
             setRotate((getRotate() + 90) % 360);}
-
     }
 
     // FIXME Task 8: Implement starting placements
@@ -572,7 +533,6 @@ public class Board extends Application implements Runnable  {
         completionText.toFront();
         completionText.setOpacity(1);
         completionText.setEffect(dropShadow);
-
     }
 
     /** helps to hide the completion message  **/
