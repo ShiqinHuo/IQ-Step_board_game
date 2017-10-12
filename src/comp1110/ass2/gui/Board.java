@@ -210,8 +210,8 @@ public class Board extends Application implements Runnable  {
             String newpiece = "";
             if (char2.equals("A") ) newpiece = char1 + "E";
             else if (char2.equals("E")) newpiece = char1 + "A";
-            this.piece = newpiece;
             System.out.println(piece + " ->updated-> " +newpiece );
+            this.piece = newpiece;
             setImage(new Image(Viewer.class.getResource(URI_BASE+newpiece+".png").toString()));
             setFitHeight(80);
             setFitWidth(80);
@@ -302,8 +302,8 @@ public class Board extends Application implements Runnable  {
                 setFitHeight(110);
                 setFitWidth(110);
                 setOpacity(0.3);
-                System.out.println("mouse X: "+ mouseX);
-                System.out.println("mouse Y: "+ mouseY);
+               // System.out.println("mouse X: "+ mouseX);
+              //  System.out.println("mouse Y: "+ mouseY);
                 double movementX = event.getSceneX() - mouseX;
                 double movementY = event.getSceneY() - mouseY;
                 setLayoutX(getLayoutX() + movementX);
@@ -894,10 +894,12 @@ public class Board extends Application implements Runnable  {
                 //keyboardHandlers(scene);
 
                 setNewstart ();
+                done ="";
+                pastplacement ="";
                 viewNewStart(newstart);
                 makeOriginalPieces();
-                pastplacement ="";
-                done ="";
+                //pastplacement ="";
+
             }
         });
         controls.getChildren().add(button);
