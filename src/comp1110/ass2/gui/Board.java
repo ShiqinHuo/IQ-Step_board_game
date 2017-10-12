@@ -9,7 +9,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -36,6 +35,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static comp1110.ass2.Alphabet.isPeg;
+import static comp1110.ass2.StepsGame.notObstruct;
 
 public class Board extends Application implements Runnable  {
     private static final int BOARD_WIDTH = 933;
@@ -51,7 +51,7 @@ public class Board extends Application implements Runnable  {
     private final DropShadow dropShadow = new DropShadow();
 
     private static String newstart = "";
-    private static String placement = "";
+    private static String pastplacement = "";
 
     private final Group root = new Group();
     private final Group controls = new Group();
@@ -59,7 +59,6 @@ public class Board extends Application implements Runnable  {
     private static final Group letters = new Group();
     private final Group pieces = new Group();
     private final Group newpieces = new Group();
-    private final Group boardpieces = new Group();
     private final Group solution = new Group();
     private ArrayList<Peg> peglist = new ArrayList<>();
 
@@ -74,7 +73,22 @@ public class Board extends Application implements Runnable  {
     private double endMilli = 0;
     private double useTime = 0;
     private BigDecimal UseTime;
+    private String done = ""; // initialise the placed pieces
 
+    public static final String[][] TaskEleven_OBJECTIVE ={
+            {"HHnBFOGDL", "EEfHALAHS", "HFSGFlBDx", "EFBFCgBGS", "BFqHALAHS",
+                    "EFBAFnGFS", "CHSGHnBGK", "DGSGHnBHF", "FBmBCoCEj", "HGnGAREBv",
+                    "BGKFCNGFn", "FBgEElBEe", "BGKFCNCAg", "EFBAFnDHS", "GDLCGOEEn"},
+            {"FCLBFqEFjCCW", "AHSEHlBDxFBg", "EFBBFqCHSGHn", "BGSGHnDGQEEf", "EFBHAgDGSAHQ",
+                    "BGSAHQEFBHAg", "BHFFCLHBNDFl", "BHFFCLHBNGGn", "BGSAHQEFBHFn", "EFBFCNCHSBBG",
+                    "BFOGDLADgDFj", "EEfFBiCCLBGS", "HFSFDbEAoBHD", "DGSBGlEAoCEj", "HFSFDPBGKADg"},
+            {"BFOGDLADgDFjHEQ", "BHFFCLHBNGGnEDI", "EFBFCNCHSBBGADg", "BGKAFjGCNHAPCAg", "HFSFDbEAoBHDGDL",
+                    "EFBAFjGCNHAPCAg", "FCLBFqDAWHEjEFF", "AEnCElFFSBHFDGj", "AHSEHlBDxFBgHCP", "FBmBCoCEjABRDCP",
+                    "GDLCGOEEnADgDAi", "HHnBFOGDLADgDAi", "BGKFCNEEnDHSGEQ", "BFqEFlHDiAFnCCL", "GDLADgBGODAiHAk"},
+            {"AHSEHlBDxFBgHCPGBi", "EFBHAgDGSAHQCDNGHj", "DGSGHnBHFFDNCAkHCi", "EFBFCNCHSBBGADgHAi", "GDLADgBGODAiHAkCGc",
+                    "BHFFCLHBNGGnEDIADg", "HHnBFOGDLADgDAiCCk", "BFqHALAHSFDPCDNDAi", "FBmBCoCEjABRDCPHCN", "CHSGHnBGKFCNADgHAi",
+                    "HFSFDbEAoBHDGDLADg", "EEfFBiCCLBGSHANAHQ", "FCLBFqDAWHEjEFFCGl", "BHDHBLADgCGQDFlFEj", "EFBFCNDAgCEnAESGEQ"}
+    }; // by Wenjun Yang
 
     @Override
     public void run() {
@@ -111,7 +125,7 @@ public class Board extends Application implements Runnable  {
         for(int i = 0;i<=49;i++){
             if (isPeg(i)) {
                 Peg onepeg = new Peg(i);
-                System.out.println("peg letter: "+onepeg.letter+" x-pos: "+onepeg.x+" y-pos: "+onepeg.y);
+                //System.out.println("peg letter: "+onepeg.letter+" x-pos: "+onepeg.x+" y-pos: "+onepeg.y);
                 peglist.add(onepeg);
                 Label letter = new Label(onepeg.letter.toString());
                 letter.setLayoutX(onepeg.x+73);
@@ -127,10 +141,6 @@ public class Board extends Application implements Runnable  {
             }
         }
     }
-    private HashMap<String,Double> hashCoordX = new HashMap();
-    private HashMap<String,Double> hashCoordY = new HashMap();
-    /* Record the rotated */
-    private HashMap<String,Double> mapRotated = new HashMap<>();
 
 //https://stackoverflow.com/questions/41246688/circle-wont-move-position-in-javafx/41247282
 //https://stackoverflow.com/questions/21118394/explicitly-positioning-nodes-in-javafx
@@ -170,29 +180,6 @@ public class Board extends Application implements Runnable  {
                     setFitHeight(80);
                     setFitWidth(80);
                     break;}}}}
-/**  */
-    class FXPiece extends Picture{
-        double fixedX;
-        double fixedY;
-        double rotate;
-        FXPiece(String piece){
-            super(piece);
-            //if (placedpieces.contains(piece)){
-                fixedX = hashCoordX.get(piece);
-                fixedY = hashCoordY.get(piece);
-                rotate = mapRotated.get(piece);
-                setLayoutX(fixedX);
-                System.out.println("fffffffxxxxxx"+fixedX);
-                setLayoutY(fixedY);
-                System.out.println("fffffffyyyyy"+fixedY);
-                setRotate(rotate);
-                System.out.println("rotateeeeeeee"+rotate);
-                setFitHeight(110);
-                setFitWidth(110);
-                setOpacity(1);
-        }
-    }
-
 
     /** Assign the coordinate for all pieces */
     class FlippableFXPiece extends Picture{
@@ -282,8 +269,7 @@ public class Board extends Application implements Runnable  {
             setOnScroll(event -> {if (!isOnBoard()) {
                 hideCompletion();
                 hideUsingTime();
-                rotate();
-                checkMove();
+                rotate(); // not on board -> enables rotate property
                 event.consume();
             }});
 //https://stackoverflow.com/questions/22542015/how-to-add-a-mouse-doubleclick-event-listener-to-the-cells-of-a-listview-in-java
@@ -291,11 +277,10 @@ public class Board extends Application implements Runnable  {
                 @Override
                 public void handle(MouseEvent click) {
                     if (homeX == getLayoutX() & homeY == getLayoutY()){
-                        if (click.getClickCount() == 2) {
+                        if (click.getClickCount() == 2) { // double click to flip the piece -> only at the origin
                             flippedPieces();
                             hideCompletion();
-                            hideUsingTime();
-                            checkMove();}}
+                            hideUsingTime();}}
                 }
             });
 
@@ -323,40 +308,48 @@ public class Board extends Application implements Runnable  {
 
             setOnMouseReleased(event -> {
                 if (isOnBoard()) {
-                   // System.out.println("onononXXXXX"+getLayoutX());
-                    //System.out.println("ooooonnYYYYY"+getLayoutY());
                     setOpacity(1);
-                    snapToGrid();
+                    snapToGrid(); // check the validity (whether it's movable)
                     hideCompletion();
                     hideUsingTime();
-                    checkMove();
                     event.consume();
-                    updatedPieces();
                 }
                 else {
-                    //System.out.println("gggggXXX"+getLayoutX());
-                    //System.out.println("ggggYYY"+getLayoutY());
-                    snapToHome();
-                    setOpacity(1);}
+                    if(!done.contains(String.valueOf(piece.charAt(0)))) {
+                        System.out.println(done);
+                            snapToHome();
+                            System.out.println("Directly to home! Out board!");}
+                    else
+                    {
+                        //pastplacement = pastplacement.substring(0,pastplacement.length()-3);
+                        snapToHome();
+                        int index = done.indexOf(piece.charAt(0));
+                        System.out.println("done test "+ done);
+                        System.out.println("index: "+index);
+                        System.out.println("placement length "+pastplacement.length());
+                        System.out.println("previous placement "+pastplacement);
+                        //https://stackoverflow.com/questions/7775364/how-can-i-remove-a-substring-from-a-given-string
+                        if (3 * (index+1) == pastplacement.length()){ // the last piece to back
+                            pastplacement = pastplacement.substring(0,3*index);}
+                        else {
+                            System.out.println("qian :" + pastplacement.substring(0,3*index));
+                            System.out.println("hou " + pastplacement.substring(3*index+3));
+                            System.out.println();
+                            pastplacement = pastplacement.substring(0,3*index)+pastplacement.substring(3*index+3);}
+                        System.out.println("outboard! reduced pastplacement: " +pastplacement);
+                        System.out.println("done before: "+done);
+                        String renew = "";
+                        for (int i = 0; i < done.length();i++){
+                            if (!(done.charAt(i)==piece.charAt(0))) renew += done.charAt(i);
+                        }
+                        done = renew;
+                        System.out.println("done after renew: " + done);
+                    }
+                        setOpacity(1);}
             });
                 }
 
 //https://stackoverflow.com/questions/521171/a-java-collection-of-value-pairs-tuples
-
-        //** remove pieces already on the board from the piecelist. **//*
-        private void updatedPieces() {
-            if (piecelist.contains(piece)){
-                int index = piecelist.indexOf(piece);
-                piecelist.remove(index);
-                if (! placedpieces.contains(piece)){
-                    boardpieces.getChildren().add(new DraggableFXPiece(piece));
-                    placedpieces.add(piece);
-                    hashCoordX.put(piece,getLayoutX());
-                    hashCoordY.put(piece,getLayoutY());
-                    mapRotated.put(piece,getRotate());
-                }
-            }}
-
 
         boolean isOnBoard(){
             if ( piece.equals("BA") && getRotate() == 0 || piece.equals("EA") && getRotate() == 180){
@@ -381,53 +374,6 @@ public class Board extends Application implements Runnable  {
             return true;
         }
 
-        /** Check whether there are wrong connections between pieces.
-        *   If so, show the skulls to mention the wrong piece placement. **/
-        private void checkMove () {
-            String placement = newstart;
-            for (Node p : pieces.getChildren()) {
-                placement += p.toString();}
-            if (!StepsGame.isPlacementSequenceValid(placement)) {
-                //showSkulls(StepsGame.getError(placement));
-                //snapToHome(); -- Fixme
-            }
-            else {
-                if (StepsGame.isPlacementSequenceValid(placement) && placement.length() > 34) {
-                    endMilli = System.currentTimeMillis();
-                    useTime = endMilli - startMilli;
-                    if (useTime != startMilli) {
-                        if (difficulty.getValue() == 0) {
-                             diff_0.add(useTime);
-                            }
-                        else if (difficulty.getValue() == 1) {
-                             diff_1.add(useTime);
-                            }
-                        else if (difficulty.getValue() == 2) {
-                            diff_2.add(useTime);
-                            }
-                        else if (difficulty.getValue() == 3) {
-                            diff_3.add(useTime);
-                            }
-                        else if (difficulty.getValue() == 4) {
-                            diff_4.add(useTime);
-                            }
-                    }
-                    if (useTime > 60000) {
-                        UseTime = new BigDecimal(useTime / 60000);
-                        useTime = UseTime.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-                        timeUsing = new Text("use time: " + useTime + " min");}
-                    else {
-                        UseTime = new BigDecimal(useTime / 1000);
-                        useTime = UseTime.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-                        timeUsing = new Text("use time: " + useTime + " s");}
-                    makeUsingTime();
-                    //laugh.play();
-                    showCompletion();
-                    showUsingTime();
-                    }
-                }
-            }
-
         /** Make the pieces snap to their original position. */
         private void snapToHome() {
             homeY = piecemapY.get(piece);
@@ -443,39 +389,133 @@ public class Board extends Application implements Runnable  {
         }
 
         private void snapToGrid(){
+            done = ""; //  initialise each time
+            if (pastplacement.length()>0){
+                for (int i = 0; i< pastplacement.length();i+=3){
+                    done += String.valueOf( pastplacement.charAt(i));
+                }
+            } // if already on board
+            if (done.contains(String.valueOf(piece.charAt(0)))){
+                int index = done.indexOf(piece.charAt(0));
+                //https://stackoverflow.com/questions/7775364/how-can-i-remove-a-substring-from-a-given-string
+                if (3 * (index+1) == pastplacement.length()){ // the last piece to back
+                    pastplacement = pastplacement.substring(0,3*index);}
+                else {
+                    pastplacement = pastplacement.substring(0,3*index)+pastplacement.substring(3*index+3);}
+                String renew = "";
+                for (int i = 0; i < done.length();i++){
+                    if (!(done.charAt(i)==piece.charAt(0))) renew += done.charAt(i);
+                }
+                done = renew; // reduce the done
+                System.out.println(" renew done here: " + done);
+            }
+            // calculated done pieces each time
             String ori = "";
-            String pieceplacement = "";
+            String pieceplacement;
+            int index;
             String char1 = String.valueOf(piece.charAt(0));
             String char2 = String.valueOf(piece.charAt(1));
-            System.out.println("grid??");
+            int count = 0;
             for (Peg a : peglist){
-                //System.out.println("layout x: " +getLayoutX()+" xpos: "+a.x+" peg: "+a.letter.toString());
-                //System.out.println("layout y: " +getLayoutY()+" ypos: "+a.y+" peg: "+a.letter.toString());
                 if(getLayoutX()-25 <= a.x+20 && getLayoutX()-25 >= a.x-20 && getLayoutY()+ 55 <= a.y+20 && getLayoutY()+55  >= a.y-20){
                     setLayoutY(a.y - 55); // getLayoutY() - 20 <= pos <= getLayoutY() + 20
                     setLayoutX(a.x + 25);
-                    System.out.println();
+                    setRotate(getRotate());
+                    setImage(new Image(Viewer.class.getResource(URI_BASE+ piece+".png").toString()));// top
+                    System.out.println("placed well");
                     setFitHeight(110);
                     setFitWidth(110);
-                }else continue;
-                if (char2 == "E") { // flipped
-                    ori =  String.valueOf('E'+(getRotate()/90)); // E F G H
+                    if (char2.equals("E")) { // flipped
+                        ori =  String.valueOf((char) ('E'+(getRotate()/90))); // E F G H
+                    }
+                    else if (char2.equals("A")) {// non-flipped
+                        ori = String.valueOf((char) ('A'+(getRotate()/90)));}
+                    pieceplacement = char1 + ori + a.letter.toString();
+                    //System.out.println("orientation : " + ori);
+                    System.out.println("this current placement: " + pieceplacement);
+
+                    if (pastplacement.length()==0) // first piece to place
+                        pastplacement = newstart + pieceplacement; // add the given string: "newstart"
+                    else // Updated ( try )
+
+                        if (!done.contains(char1))
+                            pastplacement = pastplacement + pieceplacement;
+
+                        else  {
+                            index = done.indexOf(char1);
+                            System.out.println("index: "+index);
+                            System.out.println("before: "+pastplacement);
+                            //https://stackoverflow.com/questions/7775364/how-can-i-remove-a-substring-from-a-given-string
+                            pastplacement = pastplacement.replace(pastplacement.substring(3*index,3*index+3),"");
+                            System.out.println("reduced: "+pastplacement);
+                            pastplacement = pastplacement + pieceplacement;
+                        }
+
+                    System.out.println("initially revised pastplacement: " + pastplacement);
+                    // whether complete?
+                    if ( StepsGame.notObstruct(pastplacement.substring(0,pastplacement.length()-3),pieceplacement) && pastplacement.length() == 24) {
+                        endMilli = System.currentTimeMillis();
+                        useTime = endMilli - startMilli;
+                        if (useTime != startMilli) {
+                            if (difficulty.getValue() == 0) {
+                                diff_0.add(useTime);
+                            }
+                            else if (difficulty.getValue() == 1) {
+                                diff_1.add(useTime);
+                            }
+                            else if (difficulty.getValue() == 2) {
+                                diff_2.add(useTime);
+                            }
+                            else if (difficulty.getValue() == 3) {
+                                diff_3.add(useTime);
+                            }
+                            else if (difficulty.getValue() == 4) {
+                                diff_4.add(useTime);
+                            }
+                        }
+                        if (useTime > 60000) {
+                            UseTime = new BigDecimal(useTime / 60000);
+                            useTime = UseTime.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                            timeUsing = new Text("use time: " + useTime + " min");}
+                        else {
+                            UseTime = new BigDecimal(useTime / 1000);
+                            useTime = UseTime.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                            timeUsing = new Text("use time: " + useTime + " s");}
+                        makeUsingTime();
+                        showCompletion();
+                        showUsingTime();}
+                    //  place well ! -> update the pastplacement
+                    else if(StepsGame.notObstruct(pastplacement.substring(0,pastplacement.length()-3),pieceplacement)) {
+                        System.out.println("enter not Obstruct here");
+                        done += char1;
+                        System.out.println("enter comfirmed pastplacement " +pastplacement);
+                        //continue;
+                    }
+                    else if (pieceplacement.equals("")) {
+                        snapToHome();
+                    } //
+                    else if(!notObstruct(pastplacement.substring(0,pastplacement.length()-3),pieceplacement)){
+                        System.out.println("home here!");
+                        System.out.println("before return pastplacement: " + pastplacement);
+                        System.out.println("BUG length :" +pastplacement.length());
+                        System.out.println("BUG revise :" +pastplacement.substring(0,pastplacement.length()-3));
+                        pastplacement = pastplacement.substring(0,pastplacement.length()-3);
+                        System.out.println("return to previous pastplacement: " + pastplacement);
+                        System.out.println("BUG test");
+                        snapToHome();
+                    }
+                    System.out.println("comfirmed pastplacement: " + pastplacement);}
+                else {
+                    count += 1;
+                    System.out.println("count pegs: "+count);
+                    if (count == 25) {
+                        snapToHome();
+                        System.out.println("not on grid! ->  home");
+                        System.out.println("pastplacement-> " + pastplacement);
+                    }
                 }
-                else if (char2 == "A") {// non-flipped
-                    ori = String.valueOf('A'+(getRotate()/90));}
-                pieceplacement = char1 + ori + a.letter.toString();
-                if (placement.length()==0)
-                    placement = newstart + pieceplacement;
-                else
-                    placement = placement + pieceplacement;
-                break;
-            }
-            if (pieceplacement.equals(""))
-                snapToHome();
-            else if(StepsGame.isPlacementSequenceValid(placement)){
-                snapToHome();
-                placement = placement.substring(0,placement.length()-3);
-            }
+                // next peg in the traversal -> continue
+        }
         }
 
 
@@ -593,16 +633,16 @@ public class Board extends Application implements Runnable  {
                             double best = BestScore(difficulty.getValue());
                             BigDecimal Best = new BigDecimal(best/6000);
                             best = Best.setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
-                            new innerStage().display("The best score for "+ difficulty.getValue(),+best+" min!");
+                            new innerStage().display("The best score for level "+ difficulty.getValue(),+best+" min!");
                         }
                         else if (BestScore(difficulty.getValue()) == 0){
-                            new innerStage().display("The best score for "+ difficulty.getValue(), "No record yet!");
+                            new innerStage().display("The best score for level "+ (int) difficulty.getValue(), "Oops! No record yet:( \n\n Congratulations! \n\nYou're the 1st lucky guy to play this level:)");
                         }
                         else{
                             double best = BestScore(difficulty.getValue());
                             BigDecimal Best = new BigDecimal(best/1000);
                             best = Best.setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
-                            new innerStage().display("The best score for "+ difficulty.getValue(), +best+ " s!");
+                            new innerStage().display("The best score for level "+ difficulty.getValue(), +best+ " s!");
                         }
                     }
                 });
@@ -641,7 +681,7 @@ public class Board extends Application implements Runnable  {
            inner.setTitle(title);
            inner.initModality(Modality.APPLICATION_MODAL);
            inner.setMinWidth(300);
-           inner.setMinHeight(100);
+           inner.setMinHeight(200);
 
            Label label = new Label(message);
            VBox layout = new VBox(10);
@@ -733,8 +773,13 @@ public class Board extends Application implements Runnable  {
     // FIXME Task 11: Generate interesting starting placements
 
     /**
-     * Set a label for difficulty, when the bar stays at "1", representing easy mode.
-     * Similarly,"2" represents medium mode;"3" represents the hard mode.*/
+     * Set slide bar for difficulty
+     * "0" represents easy level
+     * Similarly,
+     * "0" represents medium level
+     * "2" represents hard level
+     * "3" represents hardest level
+     * */
 
     private void makeControls() {
         Button button = new Button("Start");
@@ -745,8 +790,6 @@ public class Board extends Application implements Runnable  {
             public void handle(ActionEvent e) {
                 startMilli = System.currentTimeMillis();
                 //xia.play();
-                //newPiece.getChildren().clear();
-                //newPiece.setOpacity(1);
                 pieces.setOpacity(1);
                 //laugh.stop();
                 hideCompletion();
@@ -755,7 +798,8 @@ public class Board extends Application implements Runnable  {
                 //makePlacement();
                 //makeSolution(StepsGame.getSolutions());
                 makeOriginalPieces();
-                //makeUpdatedPieces();
+                pastplacement ="";
+                done ="";
             }
         });
         controls.getChildren().add(button);
@@ -789,6 +833,7 @@ public class Board extends Application implements Runnable  {
         Scene scene = new Scene(root, BOARD_WIDTH, BOARD_HEIGHT);
         makePegs();
         //addBackground();
+        //pastplacement = "";
         addTitle();
         primaryStage.setScene(scene);
         root.getChildren().add(pegs);
@@ -796,10 +841,6 @@ public class Board extends Application implements Runnable  {
         root.getChildren().add(controls);
         root.getChildren().add(newpieces);
         root.getChildren().add(pieces);
-        root.getChildren().add(boardpieces);
-        //root.getChildren().add(correct-pieces);
-        //root.getChildren().add(pane);
-        //root.getChildren().add(newPiece);
         keyboardHandlers(scene);
         InsTextEffect();
         compTextEffect();
