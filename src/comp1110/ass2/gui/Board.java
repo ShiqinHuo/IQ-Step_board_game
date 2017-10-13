@@ -868,6 +868,7 @@ public class Board extends Application implements Runnable  {
                             if (pastplacement.length()==0) pastplacement =newstart;
                             System.out.println("BUG after" + pastplacement);
                             placePieces(nextMask(pastplacement));
+                            hints.play();
                             invisibleSol.setOpacity(0.75);} //invi = true;
                         else
                             invisibleSol.setOpacity(0);
