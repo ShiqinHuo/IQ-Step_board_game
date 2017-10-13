@@ -46,6 +46,8 @@ public class Board extends Application implements Runnable  {
     TextField textField;
     /** message on completion */
     private final Text completionText = new Text("Good Job!");
+    Title comText = new Title("Well Done!");
+
     private final Text insText = new Text(" Press Q =>to=> Quit game\n\n Click '/' =>to=> Show next piece hint.\n\n Click '/' Again =>to=> Hide next piece hint. \n\n Press S =>to=> Show best score \n\n Mouse Double click =>to=> Flip piece\n\n Mouse scroll =>to=> Rotate.\n\n Slide the \"Difficulty\" =>to=> Change difficulty levels.\n\n Press \"Start\" =>to=> a new game. ");
     private Text timeUsing = new Text("Shows timeUsing");
     private final Slider difficulty = new Slider();
@@ -440,10 +442,11 @@ public class Board extends Application implements Runnable  {
             if (done.contains(String.valueOf(piece.charAt(0)))){
                 int index = done.indexOf(piece.charAt(0));
                 //https://stackoverflow.com/questions/7775364/how-can-i-remove-a-substring-from-a-given-string
-                if (3 * (index+1) == pastplacement.length()){ // the last piece to back
+                if (3 * (index+1) == pastplacement.length() && !(pastplacement.length() == 24)){ // the last piece to back
                    // pastplacement = pastplacement.substring(0,3*index);
                     return true;
                 }
+                else if((pastplacement.length() == 24)) return false; // already done!
                 else { // not the last to place..
                     System.out.println("canmove checker: !!");
                     p = pastplacement.substring(3*index,3*index+3);
@@ -598,8 +601,9 @@ public class Board extends Application implements Runnable  {
                                 useTime = UseTime.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
                                 timeUsing = new Text("use time: " + useTime + " s");}
                             makeUsingTime();
-                            showCompletion();
                             win.play();
+                            System.out.println("AAAAlast: win??????????");
+                            showCompletion();
                             showUsingTime();}
                         //  place well ! -> update the pastplacement
                         else if(StepsGame.notObstruct(pastplacement.substring(0,pastplacement.length()-3),pieceplacement)) {
@@ -711,6 +715,7 @@ public class Board extends Application implements Runnable  {
                                 timeUsing = new Text("use time: " + useTime + " s");}
                             makeUsingTime();
                             showCompletion();
+                            System.out.println("EEEEEEEEEE??????win?????");
                             win.play();
                             showUsingTime();}
                         //  place well ! -> update the pastplacement
@@ -802,32 +807,42 @@ public class Board extends Application implements Runnable  {
     /** helps to set the effect of text, arranging the text's position, size.
       * When called, record current time automatically.**/
     private void compTextEffect() {
-        completionText.setFill(Color.DEEPPINK);
+/*        completionText.setFill(Color.DEEPPINK);
         completionText.setFont(Font.loadFont(MenuApp.class.getResource("res/handwriting-draft_free-version.ttf").toExternalForm(), 20));
         completionText.setLayoutX(400);
-        completionText.setLayoutY(70);
+        completionText.setLayoutY(70);*/
         //completionText.setTextAlignment(TextAlignment.CENTER);
        // root.getChildren().add(completionText);
+
+        comText.setTranslateX(BOARD_WIDTH/2 - comText.getTitleWidth()/2);
+        comText.setTranslateY(BOARD_HEIGHT/2);
         endMilli = System.currentTimeMillis();
+        comText.setOpacity(0); // hide initially -- debugged
+        root.getChildren().add(comText);
     }
 
     /** This method helps to show the completion text -> set it front **/
     private void showCompletion() {
-        //newPiece.setOpacity(0.3);
         newpieces.setOpacity(0.3);
         startpieces.setOpacity(0.3);
-        completionText.toFront();
+        comText.toFront();
+        comText.setOpacity(1);
+/*        completionText.toFront();
         completionText.setOpacity(1);
-        completionText.setEffect(blueshadow);
+        completionText.setEffect(blueshadow);*/
+
     }
 
     /** helps to hide the completion message  **/
     private void hideCompletion() {
-        completionText.toBack();
+/*        completionText.toBack();
         completionText.setOpacity(0);
         newpieces.setOpacity(1);
+        startpieces.setOpacity(1);*/
+        comText.toBack();
+        comText.setOpacity(0);
+        newpieces.setOpacity(1);
         startpieces.setOpacity(1);
-        //newPiece.setOpacity(1);
     }
 // Using time relevant methods are based on ideas given by Henan Wang(u6007140) and Shenjia Ji(u5869805)
     /** helps to set properties for the "timeUsing" text
@@ -1148,7 +1163,7 @@ public class Board extends Application implements Runnable  {
                 startMilli = System.currentTimeMillis();
                 begin.play();
 
-                hideCompletion();
+                //hideCompletion();
                 hideUsingTime();
                 startpieces.getChildren().clear();
                 newpieces.getChildren().clear();
@@ -1211,6 +1226,7 @@ public class Board extends Application implements Runnable  {
         keyboardHandlers(scene);
         InsTextEffect();
         compTextEffect();
+        //hideCompletion();
         makeControls();
         makeUsingTime();
 
