@@ -20,6 +20,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
@@ -27,6 +28,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -65,12 +67,21 @@ public class Board extends Application implements Runnable  {
     private ArrayList<Double> diff_3 = new ArrayList<>();
     //private ArrayList<Double> diff_4 = new ArrayList<>();
 
-
     private double startMilli = 0;
     private double endMilli = 0;
     private double useTime = 0;
     private BigDecimal UseTime;
     private String done = ""; // initialise the placed pieces
+
+// the idea is suggested by Shenjia Ji (u5869805) and Henan Wang (u6007140)
+// https://stackoverflow.com/questions/23202272/how-to-play-sounds-with-javafx
+    private AudioClip begin = new AudioClip(getClass().getResource("res/begin~.mp3").toString());
+    private AudioClip yohu = new AudioClip(getClass().getResource("res/yohu.mp3").toString());
+    private AudioClip ouou = new AudioClip(getClass().getResource("res/ouoh-error.mp3").toString());
+    private AudioClip win = new AudioClip(getClass().getResource("res/mar-success.mp3").toString());
+    private AudioClip snap = new AudioClip(getClass().getResource("res/snap.mp3").toString());
+    private AudioClip hints = new AudioClip(getClass().getResource("res/hints.mp3").toString());
+    private AudioClip flip = new AudioClip(getClass().getResource("res/flip.mp3").toString());
 
     public static final String[][] TaskEleven_OBJECTIVE ={
             //diff_3
@@ -212,6 +223,7 @@ public class Board extends Application implements Runnable  {
             else if (char2.equals("E")) newpiece = char1 + "A";
             System.out.println(piece + " ->updated-> " +newpiece );
             this.piece = newpiece;
+            flip.play();
             setImage(new Image(Viewer.class.getResource(URI_BASE+newpiece+".png").toString()));
             setFitHeight(80);
             setFitWidth(80);
@@ -321,11 +333,13 @@ public class Board extends Application implements Runnable  {
                     hideUsingTime();
                     event.consume();
                 }
-                else {
+                else if(!(getLayoutX()==homeX && getLayoutY() == homeY)){
+                    ouou.play();
+                    snap.play();
                     if(!done.contains(String.valueOf(piece.charAt(0)))) {
                         System.out.println(done);
-                            snapToHome();
-                            System.out.println("Directly to home! Out board!");}
+                        snapToHome();
+                        System.out.println("Directly to home! Out board!");}
                     else
                     {
                         //pastplacement = pastplacement.substring(0,pastplacement.length()-3);
@@ -352,12 +366,24 @@ public class Board extends Application implements Runnable  {
                         done = renew;
                         System.out.println("done after renew: " + done);
                     }
-                        setOpacity(1);}
+                    setOpacity(1);}
             });
                 }
 
 //https://stackoverflow.com/questions/521171/a-java-collection-of-value-pairs-tuples
 
+        /** To check whether the piece already on board can move:
+         * Bottom level probably is constrained by the top level pieces */
+
+        /* the precondition is "on board" already!*/
+        boolean canmove(){
+
+
+
+            return false;
+        }
+
+        /** Check whether the piece is on board or out of the board boundary. */
         boolean isOnBoard(){
             if ( piece.equals("BA") && getRotate() == 0 || piece.equals("EA") && getRotate() == 180){
                 if (getLayoutX()<270||getLayoutX()>520 || getLayoutY()<220 || getLayoutY()>290){
@@ -395,6 +421,11 @@ public class Board extends Application implements Runnable  {
             setFitWidth(80);
         }
 
+        /** The main aim is to test whether the piece is correctly located on the peg rather than the non-peg area.
+         * It applies the for-each loop to travel through all pegs to check the validity in terms of the distance.
+         * Another feature for this method is to record the end time is the piece is the last one to place correctly.
+         * Last, it enables us to communicate with the backend programming since it gives to output of the
+         * piece placement (3-char) and the updated board placement String */
         private void snapToGrid(){
             done = ""; //  initialise each time
             if (pastplacement.length()>0){
@@ -425,6 +456,8 @@ public class Board extends Application implements Runnable  {
             int count = 0;
             for (Peg a : peglist){
                 if(getLayoutX()-25 <= a.x+20 && getLayoutX()-25 >= a.x-20 && getLayoutY()+ 55 <= a.y+20 && getLayoutY()+55  >= a.y-20){
+                    //ouou.play();
+                    //snap.play();
                     setLayoutY(a.y - 55); // getLayoutY() - 20 <= pos <= getLayoutY() + 20
                     setLayoutX(a.x + 25);
                     setRotate(getRotate());
@@ -464,6 +497,7 @@ public class Board extends Application implements Runnable  {
                     System.out.println("initially revised pastplacement: " + pastplacement);
                     // whether complete?
                     if ( StepsGame.notObstruct(pastplacement.substring(0,pastplacement.length()-3),pieceplacement) && pastplacement.length() == 24) {
+                        yohu.play();
                         endMilli = System.currentTimeMillis();
                         useTime = endMilli - startMilli;
                         if (useTime != startMilli) {
@@ -490,18 +524,23 @@ public class Board extends Application implements Runnable  {
                             timeUsing = new Text("use time: " + useTime + " s");}
                         makeUsingTime();
                         showCompletion();
+                        win.play();
                         showUsingTime();}
                     //  place well ! -> update the pastplacement
                     else if(StepsGame.notObstruct(pastplacement.substring(0,pastplacement.length()-3),pieceplacement)) {
+                        yohu.play();
                         System.out.println("enter not Obstruct here");
                         done += char1;
                         System.out.println("enter comfirmed pastplacement " +pastplacement);
                         //continue;
                     }
                     else if (pieceplacement.equals("")) {
+                        ouou.play();
+                        snap.play();
                         snapToHome();
                     } //
                     else if(!notObstruct(pastplacement.substring(0,pastplacement.length()-3),pieceplacement)){
+                        ouou.play();
                         System.out.println("home here!");
                         System.out.println("before return pastplacement: " + pastplacement);
                         System.out.println("BUG length :" +pastplacement.length());
@@ -509,6 +548,7 @@ public class Board extends Application implements Runnable  {
                         pastplacement = pastplacement.substring(0,pastplacement.length()-3);
                         System.out.println("return to previous pastplacement: " + pastplacement);
                         System.out.println("BUG test");
+                        snap.play();
                         snapToHome();
                     }
                     System.out.println("comfirmed pastplacement: " + pastplacement);}
@@ -516,6 +556,8 @@ public class Board extends Application implements Runnable  {
                     count += 1;
                     //System.out.println("count pegs: "+count);
                     if (count == 25) {
+                        ouou.play();
+                        snap.play();
                         snapToHome();
                         System.out.println("not on grid! ->  home");
                         System.out.println("pastplacement-> " + pastplacement);
@@ -529,6 +571,7 @@ public class Board extends Application implements Runnable  {
 
         /** Make the piece rotate clockwise. Each time rotate 45 degrees. **/
         private void rotate() {
+            flip.play();
             setRotate((getRotate() + 90) % 360);}
     }
 
@@ -569,7 +612,7 @@ public class Board extends Application implements Runnable  {
         completionText.setLayoutX(400);
         completionText.setLayoutY(70);
         //completionText.setTextAlignment(TextAlignment.CENTER);
-        root.getChildren().add(completionText);
+       // root.getChildren().add(completionText);
         endMilli = System.currentTimeMillis();
     }
 
@@ -599,7 +642,7 @@ public class Board extends Application implements Runnable  {
         timeUsing.setFont(Font.loadFont(MenuApp.class.getResource("res/handwriting-draft_free-version.ttf").toExternalForm(), 15));
         timeUsing.setTextAlignment(TextAlignment.LEFT);
         timeUsing.setLayoutY(650);
-        root.getChildren().add(timeUsing);
+        //root.getChildren().add(timeUsing);
     }
     /** helps to show the "timeUsing" text. **/
     private void showUsingTime() {
@@ -882,6 +925,7 @@ public class Board extends Application implements Runnable  {
                 hideUsingTime();
                 startpieces.getChildren().clear();
                 newpieces.getChildren().clear();
+                begin.play();
                 piecelist = new ArrayList<>();
 
                 //makePlacement();
@@ -910,7 +954,7 @@ public class Board extends Application implements Runnable  {
             }
         });
         controls.getChildren().add(button);
-
+// used ideas suggested by Chenhao Tong(u5920830)
         difficulty.setMin(0);
         difficulty.setMax(3);
         difficulty.setValue(0);
