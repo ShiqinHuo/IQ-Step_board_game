@@ -333,7 +333,7 @@ public class Board extends Application implements Runnable  {
             }
 
             setOnScroll(event -> {if (!isOnBoard()) {
-                hideCompletion();
+                //hideCompletion();
                 hideUsingTime();
                 rotate(); // not on board -> enables rotate property
                 event.consume();
@@ -346,14 +346,14 @@ public class Board extends Application implements Runnable  {
                     if (homeX == getLayoutX() & homeY == getLayoutY()){
                         if (click.getClickCount() == 2) { // double click to flip the piece -> only at the origin
                             flippedPieces();
-                            hideCompletion();
+                            //hideCompletion();
                             hideUsingTime();}}
                 }
             });
 
             setOnMousePressed(event -> {
                 if (canmove()) { // layer checker function
-                    hideCompletion();
+                    //hideCompletion();
                     hideUsingTime();
                     mouseX = event.getSceneX();
                     mouseY = event.getSceneY();}
@@ -361,7 +361,7 @@ public class Board extends Application implements Runnable  {
 
             setOnMouseDragged(event -> {
                 if (canmove()) { // layer checker function
-                    hideCompletion();
+                    //hideCompletion();
                     hideUsingTime();
                     setFitHeight(110);
                     setFitWidth(110);
@@ -382,7 +382,7 @@ public class Board extends Application implements Runnable  {
                 if (isOnBoard()) {
                     setOpacity(1);
                     snapToGrid(); // check the validity (whether it's movable)
-                    hideCompletion();
+                   // hideCompletion();
                     hideUsingTime();
                     event.consume();
                 }
@@ -714,9 +714,9 @@ public class Board extends Application implements Runnable  {
                                 useTime = UseTime.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
                                 timeUsing = new Text("use time: " + useTime + " s");}
                             makeUsingTime();
+                            win.play();
                             showCompletion();
                             System.out.println("EEEEEEEEEE??????win?????");
-                            win.play();
                             showUsingTime();}
                         //  place well ! -> update the pastplacement
                         else if(StepsGame.notObstruct(pastplacement.substring(0,pastplacement.length()-3),pieceplacement)) {
@@ -774,15 +774,15 @@ public class Board extends Application implements Runnable  {
 //https://stackoverflow.com/questions/18265940/should-i-always-not-catch-nullpointerexception
     private String nextMask(String placement){
         try {
-        invi = true;
+            invi = true;
             if (placement.length() == 9){
-            return nextMaskForThree(placement);
+                return nextMaskForThree(placement);
             }else {
-            Set<String> solution = SolverForHint.Solutions(placement);
-            ArrayList<String> temp = new ArrayList<>(solution);
-            int leng = placement.length();
-            String result = temp.get(0);
-            return result.substring(leng, leng + 3);
+                Set<String> solution = SolverForHint.Solutions(placement);
+                ArrayList<String> temp = new ArrayList<>(solution);
+                int leng = placement.length();
+                String result = temp.get(0);
+                return result.substring(leng, leng + 3);
             }
         }
         catch (NullPointerException z){
@@ -799,8 +799,7 @@ public class Board extends Application implements Runnable  {
         return solution.get(placement);
     }
 
-
-/*    boolean isValidCurrentStep(String pastPlacement,String appendMask){
+    /*    boolean isValidCurrentStep(String pastPlacement,String appendMask){
         Set<String> solution = SolverForHint.Solutions (pastPlacement);
         ArrayList<String> temp = new ArrayList<>(solution);
         int leng = pastPlacement.length();
@@ -816,46 +815,11 @@ public class Board extends Application implements Runnable  {
 
     /* Hints helper functions */
 
-    /** helps to set the effect of text, arranging the text's position, size.
-      * When called, record current time automatically.**/
-    private void compTextEffect() {
-/*        completionText.setFill(Color.DEEPPINK);
-        completionText.setFont(Font.loadFont(MenuApp.class.getResource("res/handwriting-draft_free-version.ttf").toExternalForm(), 20));
-        completionText.setLayoutX(400);
-        completionText.setLayoutY(70);*/
-        //completionText.setTextAlignment(TextAlignment.CENTER);
-       // root.getChildren().add(completionText);
 
-        comText.setTranslateX(BOARD_WIDTH/2 - comText.getTitleWidth()/2);
-        comText.setTranslateY(BOARD_HEIGHT/2);
-        endMilli = System.currentTimeMillis();
-        comText.setOpacity(0); // hide initially -- debugged
-        root.getChildren().add(comText);
+    private void showCompletion (){
+        new innerStage().display("Congratulations! Well done!"," Congratulations! Well done!\n\n Please close this window first! \n\n Then,\n\n Press 'Q' to quit game.\n\n Press 'Start' to restart a new game! \n\n Enjoy your time :) ");
     }
 
-    /** This method helps to show the completion text -> set it front **/
-    private void showCompletion() {
-        newpieces.setOpacity(0.3);
-        startpieces.setOpacity(0.3);
-        comText.toFront();
-        comText.setOpacity(1);
-/*        completionText.toFront();
-        completionText.setOpacity(1);
-        completionText.setEffect(blueshadow);*/
-
-    }
-
-    /** helps to hide the completion message  **/
-    private void hideCompletion() {
-/*        completionText.toBack();
-        completionText.setOpacity(0);
-        newpieces.setOpacity(1);
-        startpieces.setOpacity(1);*/
-        comText.toBack();
-        comText.setOpacity(0);
-        newpieces.setOpacity(1);
-        startpieces.setOpacity(1);
-    }
 // Using time relevant methods are based on ideas given by Henan Wang(u6007140) and Shenjia Ji(u5869805)
     /** helps to set properties for the "timeUsing" text
     * the total time to complete the game at the corresponding difficulty. **/
@@ -976,6 +940,9 @@ public class Board extends Application implements Runnable  {
            inner.setMinHeight(200);
 
            Label label = new Label(message);
+           label.setFont(Font.loadFont(MenuApp.class.getResource("res/handwriting-draft_free-version.ttf").toExternalForm(), 15));
+           label.setTextFill(Color.DEEPPINK);
+
            VBox layout = new VBox(10);
            layout.getChildren().addAll(label);
            layout.setAlignment(Pos.CENTER);
@@ -1237,7 +1204,7 @@ public class Board extends Application implements Runnable  {
         root.getChildren().add(invisibleSol);
         keyboardHandlers(scene);
         InsTextEffect();
-        compTextEffect();
+        //compTextEffect();
         //hideCompletion();
         makeControls();
         makeUsingTime();
