@@ -34,7 +34,6 @@ import javafx.stage.Stage;
 import java.math.BigDecimal;
 import java.util.*;
 
-import static comp1110.ass2.Alphabet.R;
 import static comp1110.ass2.Alphabet.isPeg;
 import static comp1110.ass2.StepsGame.notObstruct;
 
@@ -47,7 +46,7 @@ public class Board extends Application implements Runnable  {
     TextField textField;
     /** message on completion */
     private final Text completionText = new Text("Good Job!");
-    private final Text insText = new Text(" Press Q =>to=> Quit game\n\n Press '/' =>to=> Show/Hide Game hints.\n\n Press S =>to=> Show best score \n\n Mouse Double click =>to=> flip piece\n\n Mouse scroll =>to=> rotate.\n\n Slide the \"Difficulty\" =>to=> change difficulty levels.\n\n Press \"Start\" =>to=> a new game. ");
+    private final Text insText = new Text(" Press Q =>to=> Quit game\n\n Click '/' =>to=> Show next piece hint.\n\n Click '/' Again =>to=> Hide next piece hint. \n\n Press S =>to=> Show best score \n\n Mouse Double click =>to=> Flip piece\n\n Mouse scroll =>to=> Rotate.\n\n Slide the \"Difficulty\" =>to=> Change difficulty levels.\n\n Press \"Start\" =>to=> a new game. ");
     private Text timeUsing = new Text("Shows timeUsing");
     private final Slider difficulty = new Slider();
     private final DropShadow dropShadow = new DropShadow();
@@ -60,8 +59,13 @@ public class Board extends Application implements Runnable  {
     private static final Group pegs = new Group();
     private static final Group letters = new Group();
     private final Group startpieces = new Group();
+    private final Group invisibleSol = new Group();
+    private int count = 0; //initialize
+
+    private boolean invi = false;
+
     private final Group newpieces = new Group();
-    private final Group solution = new Group();
+
     private ArrayList<Peg> peglist = new ArrayList<>();
 
     private ArrayList<Double> diff_0 = new ArrayList<>();
@@ -86,7 +90,7 @@ public class Board extends Application implements Runnable  {
     private AudioClip hints = new AudioClip(getClass().getResource("res/hints.mp3").toString());
     private AudioClip flip = new AudioClip(getClass().getResource("res/flip.mp3").toString());
 
-    public static final String[][] TaskEleven_OBJECTIVE ={
+    private static final String[][] TaskEleven_OBJECTIVE ={
             //diff_3
             {"HHnBFOGDL", "EEfHALAHS", "HFSGFlBDx", "EFBFCgBGS", "BFqHALAHS",
                     "EFBAFnGFS", "CHSGHnBGK", "DGSGHnBHF", "FBmBCoCEj", "HGnGAREBv",
@@ -567,7 +571,7 @@ public class Board extends Application implements Runnable  {
                     }
                 }
                 // next peg in the traversal -> continue
-        }
+            }
         }
 
 
@@ -583,7 +587,8 @@ public class Board extends Application implements Runnable  {
 
     // FIXME Task 10: Implement hints
 
-    String nextMask(String placement){
+    private String nextMask(String placement){
+        invi = true;
         Set<String> solution = SolverForHint.Solutions(placement);
         ArrayList<String> temp = new ArrayList<>(solution);
         int leng = placement.length();
@@ -591,7 +596,7 @@ public class Board extends Application implements Runnable  {
         return result.substring(leng,leng+3);
     }
 
-    boolean isValidCurrentStep(String pastPlacement,String appendMask){
+/*    boolean isValidCurrentStep(String pastPlacement,String appendMask){
         Set<String> solution = SolverForHint.Solutions (pastPlacement);
         ArrayList<String> temp = new ArrayList<>(solution);
         int leng = pastPlacement.length();
@@ -603,7 +608,7 @@ public class Board extends Application implements Runnable  {
             return  (validAppendMask[j].equals(appendMask));
         }
         return false;
-    }
+    }*/
 
     /* Hints helper functions */
 
@@ -671,13 +676,23 @@ public class Board extends Application implements Runnable  {
     // used ideas given by Henan Wang(u6007140) and Shenjia Ji(u5869805)
     private void keyboardHandlers(Scene scene) {
         System.out.println("Handlers up");
+        //https://docs.oracle.com/javase/8/javafx/api/javafx/scene/input/KeyEvent.html#KEY_PRESSED
         scene.setOnKeyPressed(event -> {
                     if (event.getCode() == KeyCode.Q) {
                         Platform.exit();
                         event.consume();
                     }
                     else if (event.getCode() == KeyCode.SLASH){
-                        this.solution.setOpacity(0.8);
+                        count +=1;
+                        System.out.println("count: " +count);
+                        if (count%2 == 1){
+                            System.out.println("BUG before" + pastplacement);
+                            if (pastplacement.length()==0) pastplacement =newstart;
+                            System.out.println("BUG after" + pastplacement);
+                            placePieces(nextMask(pastplacement));
+                            invisibleSol.setOpacity(0.75);} //invi = true;
+                        else
+                            invisibleSol.setOpacity(0);
                         event.consume();
                     }
                     else if (event.getCode() == KeyCode.I){
@@ -701,22 +716,22 @@ public class Board extends Application implements Runnable  {
                             new innerStage().display("The best score for level "+ difficulty.getValue(), +best+ " s!");
                         }
                     }
-                });
-                scene.setOnKeyReleased(event -> {
-                    if (event.getCode() == KeyCode.SLASH){
-                        this.solution.setOpacity(0);
-                        event.consume();}
-                    else if (event.getCode() == KeyCode.I){
+                }); // based on ideas given by Henan Wang(u6007140) and Shenjia Ji(u5869805)
+        //https://docs.oracle.com/javase/8/javafx/api/javafx/scene/input/KeyEvent.html#KEY_RELEASED
+        scene.setOnKeyReleased(event -> {
+                     if (event.getCode() == KeyCode.I){
                         hideInstruction();
                     }
-                });}
+                });
+    }
+
 
  /** helper functions to show the hints' text */
     private void InsTextEffect(){
         //insText.setFill(Color.DEEPPINK);
         //insText.setFont(Font.loadFont(MenuApp.class.getResource("res/handwriting-draft_free-version.ttf").toExternalForm(), 10));
-        insText.setLayoutX(340);
-        insText.setLayoutY(420);
+        insText.setLayoutX(345);
+        insText.setLayoutY(410);
         //insText.setTranslateX(5);
         //insText.setTranslateY(20);
         insText.setFont(Font.loadFont(MenuApp.class.getResource("res/Penumbra-HalfSerif-Std_35114.ttf").toExternalForm(), 10));
@@ -912,7 +927,16 @@ public class Board extends Application implements Runnable  {
             StartPiece.setFitWidth(110);
             StartPiece.setImage(new Image(Viewer.class.getResource(URI_BASE+ p+"E"+".png").toString()));
         }
-        startpieces.getChildren().add(StartPiece);
+        if (invi){
+            System.out.println("here ??????");
+            invisibleSol.getChildren().clear();
+            StartPiece.setOpacity(0.75);
+            System.out.println("next hints: " + pieceplacement);
+            invi = false;
+            invisibleSol.getChildren().add(StartPiece);}
+        else
+            {StartPiece.setOpacity(1);
+            startpieces.getChildren().add(StartPiece);}
     }
 
     /**
@@ -933,32 +957,13 @@ public class Board extends Application implements Runnable  {
             @Override
             public void handle(ActionEvent e) {
                 startMilli = System.currentTimeMillis();
-                //xia.play();
-                //pieces.setOpacity(1);
-                //laugh.stop();
+                begin.play();
+
                 hideCompletion();
-                //hideSkulls();
                 hideUsingTime();
                 startpieces.getChildren().clear();
                 newpieces.getChildren().clear();
-                begin.play();
                 piecelist = new ArrayList<>();
-
-                //makePlacement();
-                //makeSolution(StepsGame.getSolutions());
-                /*
-                root.getChildren().clear();
-                makePegs();
-                addBackground();
-                addTitle();
-
-                root.getChildren().add(pegs);
-                root.getChildren().add(letters);
-                root.getChildren().add(controls);
-                root.getChildren().add(newpieces);
-                root.getChildren().add(pieces);*/
-
-                //keyboardHandlers(scene);
 
                 setNewstart ();
                 done ="";
@@ -1011,6 +1016,7 @@ public class Board extends Application implements Runnable  {
         root.getChildren().add(controls);
         root.getChildren().add(newpieces);
         root.getChildren().add(startpieces);
+        root.getChildren().add(invisibleSol);
         keyboardHandlers(scene);
         InsTextEffect();
         compTextEffect();
