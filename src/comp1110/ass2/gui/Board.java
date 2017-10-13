@@ -15,6 +15,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -33,6 +34,7 @@ import javafx.stage.Stage;
 import java.math.BigDecimal;
 import java.util.*;
 
+import static comp1110.ass2.Alphabet.R;
 import static comp1110.ass2.Alphabet.isPeg;
 import static comp1110.ass2.StepsGame.notObstruct;
 
@@ -40,6 +42,7 @@ public class Board extends Application implements Runnable  {
     private static final int BOARD_WIDTH = 933;
     private static final int BOARD_HEIGHT = 700;
     private static final String URI_BASE = "assets/";
+    private Effect blueshadow = new DropShadow(5, Color.SKYBLUE);
 
     TextField textField;
     /** message on completion */
@@ -623,7 +626,7 @@ public class Board extends Application implements Runnable  {
         startpieces.setOpacity(0.3);
         completionText.toFront();
         completionText.setOpacity(1);
-        completionText.setEffect(dropShadow);
+        completionText.setEffect(blueshadow);
     }
 
     /** helps to hide the completion message  **/
@@ -710,10 +713,16 @@ public class Board extends Application implements Runnable  {
 
  /** helper functions to show the hints' text */
     private void InsTextEffect(){
-        insText.setFill(Color.DEEPPINK);
-        insText.setFont(Font.loadFont(MenuApp.class.getResource("res/handwriting-draft_free-version.ttf").toExternalForm(), 10));
-        insText.setLayoutX(330);
-        insText.setLayoutY(430);
+        //insText.setFill(Color.DEEPPINK);
+        //insText.setFont(Font.loadFont(MenuApp.class.getResource("res/handwriting-draft_free-version.ttf").toExternalForm(), 10));
+        insText.setLayoutX(340);
+        insText.setLayoutY(420);
+        //insText.setTranslateX(5);
+        //insText.setTranslateY(20);
+        insText.setFont(Font.loadFont(MenuApp.class.getResource("res/Penumbra-HalfSerif-Std_35114.ttf").toExternalForm(), 10));
+        insText.setFill(Color.DEEPSKYBLUE);
+        insText.setEffect(blueshadow);
+
         root.getChildren().add(insText);
     }
 
@@ -827,6 +836,16 @@ public class Board extends Application implements Runnable  {
         root.getChildren().add(title);
     }
 
+    private void addHints(){
+        Text RightCorner = new Text("Press 'I' =>To=> Hide/Show the Game Instructions.");
+        RightCorner.setFont(Font.loadFont(MenuApp.class.getResource("res/Penumbra-HalfSerif-Std_35114.ttf").toExternalForm(), 12));
+        RightCorner.setEffect(new DropShadow(5,Color.ORANGERED));
+        RightCorner.setTranslateX(600);
+        RightCorner.setFill(Color.MEDIUMPURPLE);
+        RightCorner.setTranslateY(0.98 * BOARD_HEIGHT);
+        root.getChildren().add(RightCorner);
+    }
+
     // FIXME Task 11: Generate interesting starting placements
 //https://stackoverflow.com/questions/363681/how-do-i-generate-random-integers-within-a-specific-range-in-java
     /** generates interesting starting placements with only one solution  */
@@ -896,10 +915,6 @@ public class Board extends Application implements Runnable  {
         startpieces.getChildren().add(StartPiece);
     }
 
-
-    /** Helper for position  */
-
-
     /**
      * Set slide bar for difficulty
      * "0" represents easy level
@@ -909,10 +924,11 @@ public class Board extends Application implements Runnable  {
      * "3" represents hardest level
      * */
 //https://docs.oracle.com/javase/8/javafx/api/javafx/scene/layout/HBox.html
+//http://docs.oracle.com/javafx/2/ui_controls/slider.htm
     private void makeControls() {
         Button button = new Button("Start");
-        button.setLayoutX(600);
-        button.setLayoutY(595);
+        button.setLayoutX(610);
+        button.setLayoutY(605);
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
@@ -942,7 +958,6 @@ public class Board extends Application implements Runnable  {
                 root.getChildren().add(newpieces);
                 root.getChildren().add(pieces);*/
 
-
                 //keyboardHandlers(scene);
 
                 setNewstart ();
@@ -955,9 +970,11 @@ public class Board extends Application implements Runnable  {
         });
         controls.getChildren().add(button);
 // used ideas suggested by Chenhao Tong(u5920830)
+//https://docs.oracle.com/javase/8/javafx/user-interface-tutorial/slider.htm#CCHDJDFE
         difficulty.setMin(0);
         difficulty.setMax(3);
         difficulty.setValue(0);
+        difficulty.setBlockIncrement(1);
         difficulty.setPrefWidth(250);
         difficulty.setShowTickLabels(true);
         difficulty.setShowTickMarks(true);
@@ -966,13 +983,15 @@ public class Board extends Application implements Runnable  {
         difficulty.setSnapToTicks(true);
 
         difficulty.setLayoutX(300);
-        difficulty.setLayoutY(600);
+        difficulty.setLayoutY(610);
         controls.getChildren().add(difficulty);
 
         final Label difficultyCaption = new Label("Difficulty:");
-        difficultyCaption.setTextFill(Color.GREY);
-        difficultyCaption.setLayoutX(315);
-        difficultyCaption.setLayoutY(580);
+        difficultyCaption.setFont(Font.loadFont(MenuApp.class.getResource("res/Penumbra-HalfSerif-Std_35114.ttf").toExternalForm(), 12));
+        difficultyCaption.setEffect(new DropShadow(5,Color.DEEPPINK));
+        difficultyCaption.setTextFill(Color.WHITE);
+        difficultyCaption.setLayoutX(310);
+        difficultyCaption.setLayoutY(590);
         controls.getChildren().add(difficultyCaption);
     }
 
@@ -985,6 +1004,7 @@ public class Board extends Application implements Runnable  {
         makePegs();
         addBackground();
         addTitle();
+        addHints();
         primaryStage.setScene(scene);
         root.getChildren().add(pegs);
         root.getChildren().add(letters);

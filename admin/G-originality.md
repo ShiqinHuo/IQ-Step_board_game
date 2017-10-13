@@ -25,6 +25,6 @@ We declare that the work we have submitted for Stage G of this assignment and al
 * The code in class <Board.java> is based on a solution we found when researching the problem (<https://www.cs.cmu.edu/~pattis/15-1XX/common/handouts/ascii.html>)
 * The code in class <Board.java> is based on a solution we found when researching the problem (<//https://stackoverflow.com/questions/8330747/doing-minus-operation-on-string>)
 * The code in class <Board.java> is based on a solution we found when researching the problem (<https://stackoverflow.com/questions/363681/how-do-i-generate-random-integers-within-a-specific-range-in-java>)
-
+* The code in class <Board.java> is based on a solution we found when researching the problem (<http://docs.oracle.com/javafx/2/ui_controls/slider.htm>)
 
 Signed: Shiqin Huo (u5949730), Bob Smith (u3456789), and Sue Black (u0123456)
