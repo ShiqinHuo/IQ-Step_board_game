@@ -533,7 +533,7 @@ public class Board extends Application implements Runnable  {
     }
 
     // FIXME Task 8: Implement starting placements
-
+// Task 8 is combined with Task 11
 
     // FIXME Task 10: Implement hints
 
@@ -591,7 +591,7 @@ public class Board extends Application implements Runnable  {
         startpieces.setOpacity(1);
         //newPiece.setOpacity(1);
     }
-
+// Using time relevant methods are based on ideas given by Henan Wang(u6007140) and Shenjia Ji(u5869805)
     /** helps to set properties for the "timeUsing" text
     * the total time to complete the game at the corresponding difficulty. **/
     private void makeUsingTime() {
@@ -622,6 +622,7 @@ public class Board extends Application implements Runnable  {
      *     I -> the instruction text appears
      * @param scene the current game scene
      */
+    // used ideas given by Henan Wang(u6007140) and Shenjia Ji(u5869805)
     private void keyboardHandlers(Scene scene) {
         System.out.println("Handlers up");
         scene.setOnKeyPressed(event -> {
@@ -682,6 +683,7 @@ public class Board extends Application implements Runnable  {
        insText.toBack();
        insText.setOpacity(0);
    }
+   // used ideas given by Henan Wang(u6007140) and Shenjia Ji(u5869805)
  /** helper class to show the best score in an inner stage */
 //https://stackoverflow.com/questions/38062219/how-can-i-get-textfield-from-inner-stage-in-javafx
    private class innerStage{
@@ -702,6 +704,8 @@ public class Board extends Application implements Runnable  {
            inner.showAndWait();
        }
    }
+
+    // used ideas given by Henan Wang(u6007140) and Shenjia Ji(u5869805)
   /* add "if-statement" to return the best corresponding to current difficulty */
    private double BestScore(double difficulty){
        double best = 0; // initialise
@@ -719,7 +723,7 @@ public class Board extends Application implements Runnable  {
        }
        return best;
 
-   }
+   } // used ideas given by Henan Wang(u6007140) and Shenjia Ji(u5869805)
     /* find the best result in one certain difficulty */
    private double getBest (ArrayList<Double> list){
        double min = 1000000; //initialise
@@ -758,6 +762,10 @@ public class Board extends Application implements Runnable  {
         pegmapY.put(3,340);
         pegmapY.put(4,370);
     }
+    // used ideas given by the YouTuber Almas Baimagambetov and the link:
+    // https://www.youtube.com/watch?v=N2EmtYGLh4U&index=1&list=PL4h6ypqTi3RQWPZfR6t73rxZK_TFkyURe
+    // The source code is from:
+    // https://github.com/AlmasB/FXTutorials/tree/master/src/com/almasb/civ6menu
     /** UI helper functions */
     private void addBackground(){
         //ImageView imageView = new ImageView(new Image(getClass().getResource("res/Colourful.jpg").toExternalForm()));
@@ -899,7 +907,6 @@ public class Board extends Application implements Runnable  {
                 viewNewStart(newstart);
                 makeOriginalPieces();
                 //pastplacement ="";
-
             }
         });
         controls.getChildren().add(button);

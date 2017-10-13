@@ -28,7 +28,10 @@ import java.util.List;
  * This class is based on
  * https://github.com/AlmasB/FXTutorials/tree/master/src/com/almasb/civ6menu
  */
-
+// used ideas given by the YouTuber Almas Baimagambetov and the link:
+// https://www.youtube.com/watch?v=N2EmtYGLh4U&index=1&list=PL4h6ypqTi3RQWPZfR6t73rxZK_TFkyURe
+// The source code is from:
+// https://github.com/AlmasB/FXTutorials/tree/master/src/com/almasb/civ6menu
 public class Info extends Application implements Runnable {
     private static final int BOARD_WIDTH = 933;
     private static final int BOARD_HEIGHT = 700;
