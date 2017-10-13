@@ -57,6 +57,7 @@ public class Board extends Application implements Runnable  {
     private final Group root = new Group();
     private final Group controls = new Group();
     private static final Group pegs = new Group();
+    private static final Group blankpegs = new Group();
     private static final Group letters = new Group();
     private final Group startpieces = new Group();
     private final Group invisibleSol = new Group();
@@ -67,6 +68,7 @@ public class Board extends Application implements Runnable  {
     private final Group newpieces = new Group();
 
     private ArrayList<Peg> peglist = new ArrayList<>();
+    private ArrayList<BlankPeg> blankpeglist = new ArrayList<>();
 
     private ArrayList<Double> diff_0 = new ArrayList<>();
     private ArrayList<Double> diff_1 = new ArrayList<>();
@@ -137,6 +139,26 @@ public class Board extends Application implements Runnable  {
             }
         }
     }
+
+    private static class BlankPeg extends Circle {
+        double x,y;
+        Alphabet letter;
+        BlankPeg(int id){
+            setRadius(12);
+            for(Alphabet a : Alphabet.values())
+                if (!isPeg(id) && a.getId() == id){
+                    letter = a;
+                    setCenterX(pegmapX.get(id%10)+80);
+                    x = pegmapX.get(id%10) ;
+                    setCenterY(pegmapY.get(id/10));
+                    y = pegmapY.get(id/10);
+                    setStroke(Color.gray(0.8));
+                    setFill(Color.gray(0.8));
+                    setOpacity(0.1);
+                }
+        }
+    }
+
 //https://stackoverflow.com/questions/17437411/how-to-put-a-text-into-a-circle-object-to-display-it-from-circles-center
     /** Show pegs in the original state */
     private void makePegs() {
@@ -158,6 +180,25 @@ public class Board extends Application implements Runnable  {
                 letters.getChildren().add(letter);
                 letters.toFront();
                 pegs.getChildren().add(onepeg);
+            }
+        }
+    }
+
+    private void makeBlankPegs(){
+        blankpegs.getChildren().clear();
+        for(int i = 0; i<=49;i++){
+            if (!isPeg(i)){
+                BlankPeg oneblankpeg = new BlankPeg(i);
+                blankpeglist.add(oneblankpeg);
+                Label letter = new Label(oneblankpeg.letter.toString());
+                letter.setLayoutX(oneblankpeg.x+73);
+                letter.setLayoutY(oneblankpeg.y-18);
+                letter.setFont(Font.loadFont(MenuApp.class.getResource("res/Meatloaf.ttf").toExternalForm(), 30));
+                letter.setTextFill(Color.WHITE);
+                letter.setEffect(new DropShadow(30,Color.DEEPPINK));
+                letters.getChildren().add(letter);
+                letters.toFront();
+                blankpegs.getChildren().add(oneblankpeg);
             }
         }
     }
@@ -392,22 +433,23 @@ public class Board extends Application implements Runnable  {
 
         /** Check whether the piece is on board or out of the board boundary. */
         boolean isOnBoard(){
-            if ( piece.equals("BA") && getRotate() == 0 || piece.equals("EA") && getRotate() == 180){
+            if ( ((piece.equals("BA") || piece.equals("EE")) && getRotate() == 0) || (piece.equals("BE") || piece.equals("EA")) && getRotate() == 180){
                 if (getLayoutX()<270||getLayoutX()>520 || getLayoutY()<220 || getLayoutY()>290){
                     return false;
                 }}
-            else if ( piece.equals("BA") && getRotate() == 90 || piece.equals("EA") && getRotate() == 270){
+            else if ( ((piece.equals("BA") || piece.equals("EE")) && getRotate() == 90) || ((piece.equals("BE") || piece.equals("EA")) && getRotate() == 270)){
                 if (getLayoutX()<300 || getLayoutX()>520||getLayoutY()<190 || getLayoutY()>290){
                     return false;
                 }}
-            else if (piece.equals("BA") && getRotate() == 180 || piece.equals("EA") && getRotate() == 0){
+            else if (((piece.equals("BA") || piece.equals("EE")) && getRotate() == 180) || ((piece.equals("BE") || piece.equals("EA")) && getRotate() == 0)){
                 if (getLayoutX()<300 || getLayoutX()>550 || getLayoutY()<220 || getLayoutY()>290){
                     return false;
                 }}
-            else if (piece.equals("BA") && getRotate() == 270 || piece.equals("EA") && getRotate() == 90) {
+            else if (((piece.equals("BA") || piece.equals("EE")) && getRotate() == 270) ||((piece.equals("BE") || piece.equals("EA")) && getRotate() == 90)) {
                 if (getLayoutX() < 300 || getLayoutX() > 520 || getLayoutY() < 220 || getLayoutY() > 320) {
                     return false;
                 }}
+
             else if (getLayoutX()<300 || getLayoutX()>520 || getLayoutY()<220 || getLayoutY()>290){
                 return false;
             }
@@ -461,116 +503,229 @@ public class Board extends Application implements Runnable  {
             String char1 = String.valueOf(piece.charAt(0));
             String char2 = String.valueOf(piece.charAt(1));
             int count = 0;
-            for (Peg a : peglist){
-                if(getLayoutX()-25 <= a.x+20 && getLayoutX()-25 >= a.x-20 && getLayoutY()+ 55 <= a.y+20 && getLayoutY()+55  >= a.y-20){
-                    //ouou.play();
-                    //snap.play();
-                    setLayoutY(a.y - 55); // getLayoutY() - 20 <= pos <= getLayoutY() + 20
-                    setLayoutX(a.x + 25);
-                    setRotate(getRotate());
-                    setImage(new Image(Viewer.class.getResource(URI_BASE+ piece+".png").toString()));// top
-                    System.out.println("placed well");
-                    setFitHeight(110);
-                    setFitWidth(110);
-                    if (char2.equals("E")) { // flipped
-                        ori =  String.valueOf((char) ('E'+(getRotate()/90))); // E F G H
-                    }
-                    else if (char2.equals("A")) {// non-flipped
-                        ori = String.valueOf((char) ('A'+(getRotate()/90)));}
-                    pieceplacement = char1 + ori + a.letter.toString();
-                    //System.out.println("orientation : " + ori);
-                    System.out.println("this current placement: " + pieceplacement);
-
-                    if (pastplacement.length()==0) {// first piece to place
-                        pastplacement = newstart + pieceplacement; // add the given string: "newstart"
-                       // viewNewStart(newstart);
-                    }
-                        //continue; // -- fixme
-                    else // Updated ( try )
-
-                        if (!done.contains(char1))
-                            pastplacement = pastplacement + pieceplacement;
-
-                        else  {
-                            index = done.indexOf(char1);
-                            System.out.println("index: "+index);
-                            System.out.println("before: "+pastplacement);
-                            //https://stackoverflow.com/questions/7775364/how-can-i-remove-a-substring-from-a-given-string
-                            pastplacement = pastplacement.replace(pastplacement.substring(3*index,3*index+3),"");
-                            System.out.println("reduced: "+pastplacement);
-                            pastplacement = pastplacement + pieceplacement;
+            if(char2.equals("A")) {
+                for (Peg a : peglist){
+                    if(getLayoutX()-25 <= a.x+20 && getLayoutX()-25 >= a.x-20 && getLayoutY()+ 55 <= a.y+20 && getLayoutY()+55  >= a.y-20){
+                        //ouou.play();
+                        //snap.play();
+                        setLayoutY(a.y - 55); // getLayoutY() - 20 <= pos <= getLayoutY() + 20
+                        setLayoutX(a.x + 25);
+                        setRotate(getRotate());
+                        setImage(new Image(Viewer.class.getResource(URI_BASE+ piece+".png").toString()));// top
+                        System.out.println("placed well");
+                        setFitHeight(110);
+                        setFitWidth(110);
+                        if (char2.equals("E")) { // flipped
+                            ori =  String.valueOf((char) ('E'+(getRotate()/90))); // E F G H
                         }
+                        else if (char2.equals("A")) {// non-flipped
+                            ori = String.valueOf((char) ('A'+(getRotate()/90)));}
+                        pieceplacement = char1 + ori + a.letter.toString();
+                        //System.out.println("orientation : " + ori);
+                        System.out.println("this current placement: " + pieceplacement);
 
-                    System.out.println("initially revised pastplacement: " + pastplacement);
-                    // whether complete?
-                    if ( StepsGame.notObstruct(pastplacement.substring(0,pastplacement.length()-3),pieceplacement) && pastplacement.length() == 24) {
-                        yohu.play();
-                        endMilli = System.currentTimeMillis();
-                        useTime = endMilli - startMilli;
-                        if (useTime != startMilli) {
-                            if (difficulty.getValue() == 0) {
-                                diff_0.add(useTime);
-                            }
-                            else if (difficulty.getValue() == 1) {
-                                diff_1.add(useTime);
-                            }
-                            else if (difficulty.getValue() == 2) {
-                                diff_2.add(useTime);
-                            }
-                            else if (difficulty.getValue() == 3) {
-                                diff_3.add(useTime);
-                            }
+                        if (pastplacement.length()==0) {// first piece to place
+                            pastplacement = newstart + pieceplacement; // add the given string: "newstart"
+                            // viewNewStart(newstart);
                         }
-                        if (useTime > 60000) {
-                            UseTime = new BigDecimal(useTime / 60000);
-                            useTime = UseTime.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-                            timeUsing = new Text("use time: " + useTime + " min");}
-                        else {
-                            UseTime = new BigDecimal(useTime / 1000);
-                            useTime = UseTime.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-                            timeUsing = new Text("use time: " + useTime + " s");}
-                        makeUsingTime();
-                        showCompletion();
-                        win.play();
-                        showUsingTime();}
-                    //  place well ! -> update the pastplacement
-                    else if(StepsGame.notObstruct(pastplacement.substring(0,pastplacement.length()-3),pieceplacement)) {
-                        yohu.play();
-                        System.out.println("enter not Obstruct here");
-                        done += char1;
-                        System.out.println("enter comfirmed pastplacement " +pastplacement);
-                        //continue;
-                    }
-                    else if (pieceplacement.equals("")) {
-                        ouou.play();
-                        snap.play();
-                        snapToHome();
-                    } //
-                    else if(!notObstruct(pastplacement.substring(0,pastplacement.length()-3),pieceplacement)){
-                        ouou.play();
-                        System.out.println("home here!");
-                        System.out.println("before return pastplacement: " + pastplacement);
-                        System.out.println("BUG length :" +pastplacement.length());
-                        System.out.println("BUG revise :" +pastplacement.substring(0,pastplacement.length()-3));
-                        pastplacement = pastplacement.substring(0,pastplacement.length()-3);
-                        System.out.println("return to previous pastplacement: " + pastplacement);
-                        System.out.println("BUG test");
-                        snap.play();
-                        snapToHome();
-                    }
-                    System.out.println("comfirmed pastplacement: " + pastplacement);}
-                else {
-                    count += 1;
-                    //System.out.println("count pegs: "+count);
-                    if (count == 25) {
-                        ouou.play();
-                        snap.play();
-                        snapToHome();
-                        System.out.println("not on grid! ->  home");
-                        System.out.println("pastplacement-> " + pastplacement);
-                    }
+                            //continue; // -- fixme
+                        else // Updated ( try )
+
+                            if (!done.contains(char1))
+                                pastplacement = pastplacement + pieceplacement;
+
+                            else  {
+                                index = done.indexOf(char1);
+                                System.out.println("index: "+index);
+                                System.out.println("before: "+pastplacement);
+                                //https://stackoverflow.com/questions/7775364/how-can-i-remove-a-substring-from-a-given-string
+                                pastplacement = pastplacement.replace(pastplacement.substring(3*index,3*index+3),"");
+                                System.out.println("reduced: "+pastplacement);
+                                pastplacement = pastplacement + pieceplacement;
+                            }
+
+                        System.out.println("initially revised pastplacement: " + pastplacement);
+                        // whether complete?
+                        if ( StepsGame.notObstruct(pastplacement.substring(0,pastplacement.length()-3),pieceplacement) && pastplacement.length() == 24) {
+                            yohu.play();
+                            endMilli = System.currentTimeMillis();
+                            useTime = endMilli - startMilli;
+                            if (useTime != startMilli) {
+                                if (difficulty.getValue() == 0) {
+                                    diff_0.add(useTime);
+                                }
+                                else if (difficulty.getValue() == 1) {
+                                    diff_1.add(useTime);
+                                }
+                                else if (difficulty.getValue() == 2) {
+                                    diff_2.add(useTime);
+                                }
+                                else if (difficulty.getValue() == 3) {
+                                    diff_3.add(useTime);
+                                }
+                            }
+                            if (useTime > 60000) {
+                                UseTime = new BigDecimal(useTime / 60000);
+                                useTime = UseTime.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                                timeUsing = new Text("use time: " + useTime + " min");}
+                            else {
+                                UseTime = new BigDecimal(useTime / 1000);
+                                useTime = UseTime.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                                timeUsing = new Text("use time: " + useTime + " s");}
+                            makeUsingTime();
+                            showCompletion();
+                            win.play();
+                            showUsingTime();}
+                        //  place well ! -> update the pastplacement
+                        else if(StepsGame.notObstruct(pastplacement.substring(0,pastplacement.length()-3),pieceplacement)) {
+                            yohu.play();
+                            System.out.println("enter not Obstruct here");
+                            done += char1;
+                            System.out.println("enter comfirmed pastplacement " +pastplacement);
+                            //continue;
+                        }
+                        else if (pieceplacement.equals("")) {
+                            ouou.play();
+                            snap.play();
+                            snapToHome();
+                        } //
+                        else if(!notObstruct(pastplacement.substring(0,pastplacement.length()-3),pieceplacement)){
+                            ouou.play();
+                            System.out.println("home here!");
+                            System.out.println("before return pastplacement: " + pastplacement);
+                            System.out.println("BUG length :" +pastplacement.length());
+                            System.out.println("BUG revise :" +pastplacement.substring(0,pastplacement.length()-3));
+                            pastplacement = pastplacement.substring(0,pastplacement.length()-3);
+                            System.out.println("return to previous pastplacement: " + pastplacement);
+                            System.out.println("BUG test");
+                            snap.play();
+                            snapToHome();
+                        }
+                        System.out.println("comfirmed pastplacement: " + pastplacement);}
+                    else {
+                        count += 1;
+                        //System.out.println("count pegs: "+count);
+                        if (count == 25) {
+                            ouou.play();
+                            snap.play();
+                            snapToHome();
+                            System.out.println("not on grid! ->  home");
+                            System.out.println("pastplacement-> " + pastplacement);
+                        }
+                    }// next peg in the traversal -> continue
                 }
-                // next peg in the traversal -> continue
+            }
+            else if (char2.equals("E")){
+                for (BlankPeg a : blankpeglist){
+                    if(getLayoutX()-25 <= a.x+20 && getLayoutX()-25 >= a.x-20 && getLayoutY()+ 55 <= a.y+20 && getLayoutY()+55  >= a.y-20){
+                        //ouou.play();
+                        //snap.play();
+                        setLayoutY(a.y - 55); // getLayoutY() - 20 <= pos <= getLayoutY() + 20
+                        setLayoutX(a.x + 25);
+                        setRotate(getRotate());
+                        setImage(new Image(Viewer.class.getResource(URI_BASE+ piece+".png").toString()));// top
+                        System.out.println("placed well");
+                        setFitHeight(110);
+                        setFitWidth(110);
+                        if (char2.equals("E")) { // flipped
+                            ori =  String.valueOf((char) ('E'+(getRotate()/90))); // E F G H
+                        }
+                        else if (char2.equals("A")) {// non-flipped
+                            ori = String.valueOf((char) ('A'+(getRotate()/90)));}
+                        pieceplacement = char1 + ori + a.letter.toString();
+                        //System.out.println("orientation : " + ori);
+                        System.out.println("this current placement: " + pieceplacement);
+
+                        if (pastplacement.length()==0) {// first piece to place
+                            pastplacement = newstart + pieceplacement; // add the given string: "newstart"
+                            // viewNewStart(newstart);
+                        }
+                        //continue; // -- fixme
+                        else // Updated ( try )
+
+                            if (!done.contains(char1))
+                                pastplacement = pastplacement + pieceplacement;
+
+                            else  {
+                                index = done.indexOf(char1);
+                                System.out.println("index: "+index);
+                                System.out.println("before: "+pastplacement);
+                                //https://stackoverflow.com/questions/7775364/how-can-i-remove-a-substring-from-a-given-string
+                                pastplacement = pastplacement.replace(pastplacement.substring(3*index,3*index+3),"");
+                                System.out.println("reduced: "+pastplacement);
+                                pastplacement = pastplacement + pieceplacement;
+                            }
+
+                        System.out.println("initially revised pastplacement: " + pastplacement);
+                        // whether complete?
+                        if ( StepsGame.notObstruct(pastplacement.substring(0,pastplacement.length()-3),pieceplacement) && pastplacement.length() == 24) {
+                            yohu.play();
+                            endMilli = System.currentTimeMillis();
+                            useTime = endMilli - startMilli;
+                            if (useTime != startMilli) {
+                                if (difficulty.getValue() == 0) {
+                                    diff_0.add(useTime);
+                                }
+                                else if (difficulty.getValue() == 1) {
+                                    diff_1.add(useTime);
+                                }
+                                else if (difficulty.getValue() == 2) {
+                                    diff_2.add(useTime);
+                                }
+                                else if (difficulty.getValue() == 3) {
+                                    diff_3.add(useTime);
+                                }
+                            }
+                            if (useTime > 60000) {
+                                UseTime = new BigDecimal(useTime / 60000);
+                                useTime = UseTime.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                                timeUsing = new Text("use time: " + useTime + " min");}
+                            else {
+                                UseTime = new BigDecimal(useTime / 1000);
+                                useTime = UseTime.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                                timeUsing = new Text("use time: " + useTime + " s");}
+                            makeUsingTime();
+                            showCompletion();
+                            win.play();
+                            showUsingTime();}
+                        //  place well ! -> update the pastplacement
+                        else if(StepsGame.notObstruct(pastplacement.substring(0,pastplacement.length()-3),pieceplacement)) {
+                            yohu.play();
+                            System.out.println("enter not Obstruct here");
+                            done += char1;
+                            System.out.println("enter comfirmed pastplacement " +pastplacement);
+                            //continue;
+                        }
+                        else if (pieceplacement.equals("")) {
+                            ouou.play();
+                            snap.play();
+                            snapToHome();
+                        } //
+                        else if(!notObstruct(pastplacement.substring(0,pastplacement.length()-3),pieceplacement)){
+                            ouou.play();
+                            System.out.println("home here!");
+                            System.out.println("before return pastplacement: " + pastplacement);
+                            System.out.println("BUG length :" +pastplacement.length());
+                            System.out.println("BUG revise :" +pastplacement.substring(0,pastplacement.length()-3));
+                            pastplacement = pastplacement.substring(0,pastplacement.length()-3);
+                            System.out.println("return to previous pastplacement: " + pastplacement);
+                            System.out.println("BUG test");
+                            snap.play();
+                            snapToHome();
+                        }
+                        System.out.println("comfirmed pastplacement: " + pastplacement);}
+                    else {
+                        count += 1;
+                        //System.out.println("count pegs: "+count);
+                        if (count == 25) {
+                            ouou.play();
+                            snap.play();
+                            snapToHome();
+                            System.out.println("not on grid! ->  home");
+                            System.out.println("pastplacement-> " + pastplacement);
+                        }
+                    }// next peg in the traversal -> continue
+                }
             }
         }
 
@@ -829,6 +984,7 @@ public class Board extends Application implements Runnable  {
         pegmapY.put(3,340);
         pegmapY.put(4,370);
     }
+
     // used ideas given by the YouTuber Almas Baimagambetov and the link:
     // https://www.youtube.com/watch?v=N2EmtYGLh4U&index=1&list=PL4h6ypqTi3RQWPZfR6t73rxZK_TFkyURe
     // The source code is from:
@@ -1007,11 +1163,13 @@ public class Board extends Application implements Runnable  {
         primaryStage.setTitle("IQ-Steps Viewer");
         Scene scene = new Scene(root, BOARD_WIDTH, BOARD_HEIGHT);
         makePegs();
+        makeBlankPegs();
         addBackground();
         addTitle();
         addHints();
         primaryStage.setScene(scene);
         root.getChildren().add(pegs);
+        root.getChildren().add(blankpegs);
         root.getChildren().add(letters);
         root.getChildren().add(controls);
         root.getChildren().add(newpieces);
