@@ -766,15 +766,22 @@ public class Board extends Application implements Runnable  {
 // Task 8 is combined with Task 11
 
     // FIXME Task 10: Implement hints
-
+//https://stackoverflow.com/questions/18265940/should-i-always-not-catch-nullpointerexception
     private String nextMask(String placement){
-        invi = true;
-        Set<String> solution = SolverForHint.Solutions(placement);
-        ArrayList<String> temp = new ArrayList<>(solution);
-        int leng = placement.length();
-        String result = temp.get(0);
-        return result.substring(leng,leng+3);
-    }
+        try {
+           // if(placement != "") {
+                invi = true;
+                Set<String> solution = SolverForHint.Solutions(placement);
+                ArrayList<String> temp = new ArrayList<>(solution);
+                int leng = placement.length();
+                String result = temp.get(0);
+                return result.substring(leng,leng+3);//}
+        }
+        catch (NullPointerException z){
+            new innerStage().display("NullPointerException", "Please press 'Start' first!");
+            return null;}
+        }
+
 
 /*    boolean isValidCurrentStep(String pastPlacement,String appendMask){
         Set<String> solution = SolverForHint.Solutions (pastPlacement);
