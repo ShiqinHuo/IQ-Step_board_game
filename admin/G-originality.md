@@ -1,7 +1,7 @@
 We declare that the work we have submitted for Stage G of this assignment and all stages before it is entirely our own work, with the following documented exceptions:
 
 * The idea of using <...> to make the game run faster came from a discussion with <...> (noted in source code comments)
-
+// below only contains board.java references
 * The code in class <Board.java> is based on a solution we found when researching the problem (<https://stackoverflow.com/questions/1104975/a-for-loop-to-iterate-over-an-enum-in-java>)
 * The code in class <Board.java> is based on a solution we found when researching the problem (<https://stackoverflow.com/questions/17437411/how-to-put-a-text-into-a-circle-object-to-display-it-from-circles-center>)
 * The code in class <Board.java> is based on a solution we found when researching the problem (<https://stackoverflow.com/questions/41246688/circle-wont-move-position-in-javafx/41247282>)
