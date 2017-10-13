@@ -1071,61 +1071,62 @@ public class Board extends Application implements Runnable  {
     }
     //https://www.quora.com/How-do-you-compare-chars-in-Java
     private void placePieces (String pieceplacement){
-        String p = String.valueOf(pieceplacement.charAt(0));
-        char ori = pieceplacement.charAt(1);
-        char location = pieceplacement.charAt(2);
-        //https://docs.oracle.com/javase/8/javafx/api/javafx/scene/image/ImageView.html
-        ImageView StartPiece =new ImageView();
-        //https://stackoverflow.com/questions/27785917/javafx-mouseposition
-        //https://www.cs.cmu.edu/~pattis/15-1XX/common/handouts/ascii.html
-        if ("ABCDEFGHIJ".contains(String.valueOf(location))){
-            StartPiece.setLayoutY(195);
-            StartPiece.setLayoutX(275+30*(location-'A'));
-        }
-        else if ("KLMNOPQRST".contains((String.valueOf(location)))){
-            StartPiece.setLayoutY(225);
-            StartPiece.setLayoutX(275+30*(location-'K'));
-        }
-        else if ("UVWXY".contains((String.valueOf(location)))){
-            StartPiece.setLayoutY(255);
-            StartPiece.setLayoutX(275+30*(location-'U'));
-        }
-        else if ("abcde".contains((String.valueOf(location)))){
-            StartPiece.setLayoutY(255);
-            StartPiece.setLayoutX(425+30*(location-'a'));
-        }
-        else if ("fghijklmno".contains((String.valueOf(location)))){
-            StartPiece.setLayoutY(285);
-            StartPiece.setLayoutX(275+30*(location-'f'));
-        }
-        else if ("pqrstuvwxy".contains((String.valueOf((location))))){
-            StartPiece.setLayoutY(315);
-            StartPiece.setLayoutX(275+30*(location-'p'));
-        }
+        if (! (pieceplacement==null)){
+            String p = String.valueOf(pieceplacement.charAt(0));
+            char ori = pieceplacement.charAt(1);
+            char location = pieceplacement.charAt(2);
+            //https://docs.oracle.com/javase/8/javafx/api/javafx/scene/image/ImageView.html
+            ImageView StartPiece =new ImageView();
+            //https://stackoverflow.com/questions/27785917/javafx-mouseposition
+            //https://www.cs.cmu.edu/~pattis/15-1XX/common/handouts/ascii.html
+            if ("ABCDEFGHIJ".contains(String.valueOf(location))){
+                StartPiece.setLayoutY(195);
+                StartPiece.setLayoutX(275+30*(location-'A'));
+            }
+            else if ("KLMNOPQRST".contains((String.valueOf(location)))){
+                StartPiece.setLayoutY(225);
+                StartPiece.setLayoutX(275+30*(location-'K'));
+            }
+            else if ("UVWXY".contains((String.valueOf(location)))){
+                StartPiece.setLayoutY(255);
+                StartPiece.setLayoutX(275+30*(location-'U'));
+            }
+            else if ("abcde".contains((String.valueOf(location)))){
+                StartPiece.setLayoutY(255);
+                StartPiece.setLayoutX(425+30*(location-'a'));
+            }
+            else if ("fghijklmno".contains((String.valueOf(location)))){
+                StartPiece.setLayoutY(285);
+                StartPiece.setLayoutX(275+30*(location-'f'));
+            }
+            else if ("pqrstuvwxy".contains((String.valueOf((location))))){
+                StartPiece.setLayoutY(315);
+                StartPiece.setLayoutX(275+30*(location-'p'));
+            }
 
-        if (ori >='A' && ori <'E'){
-            StartPiece.setRotate((ori-'A')*90);
-            StartPiece.setFitHeight(110);
-            StartPiece.setFitWidth(110);
-            StartPiece.setImage(new Image(Viewer.class.getResource(URI_BASE+ p+"A"+".png").toString()));
+            if (ori >='A' && ori <'E'){
+                StartPiece.setRotate((ori-'A')*90);
+                StartPiece.setFitHeight(110);
+                StartPiece.setFitWidth(110);
+                StartPiece.setImage(new Image(Viewer.class.getResource(URI_BASE+ p+"A"+".png").toString()));
+            }
+            else if (ori >='E' && ori <='H'){
+                StartPiece.setRotate((ori-'E')*90);
+                StartPiece.setFitHeight(110);
+                StartPiece.setFitWidth(110);
+                StartPiece.setImage(new Image(Viewer.class.getResource(URI_BASE+ p+"E"+".png").toString()));
+            }
+            if (invi){
+                System.out.println("here ??????");
+                invisibleSol.getChildren().clear();
+                StartPiece.setOpacity(0.75);
+                System.out.println("next hints: " + pieceplacement);
+                invi = false;
+                invisibleSol.getChildren().add(StartPiece);}
+            else
+                {StartPiece.setOpacity(1);
+                startpieces.getChildren().add(StartPiece);}}
         }
-        else if (ori >='E' && ori <='H'){
-            StartPiece.setRotate((ori-'E')*90);
-            StartPiece.setFitHeight(110);
-            StartPiece.setFitWidth(110);
-            StartPiece.setImage(new Image(Viewer.class.getResource(URI_BASE+ p+"E"+".png").toString()));
-        }
-        if (invi){
-            System.out.println("here ??????");
-            invisibleSol.getChildren().clear();
-            StartPiece.setOpacity(0.75);
-            System.out.println("next hints: " + pieceplacement);
-            invi = false;
-            invisibleSol.getChildren().add(StartPiece);}
-        else
-            {StartPiece.setOpacity(1);
-            startpieces.getChildren().add(StartPiece);}
-    }
 
     /**
      * Set slide bar for difficulty
