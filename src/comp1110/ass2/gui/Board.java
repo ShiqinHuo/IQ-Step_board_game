@@ -289,8 +289,8 @@ public class Board extends Application implements Runnable  {
                 if (!done.contains(String.valueOf(temp.charAt(j)))) {
                     piecelist.add(String.valueOf(temp.charAt(j)) + "A");
                     System.out.println("piecelist: " +piecelist);
-                }
-                else continue;//https://stackoverflow.com/questions/8330747/doing-minus-operation-on-string
+                }// else continue;
+                //https://stackoverflow.com/questions/8330747/doing-minus-operation-on-string
             }
         }
     }
@@ -336,7 +336,7 @@ public class Board extends Application implements Runnable  {
                 rotate(); // not on board -> enables rotate property
                 event.consume();
             }});
-//https://stackoverflow.com/questions/22542015/how-to-add-a-mouse-doubleclick-event-listener-to-the-cells-of-a-listview-in-java
+            //https://stackoverflow.com/questions/22542015/how-to-add-a-mouse-doubleclick-event-listener-to-the-cells-of-a-listview-in-java
             setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent click) {
@@ -350,30 +350,33 @@ public class Board extends Application implements Runnable  {
             });
 
             setOnMousePressed(event -> {
-                hideCompletion();
-                hideUsingTime();
-                mouseX = event.getSceneX();
-                mouseY = event.getSceneY();
+                if (canmove()) { // layer checker function
+                    hideCompletion();
+                    hideUsingTime();
+                    mouseX = event.getSceneX();
+                    mouseY = event.getSceneY();}
                     });
 
             setOnMouseDragged(event -> {
-                hideCompletion();
-                hideUsingTime();
-                setFitHeight(110);
-                setFitWidth(110);
-                setOpacity(0.3);
+                if (canmove()) { // layer checker function
+                    hideCompletion();
+                    hideUsingTime();
+                    setFitHeight(110);
+                    setFitWidth(110);
+                    setOpacity(0.3);
                // System.out.println("mouse X: "+ mouseX);
               //  System.out.println("mouse Y: "+ mouseY);
-                double movementX = event.getSceneX() - mouseX;
-                double movementY = event.getSceneY() - mouseY;
-                setLayoutX(getLayoutX() + movementX);
-                setLayoutY(getLayoutY() + movementY);
-                mouseX = event.getSceneX();
-                mouseY = event.getSceneY();
-                event.consume();
-                    });
+                    double movementX = event.getSceneX() - mouseX;
+                    double movementY = event.getSceneY() - mouseY;
+                    setLayoutX(getLayoutX() + movementX);
+                    setLayoutY(getLayoutY() + movementY);
+                    mouseX = event.getSceneX();
+                    mouseY = event.getSceneY();
+                    event.consume();}
+                else event.consume();
+                        });
 
-            setOnMouseReleased(event -> {
+            setOnMouseReleased(event -> { if(canmove()){
                 if (isOnBoard()) {
                     setOpacity(1);
                     snapToGrid(); // check the validity (whether it's movable)
@@ -382,15 +385,14 @@ public class Board extends Application implements Runnable  {
                     event.consume();
                 }
                 else if(!(getLayoutX()==homeX && getLayoutY() == homeY)){
-                    ouou.play();
+                    //ouou.play();
                     snap.play();
                     if(!done.contains(String.valueOf(piece.charAt(0)))) {
                         System.out.println(done);
                         snapToHome();
                         System.out.println("Directly to home! Out board!");}
-                    else
+                    else if (canmove()) // layer constrains
                     {
-                        //pastplacement = pastplacement.substring(0,pastplacement.length()-3);
                         snapToHome();
                         int index = done.indexOf(piece.charAt(0));
                         System.out.println("done test "+ done);
@@ -415,20 +417,42 @@ public class Board extends Application implements Runnable  {
                         System.out.println("done after renew: " + done);
                     }
                     setOpacity(1);}
-            });
+            }});
                 }
 
-//https://stackoverflow.com/questions/521171/a-java-collection-of-value-pairs-tuples
-
         /** To check whether the piece already on board can move:
-         * Bottom level probably is constrained by the top level pieces */
-
-        /* the precondition is "on board" already!*/
-        boolean canmove(){
-
-
-
-            return false;
+         * Bottom level probably is constrained by the top level pieces
+         * Top layer: notObstruct(reducedplacement,p)  -> canmove -> true
+         * Bottom layer: Obstruct ! -> false -> cannot move
+         * the precondition is "on board" already!
+         * */
+        private boolean canmove(){
+            String p;
+            String reducedplacement;
+            // already on board
+            done = ""; //  initialise each time
+            if (pastplacement.length() == 0) pastplacement = newstart;
+            if (pastplacement.length()>0){
+                for (int i = 0; i< pastplacement.length();i+=3){
+                    done += String.valueOf( pastplacement.charAt(i));
+                }
+            }
+            if (done.contains(String.valueOf(piece.charAt(0)))){
+                int index = done.indexOf(piece.charAt(0));
+                //https://stackoverflow.com/questions/7775364/how-can-i-remove-a-substring-from-a-given-string
+                if (3 * (index+1) == pastplacement.length()){ // the last piece to back
+                   // pastplacement = pastplacement.substring(0,3*index);
+                    return true;
+                }
+                else { // not the last to place..
+                    System.out.println("canmove checker: !!");
+                    p = pastplacement.substring(3*index,3*index+3);
+                    reducedplacement = pastplacement.substring(0,3*index)+pastplacement.substring(3*index+3);
+                    return  (notObstruct(reducedplacement,p));
+                }
+            }
+            else // not on board
+                return true;
         }
 
         /** Check whether the piece is on board or out of the board boundary. */
@@ -512,6 +536,7 @@ public class Board extends Application implements Runnable  {
                         setLayoutX(a.x + 25);
                         setRotate(getRotate());
                         setImage(new Image(Viewer.class.getResource(URI_BASE+ piece+".png").toString()));// top
+                        toFront(); // debugged for layer arrangement
                         System.out.println("placed well");
                         setFitHeight(110);
                         setFitWidth(110);
