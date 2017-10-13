@@ -91,7 +91,7 @@ public class Board extends Application implements Runnable  {
     private AudioClip ouou = new AudioClip(getClass().getResource("res/ouoh-error.mp3").toString());
     private AudioClip win = new AudioClip(getClass().getResource("res/mar-success.mp3").toString());
     private AudioClip snap = new AudioClip(getClass().getResource("res/snap.mp3").toString());
-    private AudioClip hints = new AudioClip(getClass().getResource("res/hints.mp3").toString());
+    private AudioClip hint = new AudioClip(getClass().getResource("res/hint.mp3").toString());
     private AudioClip flip = new AudioClip(getClass().getResource("res/flip.mp3").toString());
 
     private static final String[][] TaskEleven_OBJECTIVE ={
@@ -857,6 +857,7 @@ public class Board extends Application implements Runnable  {
         //https://docs.oracle.com/javase/8/javafx/api/javafx/scene/input/KeyEvent.html#KEY_PRESSED
         scene.setOnKeyPressed(event -> {
                     if (event.getCode() == KeyCode.Q) {
+                        System.out.println("?????");
                         Platform.exit();
                         event.consume();
                     }
@@ -864,11 +865,12 @@ public class Board extends Application implements Runnable  {
                         count +=1;
                         System.out.println("count: " +count);
                         if (count%2 == 1){
+                            hint.play();
+                            System.out.println("play????????");
                             System.out.println("BUG before" + pastplacement);
                             if (pastplacement.length()==0) pastplacement =newstart;
                             System.out.println("BUG after" + pastplacement);
                             placePieces(nextMask(pastplacement));
-                            hints.play();
                             invisibleSol.setOpacity(0.75);} //invi = true;
                         else
                             invisibleSol.setOpacity(0);
