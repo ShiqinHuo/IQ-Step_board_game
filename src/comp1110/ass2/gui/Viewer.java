@@ -22,6 +22,7 @@ import javafx.stage.Stage;
  * class does not play a game, it just illustrates various piece
  * placements.
  */
+// How to make visual pieces on the board was discussed with Peng Yong & Wenjun Yang(u6251843)
 
 public class Viewer extends Application {
 
