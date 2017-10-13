@@ -774,18 +774,30 @@ public class Board extends Application implements Runnable  {
 //https://stackoverflow.com/questions/18265940/should-i-always-not-catch-nullpointerexception
     private String nextMask(String placement){
         try {
-           // if(placement != "") {
-                invi = true;
-                Set<String> solution = SolverForHint.Solutions(placement);
-                ArrayList<String> temp = new ArrayList<>(solution);
-                int leng = placement.length();
-                String result = temp.get(0);
-                return result.substring(leng,leng+3);//}
+        invi = true;
+            if (placement.length() == 9){
+            return nextMaskForThree(placement);
+            }else {
+            Set<String> solution = SolverForHint.Solutions(placement);
+            ArrayList<String> temp = new ArrayList<>(solution);
+            int leng = placement.length();
+            String result = temp.get(0);
+            return result.substring(leng, leng + 3);
+            }
         }
         catch (NullPointerException z){
             new innerStage().display("NullPointerException", "Please press 'Start' first!");
-            return null;}
+            return null;
         }
+    }
+
+    private String nextMaskForThree(String placement){
+        Map<String,String> solution = new HashMap<>();
+        solution.put("HHnBFOGDL","ADg"); solution.put("EEfHALAHS","FDP"); solution.put("HFSGFlBDx","FAi"); solution.put("EFBFCgBGS","GHn"); solution.put("BFqHALAHS","FDP");
+        solution.put("EFBAFnGFS","FCN"); solution.put("CHSGHnBGK","FCN"); solution.put("DGSGHnBHF","FDN"); solution.put("FBmBCoCEj","ABR"); solution.put("HGnGAREBv","FAi");
+        solution.put("BGKFCNGFn","ADg"); solution.put("FBgEElBEe","ABR"); solution.put("BGKFCNCAg","HEj"); solution.put("EFBAFnDHS","FCN"); solution.put("GDLCGOEEn","ADg");
+        return solution.get(placement);
+    }
 
 
 /*    boolean isValidCurrentStep(String pastPlacement,String appendMask){
