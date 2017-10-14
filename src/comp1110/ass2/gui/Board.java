@@ -43,15 +43,9 @@ public class Board extends Application implements Runnable  {
     private static final String URI_BASE = "assets/";
     private Effect blueshadow = new DropShadow(5, Color.SKYBLUE);
 
-    TextField textField;
-    /** message on completion */
-    private final Text completionText = new Text("Good Job!");
-    Title comText = new Title("Well Done!");
-
     private final Text insText = new Text(" Press Q =>to=> Quit game\n\n Click '/' =>to=> Show next piece hint.\n\n Click '/' Again =>to=> Hide next piece hint. \n\n Press S =>to=> Show best score \n\n Mouse Double click =>to=> Flip piece\n\n Mouse scroll =>to=> Rotate.\n\n Slide the \"Difficulty\" =>to=> Change difficulty levels.\n\n Press \"Start\" =>to=> a new game. ");
     private Text timeUsing = new Text("Shows timeUsing");
     private final Slider difficulty = new Slider();
-    private final DropShadow dropShadow = new DropShadow();
 
     private static String newstart = "";
     private static String pastplacement = "";
@@ -63,12 +57,11 @@ public class Board extends Application implements Runnable  {
     private static final Group letters = new Group();
     private final Group startpieces = new Group();
     private final Group invisibleSol = new Group();
-    private int count = 0; //initialize
-
-    private boolean invi = false;
-
     private final Group newpieces = new Group();
-
+    private boolean invi = false; // flag to divide the pieces into different groups:
+                                    //  1. starting pieces group 2. hints pieces group
+    private int count = 0; //initialize
+    // serves as a flag to show/hide the instructions text
     private ArrayList<Peg> peglist = new ArrayList<>();
     private ArrayList<BlankPeg> blankpeglist = new ArrayList<>();
 
@@ -76,7 +69,6 @@ public class Board extends Application implements Runnable  {
     private ArrayList<Double> diff_1 = new ArrayList<>();
     private ArrayList<Double> diff_2 = new ArrayList<>();
     private ArrayList<Double> diff_3 = new ArrayList<>();
-    //private ArrayList<Double> diff_4 = new ArrayList<>();
 
     private double startMilli = 0;
     private double endMilli = 0;
@@ -141,7 +133,10 @@ public class Board extends Application implements Runnable  {
             }
         }
     }
-
+    /** Resembling to the Peg class, which helps to view the circle.
+     * We set the opacity to 0.1 since we don't need to see its color,
+     * and we can distinguish it from the grey peg.
+     * Only its letter is visible. */
     private static class BlankPeg extends Circle {
         double x,y;
         Alphabet letter;
@@ -185,7 +180,14 @@ public class Board extends Application implements Runnable  {
             }
         }
     }
-
+    /** Similar to makePegs,
+     *  This method helps to make those blank pegs around the grey peg.
+     *  The aim is to classify the blanks and pegs,
+     *  which is helpful when we select the nearest grid to snap,
+     *  thereby distinguish the concavo-convex of the piece.
+     *  Notice that: the flipped piece will change its concavo-convex.
+     *  We should assign different kinds of grid for piece to snap
+     *  according to its concavo-convex. */
     private void makeBlankPegs(){
         blankpegs.getChildren().clear();
         for(int i = 0; i<=49;i++){
@@ -299,7 +301,7 @@ public class Board extends Application implements Runnable  {
     private ArrayList<String> placedpieces = new ArrayList<>();
 
 //https://www.mkyong.com/java/how-to-loop-arraylist-in-java/
-    /** This method is used to show those draggable pieces on the board. **/
+    /** Helps to make those draggable pieces on their home position. **/
     private void makeOriginalPieces() {
         originalPieces();
         //pieces.getChildren().clear(); // updated piecelist states : including the flipped side
@@ -333,7 +335,6 @@ public class Board extends Application implements Runnable  {
             }
 
             setOnScroll(event -> {if (!isOnBoard()) {
-                //hideCompletion();
                 hideUsingTime();
                 rotate(); // not on board -> enables rotate property
                 event.consume();
@@ -346,14 +347,12 @@ public class Board extends Application implements Runnable  {
                     if (homeX == getLayoutX() & homeY == getLayoutY()){
                         if (click.getClickCount() == 2) { // double click to flip the piece -> only at the origin
                             flippedPieces();
-                            //hideCompletion();
                             hideUsingTime();}}
                 }
             });
 
             setOnMousePressed(event -> {
                 if (canmove()) { // layer checker function
-                    //hideCompletion();
                     hideUsingTime();
                     mouseX = event.getSceneX();
                     mouseY = event.getSceneY();}
@@ -361,7 +360,6 @@ public class Board extends Application implements Runnable  {
 
             setOnMouseDragged(event -> {
                 if (canmove()) { // layer checker function
-                    //hideCompletion();
                     hideUsingTime();
                     setFitHeight(110);
                     setFitWidth(110);
@@ -382,7 +380,6 @@ public class Board extends Application implements Runnable  {
                 if (isOnBoard()) {
                     setOpacity(1);
                     snapToGrid(); // check the validity (whether it's movable)
-                   // hideCompletion();
                     hideUsingTime();
                     event.consume();
                 }
@@ -422,11 +419,11 @@ public class Board extends Application implements Runnable  {
             }});
                 }
 
-        /** To check whether the piece already on board can move:
-         * Bottom level probably is constrained by the top level pieces
-         * Top layer: notObstruct(reducedplacement,p)  -> canmove -> true
-         * Bottom layer: Obstruct ! -> false -> cannot move
-         * the precondition is "on board" already!
+        /** helps to check whether the piece already on board can move,
+         *  since bottom level probably is constrained by the top level pieces
+         * 1.  Top layer: notObstruct(reducedplacement,p)  -> canmove -> true
+         * 2.  Bottom layer: Obstruct ! -> false -> cannot move
+         * 3.  Precondition: "on board" already! && not the last well-placed piece!
          * */
         private boolean canmove(){
             String p;
@@ -443,7 +440,6 @@ public class Board extends Application implements Runnable  {
                 int index = done.indexOf(piece.charAt(0));
                 //https://stackoverflow.com/questions/7775364/how-can-i-remove-a-substring-from-a-given-string
                 if (3 * (index+1) == pastplacement.length() && !(pastplacement.length() == 24)){ // the last piece to back
-                   // pastplacement = pastplacement.substring(0,3*index);
                     return true;
                 }
                 else if((pastplacement.length() == 24)) return false; // already done!
@@ -483,7 +479,7 @@ public class Board extends Application implements Runnable  {
             return true;
         }
 
-        /** Make the pieces snap to their original position. */
+        /** Snap pieces to their original position. */
         private void snapToHome() {
             homeY = piecemapY.get(piece);
             String char1 = String.valueOf(piece.charAt(0));
@@ -497,11 +493,15 @@ public class Board extends Application implements Runnable  {
             setFitWidth(80);
         }
 
-        /** The main aim is to test whether the piece is correctly located on the peg rather than the non-peg area.
-         * It applies the for-each loop to travel through all pegs to check the validity in terms of the distance.
-         * Another feature for this method is to record the end time is the piece is the last one to place correctly.
-         * Last, it enables us to communicate with the backend programming since it gives to output of the
-         * piece placement (3-char) and the updated board placement String */
+        /** 1. Mainly helps to test whether the piece is correctly located on the peg
+         *     rather than the non-peg area.
+         *  2. It applies the for-each loop to travel through all pegs to check the validity
+         *     in terms of the distance.
+         *  3. Another feature for this method is to record the end time
+         *     when the piece is the last one to place correctly.
+         *  4. Last, it enables us to communicate with the backend programming
+         *     since it gives to output of the piece placement (3-char)
+         *     and the updated board placement string */
         private void snapToGrid(){
             done = ""; //  initialise each time
             if (pastplacement.length()>0){
@@ -760,33 +760,54 @@ public class Board extends Application implements Runnable  {
         }
 
 
-
-        /** Make the piece rotate clockwise. Each time rotate 45 degrees. **/
+        /** Rotate piece clockwise. Each time rotate 90 degrees. **/
         private void rotate() {
             flip.play();
             setRotate((getRotate() + 90) % 360);}
     }
 
     // FIXME Task 8: Implement starting placements
-// Task 8 is combined with Task 11
+    // Task 8 is combined with Task 11
 
     // FIXME Task 10: Implement hints
 //https://stackoverflow.com/questions/18265940/should-i-always-not-catch-nullpointerexception
+    /** This method helps to give the hint for the next piece according to the current placement
+     * It is related to 2 main exceptions
+     * 1. If the game did not start, then there is no piece for placement and no hint for the next.
+     *
+     * Solution for 1: Catch the "NullPointerException" and pop up a inner window with error message.
+     *
+     * 2. If the player made mistake(s) in precious steps,
+     *    then since the given newstart has only one solution,
+     *    the game will be stuck. Absolutely, there is no hint for next step.
+     *
+     * Solution for 2: Catch the "IndexOutOfBoundsException" and pop up a inner window with instructions.
+     * */
     private String nextMask(String placement){
         try {
             invi = true;
             if (placement.length() == 9){
                 return nextMaskForThree(placement);
             }else {
+                System.out.println("solution bug before! ");
                 Set<String> solution = SolverForHint.Solutions(placement);
                 ArrayList<String> temp = new ArrayList<>(solution);
+                System.out.println("solution bug here!!! + " + solution);
                 int leng = placement.length();
-                String result = temp.get(0);
-                return result.substring(leng, leng + 3);
+
+                try {
+                    String result = temp.get(0);
+                    return result.substring(leng, leng + 3);
+                }
+                catch (IndexOutOfBoundsException n) {
+                    new innerStage().display("IndexOutOfBoundsException", "\n Oops! \n\n You made mistakes in previous step(s). \n\n The game is blocked now. \n\n No hint for the next step. \n\n Please go back check your previous steps first! \n \n");
+                    return null;
+                }
+
             }
         }
         catch (NullPointerException z){
-            new innerStage().display("NullPointerException", "Please press 'Start' first!");
+            new innerStage().display("NullPointerException", " Please press 'Start' first! \n");
             return null;
         }
     }
@@ -799,25 +820,10 @@ public class Board extends Application implements Runnable  {
         return solution.get(placement);
     }
 
-    /*    boolean isValidCurrentStep(String pastPlacement,String appendMask){
-        Set<String> solution = SolverForHint.Solutions (pastPlacement);
-        ArrayList<String> temp = new ArrayList<>(solution);
-        int leng = pastPlacement.length();
-        String[] validAppendMask = new String[temp.size()];
-        for (int i = 0; i < validAppendMask.length; i++){
-            validAppendMask[i] = temp.get(i).substring(leng,leng+3);
-        }
-        for (int j = 0; j < validAppendMask.length; j++){
-            return  (validAppendMask[j].equals(appendMask));
-        }
-        return false;
-    }*/
-
-    /* Hints helper functions */
-
-
+    /** Hints helper functions */
+    /** helps to set up the inner pop-up window when all pieces are well placed!  */
     private void showCompletion (){
-        new innerStage().display("Congratulations! Well done!"," Congratulations! Well done!\n\n Please close this window first! \n\n Then,\n\n Press 'Q' to quit game.\n\n Press 'Start' to restart a new game! \n\n Enjoy your time :) ");
+        new innerStage().display("Congratulations! Well done!","\n Congratulations! Well done!\n\n Please close this window first! \n\n Then,\n\n Press 'Q' to quit game.\n\n Press 'Start' to restart a new game! \n\n Enjoy your time :) \n \n");
     }
 
 // Using time relevant methods are based on ideas given by Henan Wang(u6007140) and Shenjia Ji(u5869805)
@@ -846,9 +852,10 @@ public class Board extends Application implements Runnable  {
      * This method helps to catch the keyboard code and activate the corresponding operation.
      * Specifically,
      * SLASH -> hints for the next step appears
-     *     Q -> quit the game viewer and back to the menu
+     *     Q -> quit the game
      *     S -> inner stage will appear with the best score in current difficulty
-     *     I -> the instruction text appears
+     *     I -> keep pressed: the instruction text appears
+     *     I -> released: the instruction text disapears
      * @param scene the current game scene
      */
     // used ideas given by Henan Wang(u6007140) and Shenjia Ji(u5869805)
@@ -888,13 +895,13 @@ public class Board extends Application implements Runnable  {
                             new innerStage().display("The best score for level "+ difficulty.getValue(),+best+" min!");
                         }
                         else if (BestScore(difficulty.getValue()) == 0){
-                            new innerStage().display("The best score for level "+ (int) difficulty.getValue(), "Oops! No record yet:( \n\n Congratulations! \n\nYou're the 1st lucky guy to play this level:)");
+                            new innerStage().display("The best score for level "+ (int) difficulty.getValue(), " Oops! No record yet:( \n\n Congratulations! \n\n You're the 1st lucky guy to play this level:)  \n\n");
                         }
                         else{
                             double best = BestScore(difficulty.getValue());
                             BigDecimal Best = new BigDecimal(best/1000);
                             best = Best.setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
-                            new innerStage().display("The best score for level "+ difficulty.getValue(), +best+ " s!");
+                            new innerStage().display("  The best score for level "+ difficulty.getValue(), +best+ " s!  ");
                         }
                     }
                 }); // based on ideas given by Henan Wang(u6007140) and Shenjia Ji(u5869805)
@@ -906,8 +913,7 @@ public class Board extends Application implements Runnable  {
                 });
     }
 
-
- /** helper functions to show the hints' text */
+ /** helper functions to show the instructions' text */
     private void InsTextEffect(){
         //insText.setFill(Color.DEEPPINK);
         //insText.setFont(Font.loadFont(MenuApp.class.getResource("res/handwriting-draft_free-version.ttf").toExternalForm(), 10));
@@ -1057,6 +1063,7 @@ public class Board extends Application implements Runnable  {
 }
     /** Place the generated pieces to the board according to the string */
     // similar to Viewer.java
+    /** group the placement string */
     private void  viewNewStart (String newstart){
         int num = newstart.length()/3;
         for(int i=0;i<num;i++){
@@ -1066,6 +1073,8 @@ public class Board extends Application implements Runnable  {
             System.out.println("newstart: " + newstart);
         }
     }
+
+    /** View each piece placement (3-char string) as a picture on board */
     //https://www.quora.com/How-do-you-compare-chars-in-Java
     private void placePieces (String pieceplacement){
         if (! (pieceplacement==null)){
@@ -1076,6 +1085,7 @@ public class Board extends Application implements Runnable  {
             ImageView StartPiece =new ImageView();
             //https://stackoverflow.com/questions/27785917/javafx-mouseposition
             //https://www.cs.cmu.edu/~pattis/15-1XX/common/handouts/ascii.html
+
             if ("ABCDEFGHIJ".contains(String.valueOf(location))){
                 StartPiece.setLayoutY(195);
                 StartPiece.setLayoutX(275+30*(location-'A'));
@@ -1125,8 +1135,7 @@ public class Board extends Application implements Runnable  {
                 startpieces.getChildren().add(StartPiece);}}
         }
 
-    /**
-     * Set slide bar for difficulty
+    /** This method helps to set slider bar representing different difficulty levels
      * "0" represents easy level
      * Similarly,
      * "0" represents medium level
@@ -1145,7 +1154,6 @@ public class Board extends Application implements Runnable  {
                 startMilli = System.currentTimeMillis();
                 begin.play();
 
-                //hideCompletion();
                 hideUsingTime();
                 startpieces.getChildren().clear();
                 newpieces.getChildren().clear();
@@ -1156,7 +1164,6 @@ public class Board extends Application implements Runnable  {
                 pastplacement ="";
                 viewNewStart(newstart);
                 makeOriginalPieces();
-                //pastplacement ="";
             }
         });
         controls.getChildren().add(button);
@@ -1207,8 +1214,7 @@ public class Board extends Application implements Runnable  {
         root.getChildren().add(invisibleSol);
         keyboardHandlers(scene);
         InsTextEffect();
-        //compTextEffect();
-        //hideCompletion();
+
         makeControls();
         makeUsingTime();
 
