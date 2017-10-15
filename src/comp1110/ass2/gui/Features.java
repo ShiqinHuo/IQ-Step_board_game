@@ -24,15 +24,13 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by DoubleHUO on 3/10/17.
- * This class is based on
- * https://github.com/AlmasB/FXTutorials/tree/master/src/com/almasb/civ6menu
+ * Created by DoubleHUO on 13/10/17.
  */
 // used ideas given by the YouTuber Almas Baimagambetov and the link:
 // https://www.youtube.com/watch?v=N2EmtYGLh4U&index=1&list=PL4h6ypqTi3RQWPZfR6t73rxZK_TFkyURe
 // The source code is from:
 // https://github.com/AlmasB/FXTutorials/tree/master/src/com/almasb/civ6menu
-public class Info extends Application implements Runnable {
+public class Features extends Application implements Runnable {
     private static final int BOARD_WIDTH = 933;
     private static final int BOARD_HEIGHT = 700;
     private Pane root = new Pane();
@@ -40,7 +38,7 @@ public class Info extends Application implements Runnable {
 
     private void addTitle() {
 
-        Title title = new Title("Author Information");
+        Title title = new Title("Game Features");
         title.setTranslateX(BOARD_WIDTH / 2 - title.getTitleWidth() / 2);
         title.setTranslateY(BOARD_HEIGHT / 8);
 
@@ -55,10 +53,10 @@ public class Info extends Application implements Runnable {
         root.getChildren().add(instruction);
     }
 
-    private void addAuthor(double x, double y) {
-        authorBox.setTranslateX(x);
-        authorBox.setTranslateY(y);
-        authorData.forEach(data -> {
+    private void addFeature(double x, double y) {
+        featureBox.setTranslateX(x);
+        featureBox.setTranslateY(y);
+        featureData.forEach(data -> {
             MenuItem item = new MenuItem(data.getKey());
             //item.setOnAction(data.getValue());
             item.setTranslateX(-300);
@@ -66,14 +64,14 @@ public class Info extends Application implements Runnable {
             clip.translateXProperty().bind(item.translateXProperty().negate());
 
             item.setClip(clip);
-            authorBox.getChildren().addAll(item);
+            featureBox.getChildren().addAll(item);
         });
-        root.getChildren().add(authorBox);
+        root.getChildren().add(featureBox);
     }
-    private List<Pair<String,Runnable>> authorData = Arrays.asList(
-            new Pair<String,Runnable>("Xiangyi Luo u6162693",()->{}),
-            new Pair<String,Runnable>("Wenjun Yang u6251843",()->{}),
-            new Pair<String,Runnable>("Shiqin Huo  u5949730",()->{})
+    private List<Pair<String,Runnable>> featureData = Arrays.asList(
+            new Pair<String,Runnable>("Feature 1",()->{}),
+            new Pair<String,Runnable>("Feature 2",()->{}),
+            new Pair<String,Runnable>("Feature 3",()->{})
     );//https://docs.oracle.com/javase/8/javafx/api/javafx/application/Platform.html
 
     private Line line;
@@ -84,7 +82,7 @@ public class Info extends Application implements Runnable {
         double lineX = BOARD_WIDTH / 2 - 100;//WIDTH / 2 - 100;
         double lineY = BOARD_HEIGHT / 8 + 50;//HEIGHT / 3 + 50;
         addLine(lineX, lineY);
-        addAuthor(lineX + 5, lineY);
+        addFeature(lineX + 5, lineY);
         startAnimation();
         return root;
     }
@@ -102,8 +100,8 @@ public class Info extends Application implements Runnable {
         st.setToY(1);
         st.setOnFinished(e -> {
 
-            for (int i = 0; i < authorBox.getChildren().size(); i++) {
-                Node n = authorBox.getChildren().get(i);
+            for (int i = 0; i < featureBox.getChildren().size(); i++) {
+                Node n = featureBox.getChildren().get(i);
                 TranslateTransition tt = new TranslateTransition(Duration.seconds(1 + i * 0.15), n);
                 tt.setToX(0);
                 tt.setOnFinished(e2 -> n.setClip(null));
@@ -121,7 +119,7 @@ public class Info extends Application implements Runnable {
         root.getChildren().add(ackText);
     }
 
-    private VBox authorBox = new VBox(-5);
+    private VBox featureBox = new VBox(-5);
 
     private void addBackground(){
         //ImageView imageView = new ImageView(new Image(getClass().getResource("res/pinkblue.jpg").toExternalForm()));
@@ -135,26 +133,26 @@ public class Info extends Application implements Runnable {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        primaryStage.setTitle("Information");
+        primaryStage.setTitle("Game Features");
         Scene scene = new Scene(createContent());
         //addBackground();
         addTitle();
         addInstruction();
-       // addAck();
+        // addAck();
         primaryStage.setScene(scene);
         primaryStage.show();
-}
+    }
 
+
+    public static void main(String[] args) {
+        launch(args);
+    }
     @Override
     public void run() {
         try {
-            new Info().start(new Stage());
+            new Features().start(new Stage());
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    public static void main(String[] args) {
-        launch(args);
     }
-
-}

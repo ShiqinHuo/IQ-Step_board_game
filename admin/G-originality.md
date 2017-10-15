@@ -1,9 +1,31 @@
 We declare that the work we have submitted for Stage G of this assignment and all stages before it is entirely our own work, with the following documented exceptions:
 
 * The idea of using <...> to make the game run faster came from a discussion with <...> (noted in source code comments)
-
-* The code in class <...> is based on a solution we found when researching the problem (URL provided in source code comments)
-
-* ....
-
-Signed: Mary Jones (u2345678), Bob Smith (u3456789), and Sue Black (u0123456)
+// below only contains board.java references
+* The code in class <Board.java> is based on a solution we found when researching the problem (<https://stackoverflow.com/questions/1104975/a-for-loop-to-iterate-over-an-enum-in-java>)
+* The code in class <Board.java> is based on a solution we found when researching the problem (<https://stackoverflow.com/questions/17437411/how-to-put-a-text-into-a-circle-object-to-display-it-from-circles-center>)
+* The code in class <Board.java> is based on a solution we found when researching the problem (<https://stackoverflow.com/questions/41246688/circle-wont-move-position-in-javafx/41247282>)
+* The code in class <Board.java> is based on a solution we found when researching the problem (<https://stackoverflow.com/questions/21118394/explicitly-positioning-nodes-in-javafx>)
+* The code in class <Board.java> is based on a solution we found when researching the problem (<https://docs.oracle.com/javase/8/javafx/api/javafx/scene/Node.html>)
+* The code in class <Board.java> is based on a solution we found when researching the problem (<https://stackoverflow.com/questions/3290681/initializing-a-double-object-with-a-primitive-double-value>)
+* The code in class <Board.java> is based on a solution we found when researching the problem (<https://stackoverflow.com/questions/5617175/arraylist-replace-element-if-exists-at-a-given-index>)
+* The code in class <Board.java> is based on a solution we found when researching the problem (<https://www.mkyong.com/java/how-to-loop-arraylist-in-java/>)
+* The code in class <Board.java> is based on a solution we found when researching the problem (<https://stackoverflow.com/questions/22542015/how-to-add-a-mouse-doubleclick-event-listener-to-the-cells-of-a-listview-in-java>)
+* The code in class <Board.java> is based on a solution we found when researching the problem (<https://stackoverflow.com/questions/521171/a-java-collection-of-value-pairs-tuples>)
+* The code in class <Board.java> is based on a solution we found when researching the problem (<https://stackoverflow.com/questions/7775364/how-can-i-remove-a-substring-from-a-given-string>)
+* The code in class <Board.java> is based on a solution we found when researching the problem (<https://stackoverflow.com/questions/38062219/how-can-i-get-textfield-from-inner-stage-in-javafx>)
+* The code in class <Board.java> is based on a solution we found when researching the problem (<https://github.com/AlmasB/FXTutorials/tree/master/src/com/almasb/civ6menu>)
+* The code in class <Board.java> is based on a solution we found when researching the book (<Book: Learn JavaFX 8: building user experience and interfaces with java 8>)
+* The code in class <Board.java> is based on a solution we found when researching the book (<Book: JavaFX essentials>)
+* The code in class <Board.java> is based on a solution we found when researching the book (<Book: JavaFX 8: Introduction by Example>)
+* The code in class <Board.java> is based on a solution we found when researching the problem (<https://github.com/Apress/javafx-8-intro-by-example>)
+* The code in class <Board.java> is based on a solution we found when researching the problem (<https://docs.oracle.com/javase/8/javafx/api/javafx/scene/layout/HBox.html>)
+* The code in class <Board.java> is based on a solution we found when researching the problem (<https://stackoverflow.com/questions/363681/how-do-i-generate-random-integers-within-a-specific-range-in-java>)
+* The code in class <Board.java> is based on a solution we found when researching the problem (<https://www.quora.com/How-do-you-compare-chars-in-Java>)
+* The code in class <Board.java> is based on a solution we found when researching the problem (<https://www.cs.cmu.edu/~pattis/15-1XX/common/handouts/ascii.html>)
+* The code in class <Board.java> is based on a solution we found when researching the problem (<//https://stackoverflow.com/questions/8330747/doing-minus-operation-on-string>)
+* The code in class <Board.java> is based on a solution we found when researching the problem (<https://docs.oracle.com/javase/8/javafx/api/javafx/scene/input/KeyEvent.html#KEY_RELEASED>)
+* The code in class <Board.java> is based on a solution we found when researching the problem (<http://docs.oracle.com/javafx/2/ui_controls/slider.htm>)
+* The code in class <Board.java> is based on a solution we found when researching the problem (<https://stackoverflow.com/questions/18265940/should-i-always-not-catch-nullpointerexception>)
+* The code in class <Board.java> is based on a solution we found when researching the problem (<https://docs.oracle.com/javase/8/javafx/api/javafx/scene/input/KeyEvent.html#KEY_PRESSED>)
+Signed: Shiqin Huo (u5949730), Bob Smith (u3456789), and Sue Black (u0123456)

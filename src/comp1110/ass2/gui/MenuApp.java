@@ -27,6 +27,10 @@ import java.util.List;
  * This class is based on
  * https://github.com/AlmasB/FXTutorials/tree/master/src/com/almasb/civ6menu
  */
+// used ideas given by the YouTuber Almas Baimagambetov and the link:
+// https://www.youtube.com/watch?v=N2EmtYGLh4U&index=1&list=PL4h6ypqTi3RQWPZfR6t73rxZK_TFkyURe
+// The source code is from:
+// https://github.com/AlmasB/FXTutorials/tree/master/src/com/almasb/civ6menu
 
 public class MenuApp extends Application {
     private static final int WIDTH  = 933;
@@ -34,22 +38,21 @@ public class MenuApp extends Application {
 
     private List<Pair<String,Runnable>> menuData = Arrays.asList(
             new Pair<String,Runnable>("Start",new Board()),
-            new Pair<String,Runnable>("Difficulty",()->{}),
-            new Pair<String,Runnable>("Reload",()->{}),
-            new Pair<String,Runnable>("Information",new Info()),
+            new Pair<String,Runnable>("Game Features",new Features()),
+            new Pair<String,Runnable>("Author Information",new Info()),
             new Pair<String,Runnable>("Exit to Desktop", Platform::exit)
     );//https://docs.oracle.com/javase/8/javafx/api/javafx/application/Platform.html
 
     private Pane root = new Pane();
-// https://docs.oracle.com/javase/8/javafx/api/javafx/scene/layout/Pane.html
+    //https://docs.oracle.com/javase/8/javafx/api/javafx/scene/layout/Pane.html
     private VBox menuBox = new VBox(-5);
-// https://docs.oracle.com/javase/8/javafx/api/javafx/scene/layout/VBox.html
+    //https://docs.oracle.com/javase/8/javafx/api/javafx/scene/layout/VBox.html
     private Line line;
     private Parent createContent() {
         addBackground();
         addTitle();
         double lineX = WIDTH / 2 - 100;//WIDTH / 2 - 100;
-        double lineY = HEIGHT / 3 + 120;//HEIGHT / 3 + 50;
+        double lineY = HEIGHT / 2.6 + 120;//HEIGHT / 3 + 50;
         addLine(lineX, lineY);
         addMenu(lineX + 5, lineY );
         startAnimation();
@@ -57,7 +60,8 @@ public class MenuApp extends Application {
     }
 
     private void addBackground(){
-        ImageView imageView = new ImageView(new Image(getClass().getResource("res/iqsteps.png").toExternalForm()));
+        ImageView imageView = new ImageView(new Image(getClass().getResource("res/iqsteps.jpg").toExternalForm()));
+        //ImageView imageView = new ImageView(new Image(getClass().getResource("res/iqsteps.png").toExternalForm()));
         imageView.setFitWidth(WIDTH);
         imageView.setFitHeight(HEIGHT);
         root.getChildren().add(imageView);
@@ -66,12 +70,12 @@ public class MenuApp extends Application {
     private void addTitle() {
         Title title = new Title("IQ - STEPS");
         title.setTranslateX(WIDTH / 2 - title.getTitleWidth() / 2);
-        title.setTranslateY(HEIGHT / 3);
+        title.setTranslateY(HEIGHT / 5.5);
 
         root.getChildren().add(title);
     }
     private void addLine(double x, double y) {
-        line = new Line(x, y, x, y + 180);
+        line = new Line(x, y, x, y + 150);
         line.setStrokeWidth(3);
         line.setStroke(Color.color(1, 1, 1, 0.75));
         line.setEffect(new DropShadow(5, Color.BLACK));
@@ -125,6 +129,3 @@ public class MenuApp extends Application {
         launch(args);
     }
 }
-
-
-
