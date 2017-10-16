@@ -887,7 +887,7 @@ public class Board extends Application implements Runnable  {
                             double best = BestScore(difficulty.getValue());
                             BigDecimal Best = new BigDecimal(best/6000);
                             best = Best.setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
-                            new innerStage().display("The best score for level "+ difficulty.getValue(),+best+" min!");
+                            new innerStage().display("The best score for level "+ (int) difficulty.getValue(),+best+" min!");
                         }
                         else if (BestScore(difficulty.getValue()) == 0){
                             new innerStage().display("The best score for level "+ (int) difficulty.getValue(), " Oops! No record yet:( \n\n Congratulations! \n\n You're the 1st lucky guy to play this level:)  \n\n");
@@ -896,7 +896,7 @@ public class Board extends Application implements Runnable  {
                             double best = BestScore(difficulty.getValue());
                             BigDecimal Best = new BigDecimal(best/1000);
                             best = Best.setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
-                            new innerStage().display("  The best score for level "+ difficulty.getValue(), +best+ " s!  ");
+                            new innerStage().display("  The best score for level "+ (int)  difficulty.getValue(), +best+ " s!  ");
                         }
                     }
                 }); // based on ideas given by Henan Wang(u6007140) and Shenjia Ji(u5869805)
