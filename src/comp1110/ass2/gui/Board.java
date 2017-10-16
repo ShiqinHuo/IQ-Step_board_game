@@ -86,16 +86,17 @@ public class Board extends Application implements Runnable  {
     private AudioClip hint = new AudioClip(getClass().getResource("res/hint.mp3").toString());
     private AudioClip flip = new AudioClip(getClass().getResource("res/flip.mp3").toString());
 
+    //Implement by the StartPointGenerator class, some start points are similar
     private static final String[][] TaskEleven_OBJECTIVE ={
             //diff_3
             {"HHnBFOGDL", "EEfHALAHS", "HFSGFlBDx", "EFBFCgBGS", "BFqHALAHS",
                     "EFBAFnGFS", "CHSGHnBGK", "DGSGHnBHF", "FBmBCoCEj", "HGnGAREBv",
                     "BGKFCNGFn", "FBgEElBEe", "BGKFCNCAg", "EFBAFnDHS", "GDLCGOEEn"},
-            //diff_3
+            //diff_2
             {"FCLBFqEFjCCW", "AHSEHlBDxFBg", "EFBBFqCHSGHn", "BGSGHnDGQEEf", "EFBHAgDGSAHQ",
                     "BGSAHQEFBHAg", "BHFFCLHBNDFl", "BHFFCLHBNGGn", "BGSAHQEFBHFn", "EFBFCNCHSBBG",
                     "BFOGDLADgDFj", "EEfFBiCCLBGS", "HFSFDbEAoBHD", "DGSBGlEAoCEj", "HFSFDPBGKADg"},
-            //diff_2
+            //diff_1
             {"BFOGDLADgDFjHEQ", "BHFFCLHBNGGnEDI", "EFBFCNCHSBBGADg", "BGKAFjGCNHAPCAg", "HFSFDbEAoBHDGDL",
                     "EFBAFjGCNHAPCAg", "FCLBFqDAWHEjEFF", "AEnCElFFSBHFDGj", "AHSEHlBDxFBgHCP", "FBmBCoCEjABRDCP",
                     "GDLCGOEEnADgDAi", "HHnBFOGDLADgDAi", "BGKFCNEEnDHSGEQ", "BFqEFlHDiAFnCCL", "GDLADgBGODAiHAk"},
