@@ -6,6 +6,12 @@ import java.util.*;
  * Created by wenjunyang on 8/10/17.
  */
 public class SolverForHint {
+    /**
+     * A solver for the game (plays the same role as task9)
+     * Given a start point placement and return a set which contains all the possible solution
+     * @param placement A startPoints for the game
+     * @return A set which contains all the possible solutions for the input placement
+     */
     public static Set<String> Solutions(String placement){
         ArrayList<String> A = MaskGenerator.maskGenerator1('A'); ArrayList<String> B = MaskGenerator.maskGenerator2();
         ArrayList<String> C = MaskGenerator.maskGenerator1('C'); ArrayList<String> D = MaskGenerator.maskGenerator1('D');

@@ -711,7 +711,7 @@ public class StepsGame {
     /**
      * Helper for task 9
      * Given a start point placement and return a set which contains all the possible solution
-     * @param placement A valid sequence of piece placements where each piece placement is drawn from the objective
+     * @param placement A startPoint placement for the game
      * @return A set which contains all the possible solutions for the input placement
      */
     public static Set<String> possibleSolutions(String placement){
