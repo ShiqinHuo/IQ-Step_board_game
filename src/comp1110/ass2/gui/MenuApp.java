@@ -10,8 +10,10 @@ import javafx.scene.Scene;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
@@ -35,6 +37,12 @@ import java.util.List;
 public class MenuApp extends Application {
     private static final int WIDTH  = 933;
     private static final int HEIGHT = 700;
+
+    /* Loop in public domain CC https://pan.baidu.com/share/link?shareid=2705417086&uk=2839001897 */
+    private static final String LOOP_URI = MenuApp.class.getResource("res/bgm泡泡堂.mp3").toString();
+    private AudioClip loop;
+    /* game variables */
+    private boolean loopPlaying = true;
 
     private List<Pair<String,Runnable>> menuData = Arrays.asList(
             new Pair<String,Runnable>("Start",new Board()),
@@ -117,11 +125,47 @@ public class MenuApp extends Application {
         root.getChildren().add(menuBox);
     }
 
+    // set the background music for the menu (got ideas from ass1)
+    /**
+     * Set up the sound loop (to play when the 'M' key is pressed)
+     */
+    private void setUpSoundLoop() {
+        try {
+            loop = new AudioClip(LOOP_URI);
+            loop.setCycleCount(AudioClip.INDEFINITE);
+        } catch (Exception e) {
+            System.err.println(":-( something bad happened ("+LOOP_URI+"): "+e);
+        }
+    }
+
+
+    /**
+     * Turn the sound loop on or off
+     */
+    private void toggleSoundLoop() {
+        if (loopPlaying)
+            loop.stop();
+        else
+            loop.play();
+        loopPlaying = !loopPlaying;
+    }
+
+    /** Based on Ass1 */
+    private void setUpHandlers(Scene scene) {
+        /* create handlers for key press and release events */
+        scene.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.M) {
+                toggleSoundLoop();
+                event.consume();}});}
+
+
     @Override
     public  void start(Stage primaryStage) throws Exception {
         Scene scene = new Scene(createContent());
         primaryStage.setTitle("Welcome to IQ STEPS!");
         primaryStage.setScene(scene);
+        setUpHandlers(scene);
+        setUpSoundLoop();
         primaryStage.show();
     }
 
