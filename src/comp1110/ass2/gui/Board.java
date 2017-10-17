@@ -799,6 +799,7 @@ public class Board extends Application implements Runnable  {
                     return result.substring(leng, leng + 3);
                 }
                 catch (IndexOutOfBoundsException n) {
+                    ouou.play();
                     new innerStage().display("IndexOutOfBoundsException", "\n Oops! \n\n You made mistakes in previous step(s). \n\n The game is blocked now. \n\n No hint for the next step. \n\n Please go back check your previous steps first! \n \n");
                     return null;
                 }
@@ -806,6 +807,7 @@ public class Board extends Application implements Runnable  {
             }
         }
         catch (NullPointerException z){
+            ouou.play();
             new innerStage().display("NullPointerException", " Please press 'Start' first! \n");
             return null;
         }
