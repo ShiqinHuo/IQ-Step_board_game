@@ -25,7 +25,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -74,8 +73,9 @@ public class Board extends Application implements Runnable  {
     private BigDecimal UseTime;
     private String done = ""; // initialise the placed pieces
 
-//  the idea is suggested by Shenjia Ji (u5869805) and Henan Wang (u6007140)
-//  https://stackoverflow.com/questions/23202272/how-to-play-sounds-with-javafx
+// https://stackoverflow.com/questions/23202272/how-to-play-sounds-with-javafx
+// mp3 source files are from online open source platforms:
+// http://sc.chinaz.com/yinxiao/   &  https://pan.baidu.com/
     private AudioClip begin = new AudioClip(getClass().getResource("res/begin~.mp3").toString());
     private AudioClip yohu = new AudioClip(getClass().getResource("res/yohu.mp3").toString());
     private AudioClip ouou = new AudioClip(getClass().getResource("res/ouoh-error.mp3").toString());
@@ -83,6 +83,12 @@ public class Board extends Application implements Runnable  {
     private AudioClip snap = new AudioClip(getClass().getResource("res/snap.mp3").toString());
     private AudioClip hint = new AudioClip(getClass().getResource("res/hint.mp3").toString());
     private AudioClip flip = new AudioClip(getClass().getResource("res/flip.mp3").toString());
+
+/* Loop in public domain CC https://pan.baidu.com/share/link?shareid=2705417086&uk=2839001897 */
+    private static final String LOOP_URI = MenuApp.class.getResource("res/bgm小区10.mp3").toString();
+    private AudioClip loop;
+    /* game variables */
+    private boolean loopPlaying = false;
 
     //Implement by the StartPointGenerator class, some start points are similar
     private static final String[][] TaskEleven_OBJECTIVE ={
@@ -313,8 +319,6 @@ public class Board extends Application implements Runnable  {
     class DraggableFXPiece extends FlippableFXPiece {
         double homeX, homeY;
         double mouseX, mouseY;
-
-        private Board board = new Board();
 
         DraggableFXPiece(String piece) {
             super(piece);
@@ -862,6 +866,10 @@ public class Board extends Application implements Runnable  {
                         System.out.println("?????");
                         Platform.exit();
                         event.consume();
+                    } // ideas from ass 1
+                    else if (event.getCode() == KeyCode.M) {
+                            toggleSoundLoop();
+                            event.consume();
                     }
                     else if (event.getCode() == KeyCode.SLASH){
                         count +=1;
@@ -1039,13 +1047,38 @@ public class Board extends Application implements Runnable  {
     }
 
     private void addHints(){
-        Text RightCorner = new Text("Press 'I' =>To=> Hide/Show the Game Instructions.");
+        Text RightCorner = new Text("Press 'I' =>To=> Hide/Show the Game Instructions.\nPress 'M' =>To=> Hide/Play the Background Music.");
         RightCorner.setFont(Font.loadFont(MenuApp.class.getResource("res/Penumbra-HalfSerif-Std_35114.ttf").toExternalForm(), 12));
         RightCorner.setEffect(new DropShadow(5,Color.ORANGERED));
         RightCorner.setTranslateX(600);
         RightCorner.setFill(Color.MEDIUMPURPLE);
-        RightCorner.setTranslateY(0.98 * BOARD_HEIGHT);
+        RightCorner.setTranslateY(0.96 * BOARD_HEIGHT);
         root.getChildren().add(RightCorner);
+    }
+
+    // set the background music for the menu (got ideas from ass1)
+    /**
+     * Set up the sound loop (to play when the 'M' key is pressed)
+     */
+    private void setUpSoundLoop() {
+        try {
+            loop = new AudioClip(LOOP_URI);
+            loop.setCycleCount(AudioClip.INDEFINITE);
+        } catch (Exception e) {
+            System.err.println(":-( something bad happened ("+LOOP_URI+"): "+e);
+        }
+    }
+
+
+    /**
+     * Turn the sound loop on or off
+     */
+    private void toggleSoundLoop() {
+        if (loopPlaying)
+            loop.stop();
+        else
+            loop.play();
+        loopPlaying = !loopPlaying;
     }
 
     // FIXME Task 11: Generate interesting starting placements
@@ -1210,6 +1243,7 @@ public class Board extends Application implements Runnable  {
         root.getChildren().add(startpieces);
         root.getChildren().add(invisibleSol);
         keyboardHandlers(scene);
+        setUpSoundLoop();
         InsTextEffect();
 
         makeControls();
