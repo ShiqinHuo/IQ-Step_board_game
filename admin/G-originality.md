@@ -57,7 +57,7 @@ We declare that the work we have submitted for Stage G of this assignment and al
 * Info & Features classes are similar to the construction of Menu class
 
 // references for tests:
-* The idea of <How to write tests> came from a discussion with <Wenjun Yang u6251843>
+* The idea of <How to write tests> came from a discussion with Wenjun Yang (u6251843) and Xiangyi Luo(u6162693)
 * The code in class <MenuAppTest> uses an idea suggested by <https://stackoverflow.com/questions/18429422/basic-junit-test-for-javafx-8>
 * The code in class <IsPegTest> uses an idea suggested by <https://stackoverflow.com/questions/363681/how-do-i-generate-random-integers-within-a-specific-range-in-java>
 
