@@ -28,4 +28,15 @@ We declare that the work we have submitted for Stage G of this assignment and al
 * The code in class <Board.java> is based on a solution we found when researching the problem (<http://docs.oracle.com/javafx/2/ui_controls/slider.htm>)
 * The code in class <Board.java> is based on a solution we found when researching the problem (<https://stackoverflow.com/questions/18265940/should-i-always-not-catch-nullpointerexception>)
 * The code in class <Board.java> is based on a solution we found when researching the problem (<https://docs.oracle.com/javase/8/javafx/api/javafx/scene/input/KeyEvent.html#KEY_PRESSED>)
-Signed: Shiqin Huo (u5949730), Bob Smith (u3456789), and Sue Black (u0123456)
+
+//below contains StepGame.java-task9, SelectionSorter.java and RotateAndReverseTest, GetCoordinateTest references
+* The code in class <SelectionSorter.java> is based on a solution we found in BIG JAVA: Early Objects written by CAY HORSTMANN
+* The code in class <GetCoordinateTest> uses an idea suggested by comp1110.lectures.S03
+* The code in class <RotateAndReverseTest> uses an idea suggested by comp1110.lectures.S03
+
+//below contains Alphabet.java, TaskSixHelpers.java references
+* The code in class <TaskSixHelpers> uses an idea suggested by comp1110.lectures.S03 and Class <PiecePlacementWellFormed>
+* The code in <Alphabet> got idea from 1110_assignment_1 Class <Mask>
+
+Signed: Shiqin Huo (u5949730), Wenjun Yang (u6251843), and Xiangyi Luo (u6162693)
+

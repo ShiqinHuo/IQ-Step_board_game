@@ -243,10 +243,10 @@ public class Pieces {
 
 
     /**
-     * This method find all the positions which cannot be obstructed in next step
+     * This method find all the positions which cannot be used in next step
      *
      * @param pos which tell that the positions which has ring on it
-     * @return all the position which cannot use including the original pos
+     * @return all the position which cannot use by next piece
      */
     public static Set<Integer> cannotUse(Set<Integer> pos) {
         Set<Integer> update = new HashSet<>(pos);
