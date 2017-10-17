@@ -73,8 +73,9 @@ public class Board extends Application implements Runnable  {
     private BigDecimal UseTime;
     private String done = ""; // initialise the placed pieces
 
-//  the idea is suggested by Shenjia Ji (u5869805) and Henan Wang (u6007140)
-//  https://stackoverflow.com/questions/23202272/how-to-play-sounds-with-javafx
+// https://stackoverflow.com/questions/23202272/how-to-play-sounds-with-javafx
+// mp3 source files are from online open source platforms:
+// http://sc.chinaz.com/yinxiao/   &  https://pan.baidu.com/
     private AudioClip begin = new AudioClip(getClass().getResource("res/begin~.mp3").toString());
     private AudioClip yohu = new AudioClip(getClass().getResource("res/yohu.mp3").toString());
     private AudioClip ouou = new AudioClip(getClass().getResource("res/ouoh-error.mp3").toString());
@@ -318,8 +319,6 @@ public class Board extends Application implements Runnable  {
     class DraggableFXPiece extends FlippableFXPiece {
         double homeX, homeY;
         double mouseX, mouseY;
-
-        private Board board = new Board();
 
         DraggableFXPiece(String piece) {
             super(piece);
