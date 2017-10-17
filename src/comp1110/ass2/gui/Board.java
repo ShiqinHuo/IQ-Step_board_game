@@ -1048,7 +1048,7 @@ public class Board extends Application implements Runnable  {
     }
 
     private void addHints(){
-        Text RightCorner = new Text("Press 'I' =>To=> Hide/Show the Game Instructions.\n Press 'M' =>To=> Hide/Play the Background Music.");
+        Text RightCorner = new Text("Press 'I' =>To=> Hide/Show the Game Instructions.\nPress 'M' =>To=> Hide/Play the Background Music.");
         RightCorner.setFont(Font.loadFont(MenuApp.class.getResource("res/Penumbra-HalfSerif-Std_35114.ttf").toExternalForm(), 12));
         RightCorner.setEffect(new DropShadow(5,Color.ORANGERED));
         RightCorner.setTranslateX(600);
