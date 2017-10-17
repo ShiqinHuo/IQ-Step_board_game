@@ -13,7 +13,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
-import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
@@ -49,7 +48,6 @@ public class Board extends Application implements Runnable  {
 
     private static String newstart = "";
     private static String pastplacement = "";
-
     private final Group root = new Group();
     private final Group controls = new Group();
     private static final Group pegs = new Group();
@@ -69,15 +67,15 @@ public class Board extends Application implements Runnable  {
     private ArrayList<Double> diff_1 = new ArrayList<>();
     private ArrayList<Double> diff_2 = new ArrayList<>();
     private ArrayList<Double> diff_3 = new ArrayList<>();
-
+//  the idea is suggested by Shenjia Ji (u5869805) and Henan Wang (u6007140)
     private double startMilli = 0;
     private double endMilli = 0;
     private double useTime = 0;
     private BigDecimal UseTime;
     private String done = ""; // initialise the placed pieces
 
-// the idea is suggested by Shenjia Ji (u5869805) and Henan Wang (u6007140)
-// https://stackoverflow.com/questions/23202272/how-to-play-sounds-with-javafx
+//  the idea is suggested by Shenjia Ji (u5869805) and Henan Wang (u6007140)
+//  https://stackoverflow.com/questions/23202272/how-to-play-sounds-with-javafx
     private AudioClip begin = new AudioClip(getClass().getResource("res/begin~.mp3").toString());
     private AudioClip yohu = new AudioClip(getClass().getResource("res/yohu.mp3").toString());
     private AudioClip ouou = new AudioClip(getClass().getResource("res/ouoh-error.mp3").toString());
@@ -86,16 +84,17 @@ public class Board extends Application implements Runnable  {
     private AudioClip hint = new AudioClip(getClass().getResource("res/hint.mp3").toString());
     private AudioClip flip = new AudioClip(getClass().getResource("res/flip.mp3").toString());
 
+    //Implement by the StartPointGenerator class, some start points are similar
     private static final String[][] TaskEleven_OBJECTIVE ={
             //diff_3
             {"HHnBFOGDL", "EEfHALAHS", "HFSGFlBDx", "EFBFCgBGS", "BFqHALAHS",
                     "EFBAFnGFS", "CHSGHnBGK", "DGSGHnBHF", "FBmBCoCEj", "HGnGAREBv",
                     "BGKFCNGFn", "FBgEElBEe", "BGKFCNCAg", "EFBAFnDHS", "GDLCGOEEn"},
-            //diff_3
+            //diff_2
             {"FCLBFqEFjCCW", "AHSEHlBDxFBg", "EFBBFqCHSGHn", "BGSGHnDGQEEf", "EFBHAgDGSAHQ",
                     "BGSAHQEFBHAg", "BHFFCLHBNDFl", "BHFFCLHBNGGn", "BGSAHQEFBHFn", "EFBFCNCHSBBG",
                     "BFOGDLADgDFj", "EEfFBiCCLBGS", "HFSFDbEAoBHD", "DGSBGlEAoCEj", "HFSFDPBGKADg"},
-            //diff_2
+            //diff_1
             {"BFOGDLADgDFjHEQ", "BHFFCLHBNGGnEDI", "EFBFCNCHSBBGADg", "BGKAFjGCNHAPCAg", "HFSFDbEAoBHDGDL",
                     "EFBAFjGCNHAPCAg", "FCLBFqDAWHEjEFF", "AEnCElFFSBHFDGj", "AHSEHlBDxFBgHCP", "FBmBCoCEjABRDCP",
                     "GDLCGOEEnADgDAi", "HHnBFOGDLADgDAi", "BGKFCNEEnDHSGEQ", "BFqEFlHDiAFnCCL", "GDLADgBGODAiHAk"},
@@ -113,7 +112,6 @@ public class Board extends Application implements Runnable  {
             e.printStackTrace();
         }
     }/* initialize : preparation for the pegs arrangement & original pieces' arrangement */
-
 
     /** Create pegs helper class */
     private static class Peg extends Circle {
@@ -231,8 +229,6 @@ public class Board extends Application implements Runnable  {
         piecemapY.put("HE",470);
     }
 
-
-
     /* Helpers function to show the images in assets folder */
     /** Traversal through the assets images and pick up the given piece to show */
     class Picture extends ImageView{
@@ -304,7 +300,7 @@ public class Board extends Application implements Runnable  {
     /** Helps to make those draggable pieces on their home position. **/
     private void makeOriginalPieces() {
         originalPieces();
-        //pieces.getChildren().clear(); // updated piecelist states : including the flipped side
+//updated piecelist states : including the flipped side
         newpieces.getChildren().clear();
         for (String piece : piecelist) {
             newpieces.getChildren().add(new DraggableFXPiece(piece));
@@ -314,7 +310,6 @@ public class Board extends Application implements Runnable  {
 
 
     // FIXME Task 7: Implement a basic playable Steps Game in JavaFX that only allows pieces to be placed in valid places
-
     class DraggableFXPiece extends FlippableFXPiece {
         double homeX, homeY;
         double mouseX, mouseY;
@@ -595,11 +590,11 @@ public class Board extends Application implements Runnable  {
                             if (useTime > 60000) {
                                 UseTime = new BigDecimal(useTime / 60000);
                                 useTime = UseTime.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-                                timeUsing = new Text("use time: " + useTime + " min");}
+                                timeUsing = new Text("Your used time (score): " + useTime + " min");}
                             else {
                                 UseTime = new BigDecimal(useTime / 1000);
                                 useTime = UseTime.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-                                timeUsing = new Text("use time: " + useTime + " s");}
+                                timeUsing = new Text("Your used time (score): " + useTime + " s");}
                             makeUsingTime();
                             win.play();
                             System.out.println("AAAAlast: win??????????");
@@ -708,11 +703,11 @@ public class Board extends Application implements Runnable  {
                             if (useTime > 60000) {
                                 UseTime = new BigDecimal(useTime / 60000);
                                 useTime = UseTime.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-                                timeUsing = new Text("use time: " + useTime + " min");}
+                                timeUsing = new Text("Your used time (score): " + useTime + " min");}
                             else {
                                 UseTime = new BigDecimal(useTime / 1000);
                                 useTime = UseTime.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-                                timeUsing = new Text("use time: " + useTime + " s");}
+                                timeUsing = new Text("Your used time (score): " + useTime + " s");}
                             makeUsingTime();
                             win.play();
                             showCompletion();
@@ -770,7 +765,7 @@ public class Board extends Application implements Runnable  {
     // Task 8 is combined with Task 11
 
     // FIXME Task 10: Implement hints
-//https://stackoverflow.com/questions/18265940/should-i-always-not-catch-nullpointerexception
+    //https://stackoverflow.com/questions/18265940/should-i-always-not-catch-nullpointerexception
     /** This method helps to give the hint for the next piece according to the current placement
      * It is related to 2 main exceptions
      * 1. If the game did not start, then there is no piece for placement and no hint for the next.
@@ -826,15 +821,15 @@ public class Board extends Application implements Runnable  {
         new innerStage().display("Congratulations! Well done!","\n Congratulations! Well done!\n\n Please close this window first! \n\n Then,\n\n Press 'Q' to quit game.\n\n Press 'Start' to restart a new game! \n\n Enjoy your time :) \n \n");
     }
 
-// Using time relevant methods are based on ideas given by Henan Wang(u6007140) and Shenjia Ji(u5869805)
+    // Using time relevant methods are based on ideas given by Henan Wang(u6007140) and Shenjia Ji(u5869805)
     /** helps to set properties for the "timeUsing" text
     * the total time to complete the game at the corresponding difficulty. **/
     private void makeUsingTime() {
-        timeUsing.setFill(Color.DEEPPINK);
-        timeUsing.setFont(Font.loadFont(MenuApp.class.getResource("res/handwriting-draft_free-version.ttf").toExternalForm(), 15));
-        timeUsing.setTextAlignment(TextAlignment.LEFT);
-        timeUsing.setLayoutY(650);
-        //root.getChildren().add(timeUsing);
+        timeUsing.setFill(Color.RED);
+        timeUsing.setFont(Font.loadFont(MenuApp.class.getResource("res/handwriting-draft_free-version.ttf").toExternalForm(), 20));
+        timeUsing.setLayoutX(350);
+        timeUsing.setLayoutY(50);
+        root.getChildren().add(timeUsing);
     }
     /** helps to show the "timeUsing" text. **/
     private void showUsingTime() {
@@ -892,7 +887,7 @@ public class Board extends Application implements Runnable  {
                             double best = BestScore(difficulty.getValue());
                             BigDecimal Best = new BigDecimal(best/6000);
                             best = Best.setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
-                            new innerStage().display("The best score for level "+ difficulty.getValue(),+best+" min!");
+                            new innerStage().display("The best score for level "+ (int) difficulty.getValue(),+best+" min!");
                         }
                         else if (BestScore(difficulty.getValue()) == 0){
                             new innerStage().display("The best score for level "+ (int) difficulty.getValue(), " Oops! No record yet:( \n\n Congratulations! \n\n You're the 1st lucky guy to play this level:)  \n\n");
@@ -901,7 +896,7 @@ public class Board extends Application implements Runnable  {
                             double best = BestScore(difficulty.getValue());
                             BigDecimal Best = new BigDecimal(best/1000);
                             best = Best.setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
-                            new innerStage().display("  The best score for level "+ difficulty.getValue(), +best+ " s!  ");
+                            new innerStage().display("  The best score for level "+ (int)  difficulty.getValue(), +best+ " s!  ");
                         }
                     }
                 }); // based on ideas given by Henan Wang(u6007140) and Shenjia Ji(u5869805)
@@ -913,7 +908,7 @@ public class Board extends Application implements Runnable  {
                 });
     }
 
- /** helper functions to show the instructions' text */
+    /** helper functions to show the instructions' text */
     private void InsTextEffect(){
         //insText.setFill(Color.DEEPPINK);
         //insText.setFont(Font.loadFont(MenuApp.class.getResource("res/handwriting-draft_free-version.ttf").toExternalForm(), 10));
@@ -937,8 +932,9 @@ public class Board extends Application implements Runnable  {
        insText.toBack();
        insText.setOpacity(0);
    }
-   // used ideas given by Henan Wang(u6007140) and Shenjia Ji(u5869805)
- /** helper class to show the best score in an inner stage */
+
+// used ideas given by Henan Wang(u6007140) and Shenjia Ji(u5869805)
+    /** helper class to show the best score in an inner stage */
 //https://stackoverflow.com/questions/38062219/how-can-i-get-textfield-from-inner-stage-in-javafx
    private class innerStage{
        private void display(String title, String message){
@@ -962,8 +958,8 @@ public class Board extends Application implements Runnable  {
        }
    }
 
-    // used ideas given by Henan Wang(u6007140) and Shenjia Ji(u5869805)
-  /* add "if-statement" to return the best corresponding to current difficulty */
+// used ideas given by Henan Wang(u6007140) and Shenjia Ji(u5869805)
+/* add "if-statement" to return the best corresponding to current difficulty */
    private double BestScore(double difficulty){
        double best = 0; // initialise
        if (difficulty == 0){
@@ -979,9 +975,9 @@ public class Board extends Application implements Runnable  {
            best = getBest(diff_3);
        }
        return best;
-
-   } // used ideas given by Henan Wang(u6007140) and Shenjia Ji(u5869805)
-    /* find the best result in one certain difficulty */
+   }
+// used ideas given by Henan Wang(u6007140) and Shenjia Ji(u5869805)
+/* find the best result in one certain difficulty */
    private double getBest (ArrayList<Double> list){
        double min = 1000000; //initialise
        if (list.size() == 0){
@@ -1167,6 +1163,7 @@ public class Board extends Application implements Runnable  {
             }
         });
         controls.getChildren().add(button);
+
 // used ideas suggested by Chenhao Tong(u5920830)
 //https://docs.oracle.com/javase/8/javafx/user-interface-tutorial/slider.htm#CCHDJDFE
         difficulty.setMin(0);
@@ -1220,4 +1217,5 @@ public class Board extends Application implements Runnable  {
 
         primaryStage.setScene(scene);
         primaryStage.show();
-        }}
+    }
+}

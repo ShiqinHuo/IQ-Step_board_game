@@ -50,30 +50,32 @@ public class StepsGame {
      * @return True if the placement is well-formed
      */
     static boolean isPlacementWellFormed(String placement) {
+
+      //if the placement is null or empty, then return false
       if (placement == null || placement.equals("")){
           return false;
-      }else if (placement.length()%3 != 0){
+      }else if (placement.length()%3 != 0){ //if the length of placement is not divisible by three, return false
           return false;
       }else {
               String[] a = new String[placement.length()/3];
 
               for (int i = 0; i < placement.length()/3; i++){
-                  a[i] = placement.substring(3*i,3*i+3);
+                  a[i] = placement.substring(3*i,3*i+3);       //split the placement in order to get the state of each mask
               }
 
               Set<String> k = new HashSet<>();
-              for (int n = 0; n < a.length; n++){
+              for (int n = 0; n < a.length; n++){        //add the element in the array into an hashset
                   k.add(a[n]);
               }
 
-              if (k.size() != a.length){
+              if (k.size() != a.length){         //check whether there are duplicate elements in the mask
                   return false;
               }
           
               for (int m = 0; m < a.length; m++){
                   if (isPiecePlacementWellFormed(a[m]) == true && isDuplicate(placement) == false){
-                      return true;
-                  }
+                      return true;           //check whether each mask in the placement is well-formed
+                  }                          //and whether there are shapes appearing more than once in the placement
               }
               return false;
           }
@@ -92,19 +94,19 @@ public class StepsGame {
         ArrayList<Character> input = new ArrayList<>();
 
         for (int m = 0; m < a; m++){
-            input.add(b[3*m]);
+            input.add(b[3*m]);         //add every shape of the mask into an arrayList
         }
 
         if (i.length() == 3){
-            return false;
+            return false;       //if the length of each mask is 3, then the mask is not duplicate
         }else {
             Set<Character> k = new HashSet<>();
             for (int n = 0; n < input.size(); n++){
                 k.add(input.get(n));
             }
 
-            if (k.size() != input.size()){
-                return true;
+            if (k.size() != input.size()){   //if the size of set is not equal to the length of array, which means
+                return true;                 // there exists the same mask in the placement, the mask is duplicate
             }
         }
         return false;
@@ -119,46 +121,54 @@ public class StepsGame {
      * @return True if the placement sequence is valid
      */
     public static boolean isPlacementSequenceValid(String placement) {
-        if (!isPlacementWellFormed(placement)){
+        if (!isPlacementWellFormed(placement)){   //if the placement is not well-formed, then return false
             return false;
         }else{
             String[] place = new String[placement.length()/3];
 
             for (int i = 0; i < placement.length()/3; i++){
-                place[i] = placement.substring(3*i,3*i+3);
+                place[i] = placement.substring(3*i,3*i+3);   //split the placement in order to get the state of each mask
 
             }
 
             for (int m = 0; m < place.length; m++){
-                if (!isValidPieceString(place[m])){
-                    return false;
+                if (!isValidPieceString(place[m])){   //check whether each mask is placed in the board(not outside the board) and
+                    return false;                     //whether the centre of each mask is placed on the right peg
                 }
             }
 
             ArrayList<Integer> outcome = new ArrayList<>();
-            for (int v = 0; v < place.length; v++){
+            for (int v = 0; v < place.length; v++){                   //add the coordinate of each mask(in the form of number) into a ArrayList
                 ArrayList<Integer> list = getCoordinate(place[v]);
                 for (int w = 0; w <list.size(); w++){
                     outcome.add(list.get(w));
                 }
             }
 
-            Set<Integer> out = new HashSet<>();
+            Set<Integer> out = new HashSet<>();                     //add the coordinate of each mask into a set
             for (int j = 0; j < outcome.size(); j++){
                 out.add(outcome.get(j));
             }
 
-            if (outcome.size() != out.size()){
-                return false;
+            if (outcome.size() != out.size()){                     //check whether the coordinate of each mask is duplicate or not
+                return false;                                      //so as to check whether the mask placed on the board overlaps
             }
         }
         return true;
     }
 
+    /**
+     * Helper for task5
+     * Select elements from an array according to the change of element in another multi-dimensional array
+     * @param a A multi-dimensional array which is a model for a mask.
+     * @param b A 3*3 square which include all the coordinate of mask
+     * @return An ArrayList which stores the coordinate of a String
+     */
     static ArrayList<Integer> selection (int[][] a, int[] b){
         ArrayList<Integer> arr1 = new ArrayList<>();
         for (int i = 0; i < 3; i++){
             for (int j = 0; j < 3; j++){
+                //select all the elements in the position of 0 in the multi-dimensional array
                 if (a[i][j] == 0){
                 arr1.add(b[3*i+j]);
                 }
@@ -168,42 +178,52 @@ public class StepsGame {
         return arr1;
     }
 
-
+    /**
+     * Helper for task5
+     * Get all the coordinates of the spot of mask
+     * @param s a String whose length is 3
+     * @return An ArrayList which stores the coordinate of a String
+     */
     static ArrayList<Integer> getCoordinate(String s){
         Map<Character, Integer> pin = new HashMap<>();
+        //All the coordinate of mask on the board
         char[] position = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y',
                            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y'};
 
+        //Transform all the characters to the number(coordinate)
         for (int i = 0; i < position.length; i++){
             pin.put(position[i],i);
         }
 
+        //Get the shape of a mask
         int third = pin.get(s.charAt(2));
 
-        int[] gobal = {third-11, third-10, third-9, third-1, third, third+1, third+9,third+10,third+11};
+        //Get a 3*3 square which include the coordinate of masks
+        int[] gobal = {third-11, third-10, third-9, third-1, third, third+1, third+9, third+10, third+11};
 
+        //A model for each shape of mask
         int[][] arrA = {{0, 0, -1},{0, 0, 0}, {0, -1, -1}}; int[][] arrB = {{-1, 0, -1},{-1, 0, 0},{-1, 0, 0}};
         int[][] arrC = {{-1, 0, -1},{-1, 0, 0},{ 0, 0, -1}}; int[][] arrD = {{-1, 0, -1},{0, 0, -1},{-1, 0, 0}};
         int[][] arrE = {{-1, 0, -1},{0, 0, -1},{0, 0, -1}}; int[][] arrF = {{-1, -1, 0},{-1, 0, 0},{0, 0, -1}};
         int[][] arrG = {{-1, 0, 0},{-1, 0, 0},{0, 0, -1}}; int[][] arrH = {{-1, 0, 0}, {0, 0, -1},{-1, 0, 0}};
 
-        if (s.charAt(0) == 'A'){
+        if (s.charAt(0) == 'A'){ //decide the first element of a String whose length is 3
             if (s.charAt(1) == 'A'){
-                return selection(arrA,gobal);
+                return selection(arrA,gobal); //Select elements from global according to the elements in arrA
             }else if (s.charAt(1) == 'B'){
-                return selection(rotate(arrA),gobal);
+                return selection(rotate(arrA),gobal); //Select elements from global according to the elements in arrA whcih has been rotated right
             }else if (s.charAt(1) == 'C'){
-                return selection(rotate(rotate(arrA)),gobal);
+                return selection(rotate(rotate(arrA)),gobal);  //Select elements from global according to the elements in arrA whcih has been rotated 180 degrees
             }else if (s.charAt(1) == 'D'){
-                return selection(rotate(rotate(rotate(arrA))),gobal);
+                return selection(rotate(rotate(rotate(arrA))),gobal); //Select elements from global according to the elements in arrA whcih has been rotated left
             }else if (s.charAt(1) == 'E'){
-                return selection(reverse(arrA),gobal);
+                return selection(reverse(arrA),gobal); //Select elements from global according to the elements in arrA which has been reversed
             }else if (s.charAt(1) == 'F'){
-                return selection(rotate(reverse(arrA)),gobal);
+                return selection(rotate(reverse(arrA)),gobal); //Select elements from global according to the elements in arrA which has been reversed first and then rotated right
             }else if (s.charAt(1) == 'G'){
-                return selection(rotate(rotate(reverse(arrA))),gobal);
+                return selection(rotate(rotate(reverse(arrA))),gobal); //Select elements from global according to the elements in arrA which has been reversed first and then rotated 180 degrees
             }else if (s.charAt(1) == 'H'){
-                return selection(rotate(rotate(rotate(reverse(arrA)))),gobal);
+                return selection(rotate(rotate(rotate(reverse(arrA)))),gobal); //Select elements from global according to the elements in arrA which has been reversed first and then rotated left
             }
         }else if (s.charAt(0) == 'B'){
             if (s.charAt(1) == 'A'){
@@ -335,13 +355,21 @@ public class StepsGame {
         return null;
     }
 
+    /**
+     * Helper for task5
+     * Rotate a matrix
+     * @param matrix a two-dimensional array which stores the coordinates of mask
+     * @return A two-dimensional array which has been rotated
+     */
     static int[][] rotate(int[][] matrix) {
         int[][] temp = new int[3][3];
         int[][] outcome = new int[3][3];
+        //Swap the first line of matrix with the third
         temp[0] = matrix[2];
         temp[2] = matrix[0];
         temp[1] = matrix[1];
 
+        //Swap the element in different lines
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 outcome[j][i] = temp[i][j];
@@ -350,8 +378,15 @@ public class StepsGame {
         return outcome;
     }
 
+    /**
+     * Helper for task5
+     * Reverse a matrix
+     * @param matrix a two-dimensional array which stores the coordinates of mask
+     * @return A two-dimensional array which has been reverse
+     */
     static int[][] reverse(int[][] matrix){
         int[][]outcome = new int[3][3];
+        //Swap the element in different lines according to their position
         for (int i = 0;i<3;i++){
             for (int j =0 ;j<3;j++ ){
                 outcome[i][j]= matrix[i][2-j];
@@ -360,20 +395,29 @@ public class StepsGame {
         return outcome;
     }
 
+    /**
+     * Helper for task5
+     * Judge whether the String is in the board and whether the centre of each mask is placed on the right peg
+     * @param p an input String which represents the state of a mask
+     * @return boolean which decide whether the state of input String is valid or not
+     */
     static boolean isValidPieceString(String p){
+        //All possible position on the board for different masks with different directions
         char[] ACDFGH1 = {'L', 'N', 'P', 'R', 'W', 'Y', 'b', 'd', 'g', 'i', 'k', 'm'}; char[] ACDFGH2 = {'M', 'O', 'Q', 'S', 'V', 'X', 'a', 'c', 'h', 'j', 'l', 'n'};
         char[] BAEC = {'L', 'N', 'P', 'R', 'U', 'W', 'Y', 'b', 'd', 'g', 'i', 'k', 'm'}; char[] BCEA = {'L', 'N', 'P', 'R', 'T', 'W', 'Y', 'b', 'd', 'g', 'i', 'k', 'm', 'o'};
         char[] BBED = {'C', 'E', 'G', 'I', 'L', 'N', 'P', 'R', 'W', 'Y', 'b', 'd', 'g', 'i', 'k', 'm'}; char[] BDEB = {'L', 'N', 'P', 'R', 'W', 'Y', 'b', 'd', 'g', 'i', 'k', 'm', 'r', 't', 'v', 'x'};
         char[] BEEG = {'M', 'O', 'Q', 'S', 'V', 'X', 'a', 'c', 'e', 'h', 'j', 'l', 'n'}; char[] BGEE = {'K', 'M', 'O', 'Q', 'S', 'V', 'X', 'a', 'c', 'f', 'h', 'j', 'l', 'n'};
         char[] BFEH = {'M', 'O', 'Q', 'S', 'V', 'X', 'a', 'c', 'h', 'j', 'l', 'n', 'q', 's', 'u', 'w'}; char[] BHEF = {'B', 'D', 'F', 'H', 'M', 'O', 'Q', 'S', 'V', 'X', 'a', 'c', 'h', 'j', 'l', 'n'};
 
+        //decide the first character of the mask
         if (p.charAt(0) == 'A'|| p.charAt(0) == 'C' || p.charAt(0) == 'D' || p.charAt(0) == 'F' || p.charAt(0) == 'G' || p.charAt(0) == 'H'){
+            //decide the second character of the mask
             if (p.charAt(1) >= 'A' && p.charAt(1)<='D'){
                 ArrayList<Character> ACDFGHList1 = new ArrayList<>();
                 for (int m = 0; m < ACDFGH1.length; m++){
                     ACDFGHList1.add(ACDFGH1[m]);
                 }
-                if (ACDFGHList1.contains(p.charAt(2))){
+                if (ACDFGHList1.contains(p.charAt(2))){ //decide whether the coordinate of mask is in the valid choice
                     return true;
                 }else{
                     return false;
@@ -383,7 +427,7 @@ public class StepsGame {
                 for (int m = 0; m < ACDFGH2.length; m++){
                     ACDFGHList2.add(ACDFGH2[m]);
                 }
-                if (ACDFGHList2.contains(p.charAt(2))){
+                if (ACDFGHList2.contains(p.charAt(2))){   //decide whether the coordinate of mask is in the valid choice
                     return true;
                 }else{
                     return false;
@@ -638,10 +682,7 @@ public class StepsGame {
 
     }
 
-
-
-
-
+    
     /**
      * Return an array of all unique (unordered) solutions to the game, given a
      * starting placement.   A given unique solution may have more than one than
@@ -652,17 +693,29 @@ public class StepsGame {
      * the game given the starting point provided by placement.
      */
     public static String[] getSolutions(String placement) {
+
+        //Get all the solutions of a startPoint placement
         Set<String> nl = possibleSolutions(placement);
         ArrayList<String> out = new ArrayList<>(nl);
         String[] outcome = new String[nl.size()];
 
+        //Put all the elements into an array
        for (int i = 0; i < out.size(); i++){
            outcome[i] = out.get(i);
        }
+
+       //return the array
         return outcome;
     }
 
+    /**
+     * Helper for task 9
+     * Given a start point placement and return a set which contains all the possible solution
+     * @param placement A startPoint placement for the game
+     * @return A set which contains all the possible solutions for the input placement
+     */
     public static Set<String> possibleSolutions(String placement){
+        //All the possible states of the different masks
         ArrayList<String> A = MaskGenerator.maskGenerator1('A'); ArrayList<String> B = MaskGenerator.maskGenerator2();
         ArrayList<String> C = MaskGenerator.maskGenerator1('C'); ArrayList<String> D = MaskGenerator.maskGenerator1('D');
         ArrayList<String> E = MaskGenerator.maskGenerator3(); ArrayList<String> F = MaskGenerator.maskGenerator1('F');
@@ -670,15 +723,18 @@ public class StepsGame {
 
         ArrayList<Character> firstAlphabet = new ArrayList<>();
 
+        //Get the first alphabet of an arbitrary mask
         for (int i = 0; i < placement.length()/3; i++){
             firstAlphabet.add(placement.charAt(3*i));
         }
 
+        //Create a Map which contains all the possible states of masks according to the first alphabet of 3-length String
         Map<Character,ArrayList<String>> newMap = new HashMap<>();
         newMap.put('A',A);newMap.put('B',B);newMap.put('C',C);newMap.put('D',D);newMap.put('E',E);newMap.put('F',F);newMap.put('G',G);newMap.put('H',H);
 
         Set<Character> key = newMap.keySet();
 
+        //Remove all the masks which has existed in the start String
         for (int i = 0; i < firstAlphabet.size(); i++){
             key.remove(firstAlphabet.get(i));
         }
@@ -686,34 +742,37 @@ public class StepsGame {
         ArrayList<Character> keyList = new ArrayList<>(key);
 
         Set<String> orders = new HashSet<>();
+        //Discuss the situation when every mask has been placed on the board
         if (key.size() == 0){
             orders.add(placement);
             return orders;
+        //Discuss the situation when one mask has not been placed on the board
         }else if (key.size() == 1){
             ArrayList<String> one = new ArrayList<>();
             String process;
             for (int i = 0; i < newMap.get(keyList.get(0)).size(); i++){
-                if (notObstruct(placement,newMap.get(keyList.get(0)).get(i))){
+                if (notObstruct(placement,newMap.get(keyList.get(0)).get(i))){  //Check the mask which will be placed on the board does not obstruct the masks which have been placed on the board
                         process = placement + newMap.get(keyList.get(0)).get(i);
                         one.add(process);
                 }
             }
             Set<String> two = new HashSet<>(one);
             return two;
+            //Discuss the situation when two masks have not been placed on the board
         }else if (key.size() == 2){
             ArrayList<String> one = new ArrayList<>();
             Set<String> two = new HashSet<>();
             String process1;
             for (int i = 0; i < newMap.get(keyList.get(0)).size(); i++){
                 if (notObstruct(placement,newMap.get(keyList.get(0)).get(i))){
-                    process1 = placement + newMap.get(keyList.get(0)).get(i);
-                    one.add(process1);
-                }
+                    process1 = placement + newMap.get(keyList.get(0)).get(i); // Check the mask which will be placed on the board does not obstruct the masks which have been placed on the board
+                    one.add(process1);                                        // If so, then add the valid mask to the initial placement
+                }  //place the first element in the map first
                 for (String b : one){
-                    for (int j = 0; j < newMap.get(keyList.get(1)).size(); j++){
+                    for (int j = 0; j < newMap.get(keyList.get(1)).size(); j++){  //Similar to the operation above
                         if (notObstruct(b,newMap.get(keyList.get(1)).get(j))){
                         b = b + newMap.get(keyList.get(1)).get(j);
-                        two.add(b);
+                        two.add(b);  //then place the second element in the map
                         }
                     }
                 }
@@ -722,18 +781,17 @@ public class StepsGame {
             ArrayList<String> three = new ArrayList<>();
             Set<String> four = new HashSet<>();
             String process2;
-
             if (two.isEmpty()){
                 for (int i = 0; i < newMap.get(keyList.get(1)).size(); i++){
                     if (notObstruct(placement,newMap.get(keyList.get(1)).get(i))){
                         process2 = placement + newMap.get(keyList.get(1)).get(i);
-                        three.add(process2);
+                        three.add(process2);                         //place the second element in the map first
                     }
                     for (String b : three){
                         for (int j = 0; j < newMap.get(keyList.get(0)).size(); j++){
                             if (notObstruct(b,newMap.get(keyList.get(0)).get(j))){
                                 b = b + newMap.get(keyList.get(0)).get(j);
-                                four.add(b);
+                                four.add(b);                         // then place the first element
                             }
                         }
                     }
@@ -744,6 +802,7 @@ public class StepsGame {
             }else {
                 return two;
             }
+            //The code below uses the same idea as the code above
         }else if (key.size() == 3){
             ArrayList<String> one = new ArrayList<>();
             String process0; String process1; String process2;
@@ -1316,29 +1375,46 @@ public class StepsGame {
         }
     }
 
-
+    /**
+     * Helper for task 9
+     * Normalize all the correct solutions(the solutions are all correct,
+     * the order of masks may be different, we need to select one solution
+     * from the solutions with different order)
+     * @param outcome A ArrayList which contains all the correct solutions
+     * @return A set which contains solution(s) which has been normalized
+     */
     public static Set<String> afterSort(ArrayList<String> outcome){
         ArrayList<String> ll = new ArrayList<>();
         Map<String,Character[]> gg = new HashMap<>();
+
+        //Create a map which stores all the possible solutions and their corresponding characters after sorting
         for (int i = 0; i < outcome.size(); i++){
             gg.put(outcome.get(i),SelectionSorter.sort(MaskStringSplit(outcome.get(i))));
         }
 
         for (int i = 0 ; i < outcome.size();i++){
+            //Define that the initial state is 0
             int flag = 0;
             for (int j = 0 ; j < i;j++){
-                if (Arrays.equals(gg.get(outcome.get(i)),gg.get(outcome.get(j)))){
+                if (Arrays.equals(gg.get(outcome.get(i)),gg.get(outcome.get(j)))){ //If the array of character is the same, change the state
                     flag = 1;
                 }
             }
-            if (flag == 0){
+            if (flag == 0){ // Record all the states which are 0 (indicate that the array of character is different)
                 ll.add(outcome.get(i));
             }
         }
+        //Put all all the results into a set
         Set<String> result = new HashSet<>(ll);
         return result;
     }
 
+    /**
+     * Helper for task 9
+     * Split the String and get every character in the input String
+     * @param a A String with 24 characters
+     * @return An array of character which stores every character of the input String
+     */
     public static Character[] MaskStringSplit(String a){
         Character[] outcome = new Character[24];
         for (int i = 0; i < a.length(); i++){
