@@ -48,7 +48,7 @@ public class Features extends Application implements Runnable {
 
         Title instruction = new Title("Acknowledgement");
         instruction.setTranslateX(BOARD_WIDTH / 2 - instruction.getTitleWidth() / 2);
-        instruction.setTranslateY(4 * BOARD_HEIGHT / 8);
+        instruction.setTranslateY(4 * BOARD_HEIGHT / 8+30);
 
         root.getChildren().add(instruction);
     }
@@ -60,7 +60,7 @@ public class Features extends Application implements Runnable {
             MenuItem item = new MenuItem(data.getKey());
             //item.setOnAction(data.getValue());
             item.setTranslateX(-300);
-            Rectangle clip = new Rectangle(300, 30);
+            Rectangle clip = new Rectangle(800, 30);
             clip.translateXProperty().bind(item.translateXProperty().negate());
 
             item.setClip(clip);
@@ -69,9 +69,11 @@ public class Features extends Application implements Runnable {
         root.getChildren().add(featureBox);
     }
     private List<Pair<String,Runnable>> featureData = Arrays.asList(
-            new Pair<String,Runnable>("Feature 1",()->{}),
-            new Pair<String,Runnable>("Feature 2",()->{}),
-            new Pair<String,Runnable>("Feature 3",()->{})
+            new Pair<String,Runnable>("automatic scoreboard",()->{}),
+            new Pair<String,Runnable>("hint by transparent piece",()->{}),
+            new Pair<String,Runnable>("exception handling",()->{}),
+            new Pair<String,Runnable>("BGM & Operation music",()->{}),
+            new Pair<String,Runnable>("Menu Animation",()->{})
     );//https://docs.oracle.com/javase/8/javafx/api/javafx/application/Platform.html
 
     private Line line;
@@ -80,14 +82,14 @@ public class Features extends Application implements Runnable {
         addTitle();
         addAck();
         double lineX = BOARD_WIDTH / 2 - 100;//WIDTH / 2 - 100;
-        double lineY = BOARD_HEIGHT / 8 + 50;//HEIGHT / 3 + 50;
+        double lineY = BOARD_HEIGHT / 8 + 40;//HEIGHT / 3 + 50;
         addLine(lineX, lineY);
         addFeature(lineX + 5, lineY);
         startAnimation();
         return root;
     }
     private void addLine(double x, double y) {
-        line = new Line(x, y, x, y + 110);
+        line = new Line(x, y, x, y + 180);
         line.setStrokeWidth(3);
         line.setStroke(Color.color(1, 1, 1, 0.75));
         line.setEffect(new DropShadow(5, Color.BLACK));
@@ -102,7 +104,7 @@ public class Features extends Application implements Runnable {
 
             for (int i = 0; i < featureBox.getChildren().size(); i++) {
                 Node n = featureBox.getChildren().get(i);
-                TranslateTransition tt = new TranslateTransition(Duration.seconds(1 + i * 0.15), n);
+                TranslateTransition tt = new TranslateTransition(Duration.seconds(1 + i * 0.2), n);
                 tt.setToX(0);
                 tt.setOnFinished(e2 -> n.setClip(null));
                 tt.play();
@@ -115,7 +117,7 @@ public class Features extends Application implements Runnable {
         ackText.setFill(Color.DEEPPINK);
         ackText.setFont(Font.loadFont(MenuApp.class.getResource("res/Penumbra-HalfSerif-Std_35114.ttf").toExternalForm(), 14));
         ackText.setLayoutX(250);
-        ackText.setLayoutY(430);
+        ackText.setLayoutY(460);
         root.getChildren().add(ackText);
     }
 
