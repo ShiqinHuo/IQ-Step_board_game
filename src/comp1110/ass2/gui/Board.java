@@ -859,6 +859,7 @@ public class Board extends Application implements Runnable  {
      *     I -> released: the instruction text disapears
      * @param scene the current game scene
      */
+
     // used ideas given by Henan Wang(u6007140) and Shenjia Ji(u5869805)
     private void keyboardHandlers(Scene scene) {
         System.out.println("Handlers up");
