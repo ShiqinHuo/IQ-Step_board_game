@@ -821,7 +821,7 @@ public class Board extends Application implements Runnable  {
         return solution.get(placement);
     }
 
-    /** Hints helper functions */
+    /* Hints helper functions */
     /** helps to set up the inner pop-up window when all pieces are well placed!  */
     private void showCompletion (){
         new innerStage().display("Congratulations! Well done!","\n Congratulations! Well done!\n\n Please close this window first! \n\n Then,\n\n Press 'Q' to quit game.\n\n Press 'Start' to restart a new game! \n\n Enjoy your time :) \n \n");
@@ -1093,7 +1093,7 @@ public class Board extends Application implements Runnable  {
         int random = new Random().nextInt(15);
         newstart = TaskEleven_OBJECTIVE[row][random];
 }
-    /** Place the generated pieces to the board according to the string */
+    /* Place the generated pieces to the board according to the string */
     // similar to Viewer.java
     /** group the placement string */
     private void  viewNewStart (String newstart){
@@ -1188,9 +1188,10 @@ public class Board extends Application implements Runnable  {
 
                 hideUsingTime();
                 startpieces.getChildren().clear();
+                invisibleSol.getChildren().clear();
                 newpieces.getChildren().clear();
                 piecelist = new ArrayList<>();
-
+                count = 0;
                 setNewstart ();
                 done ="";
                 pastplacement ="";
