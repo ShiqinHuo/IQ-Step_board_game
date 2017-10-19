@@ -1,7 +1,5 @@
 package comp1110.ass2;
 
-import com.sun.deploy.util.ArrayUtil;
-
 /**
  * Created by wenjunyang on 7/10/17.
  */
