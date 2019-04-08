@@ -7,7 +7,7 @@ Welcome Stars and Comments! mailto:ShiqinHuo@gmail.com
 ## QuickStart
 Run [game.jar](https://github.com/ShiqinHuo/IQ-Step_board_game/blob/master/game.jar)
 
-## Demo Overview
+## Demo Video
 [Youtube Video for Demo](https://youtu.be/u260SR7zm-0)
 
 ## Presentation
