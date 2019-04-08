@@ -10,8 +10,6 @@ Run [game.jar](https://github.com/ShiqinHuo/IQ-Step_board_game/blob/master/game.
 ## Demo Video
 [Youtube Video for Demo](https://youtu.be/u260SR7zm-0)
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/u260SR7zm-0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
 ## Presentation
 
 [Slides for Presentation](https://github.com/ShiqinHuo/IQ-Step_board_game/blob/master/presentation.pdf)
