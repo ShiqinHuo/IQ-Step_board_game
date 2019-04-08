@@ -1,8 +1,7 @@
 # IQ-Step_board_game
 
-Double-layer Board Game (JavaFX GUI) with AI hints Solver &amp; Generator 
-
-ANU@COMP1110 Assignment 2
+Double-layer Board Game (JavaFX GUI) with AI hints Solver &amp; Generator - ANU@COMP1110 Assignment 2
+Welcome Stars and Comments! mailto:ShiqinHuo@gmail.com
 
 ## QuickStart
 Run [game.jar](https://github.com/ShiqinHuo/IQ-Step_board_game/blob/master/game.jar)
