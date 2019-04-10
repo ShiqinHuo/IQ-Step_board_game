@@ -7,15 +7,10 @@ Double-layer Board Game (JavaFX GUI) with AI hints Solver &amp; Generator - ANU@
 ## Demo Video
 [Youtube Video for Demo](https://youtu.be/u260SR7zm-0)
 
-## Presentation
-
-[Slides for Presentation](https://github.com/ShiqinHuo/IQ-Step_board_game/blob/master/presentation.pdf)
-
 ## QuickStart
 Run [game.jar](https://github.com/ShiqinHuo/IQ-Step_board_game/blob/master/game.jar)
 
 ## Sample GUI
-
 
 Game Menu            |  Game Features
 :-------------------------:|:-------------------------:
@@ -29,6 +24,10 @@ Hint Viewer         |  ScoreBoard
 :-------------------------:|:-------------------------:
 ![hints](pics/hints.png)  |  ![expection](pics/expection.png)
 
+
+## Presentation
+
+[Slides for Presentation](https://github.com/ShiqinHuo/IQ-Step_board_game/blob/master/presentation.pdf)
 
 ## Requirements
 [Instruction](https://github.com/ShiqinHuo/IQ-Step_board_game/blob/master/Instruction.md)
