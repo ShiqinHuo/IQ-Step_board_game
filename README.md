@@ -7,9 +7,6 @@ Double-layer Board Game (JavaFX GUI) with AI hints Solver &amp; Generator - ANU@
 ## Demo Video
 [Youtube Video for Demo](https://youtu.be/u260SR7zm-0)
 
-## QuickStart
-Run [game.jar](https://github.com/ShiqinHuo/IQ-Step_board_game/blob/master/game.jar)
-
 ## Sample GUI
 
 Game Menu            |  Game Features
@@ -24,6 +21,8 @@ Hint Viewer         |  ScoreBoard
 :-------------------------:|:-------------------------:
 ![hints](pics/hints.png)  |  ![expection](pics/expection.png)
 
+## QuickStart
+Run [game.jar](https://github.com/ShiqinHuo/IQ-Step_board_game/blob/master/game.jar)
 
 ## Presentation
 
