@@ -14,6 +14,24 @@ Double-layer Board Game (JavaFX GUI) with AI hints Solver &amp; Generator - ANU@
 ## QuickStart
 Run [game.jar](https://github.com/ShiqinHuo/IQ-Step_board_game/blob/master/game.jar)
 
+## Sample GUI
+
+<center class="half">
+    <img src="pics/menu.png" width="350"/>
+    <img src="pics/features.png" width="350"/>
+</center>
+
+<center class="half">
+    <img src="pics/auth.png" width="350"/>
+    <img src="pics/viewer.png" width="350"/>
+</center>
+
+<center class="half">
+    <img src="pics/hints.png" width="350"/>
+    <img src="pics/expection.png" width="350"/>
+</center>
+
+
 ## Requirements
 [Instruction](https://github.com/ShiqinHuo/IQ-Step_board_game/blob/master/Instruction.md)
 
