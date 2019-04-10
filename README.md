@@ -16,6 +16,12 @@ Run [game.jar](https://github.com/ShiqinHuo/IQ-Step_board_game/blob/master/game.
 
 ## Sample GUI
 
+
+menu            |  features
+:-------------------------:|:-------------------------:
+![menu](pics/menu.png)  |  ![features](pics/features.png)
+
+
 <center class="half">
     <img src="pics/menu.png" width="350"/>
     <img src="pics/features.png" width="350"/>
