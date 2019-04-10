@@ -17,25 +17,17 @@ Run [game.jar](https://github.com/ShiqinHuo/IQ-Step_board_game/blob/master/game.
 ## Sample GUI
 
 
-menu            |  features
+Game Menu            |  Game Features
 :-------------------------:|:-------------------------:
 ![menu](pics/menu.png)  |  ![features](pics/features.png)
 
+Author Info           |  Game Viewer
+:-------------------------:|:-------------------------:
+![auth](pics/auth.png)  |  ![viewer](pics/viewer.png)
 
-<center class="half">
-    <img src="pics/menu.png" width="350"/>
-    <img src="pics/features.png" width="350"/>
-</center>
-
-<center class="half">
-    <img src="pics/auth.png" width="350"/>
-    <img src="pics/viewer.png" width="350"/>
-</center>
-
-<center class="half">
-    <img src="pics/hints.png" width="350"/>
-    <img src="pics/expection.png" width="350"/>
-</center>
+Hint Viewer         |  ScoreBoard
+:-------------------------:|:-------------------------:
+![hints](pics/hints.png)  |  ![expection](pics/expection.png)
 
 
 ## Requirements
