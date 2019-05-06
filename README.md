@@ -1,6 +1,6 @@
 # IQ-Step_board_game
 
-[![Github All Releases](https://img.shields.io/github/downloads/gravetii/wordagam/total.svg?style=flat-square)](https://github.com/ShiqinHuo/IQ-Step_board_game/blob/master/game.jar)
+[![Github All Releases](https://img.shields.io/github/downloads/gravetii/wordagam/total.svg?style=flat-square)](https://github.com/ShiqinHuo/IQ-Step_board_game/releases/tag/v2.1)
 [![Release](https://img.shields.io/badge/release-demo-brightgreen.svg)](https://www.youtube.com/watch?v=u260SR7zm-0&feature=youtu.be)
 [![Forks](https://img.shields.io/github/forks/ShiqinHuo/IQ-Step_board_game.svg)](https://github.com/ShiqinHuo/IQ-Step_board_game/README.md)
 [![Stars](https://img.shields.io/github/stars/ShiqinHuo/IQ-Step_board_game.svg)](https://www.youtube.com/watch?v=u260SR7zm-0&feature=youtu.be)
