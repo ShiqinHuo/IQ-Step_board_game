@@ -6,7 +6,8 @@
 [![Forks](https://img.shields.io/github/forks/ShiqinHuo/IQ-Step_board_game.svg)](https://github.com/ShiqinHuo/IQ-Step_board_game/README.md)
 [![Stars](https://img.shields.io/github/stars/ShiqinHuo/IQ-Step_board_game.svg)](https://www.youtube.com/watch?v=u260SR7zm-0&feature=youtu.be)
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.me/shiqinhuo)
-[![LICENSE](https://img.shields.io/badge/license-NPL%20(The%20996%20Prohibited%20License)-yellow.svg)](https://github.com/996icu/996.ICU/blob/master/LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 Double-layer Board Game (JavaFX GUI) with AI hints Solver &amp; Generator - ANU@COMP1110 Assignment 2
 
 Welcome **Stars** and **Comments!** mailto:ShiqinHuo@gmail.com
