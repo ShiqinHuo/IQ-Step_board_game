@@ -1,5 +1,13 @@
 # IQ-Step_board_game
 
+![Github All Releases](https://img.shields.io/github/downloads/gravetii/wordagam/total.svg?style=flat-square)
+[![Release](https://img.shields.io/badge/release-demo-brightgreen.svg)](https://www.youtube.com/watch?v=u260SR7zm-0&feature=youtu.be)
+[![Forks](https://img.shields.io/github/stars/ShiqinHuo/IQ-Step_board_game.svg)](https://app.codacy.com/app/gravetii/wordagam?utm_source=github.com&utm_medium=referral&utm_content=gravetii/wordagam&utm_campaign=Badge_Grade_Dashboard)
+[![Stars](https://img.shields.io/github/stars/ShiqinHuo/IQ-Step_board_game.svg)](https://www.youtube.com/watch?v=u260SR7zm-0&feature=youtu.be)
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.me/shiqinhuo)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+
 Double-layer Board Game (JavaFX GUI) with AI hints Solver &amp; Generator - ANU@COMP1110 Assignment 2
 
 Welcome **Stars** and **Comments!** mailto:ShiqinHuo@gmail.com
